@@ -42,13 +42,7 @@ export class LogiinComponent implements OnInit {
           this.localStorage.store('authenticationToken', res.body.RESULT);
           this.localStorage.store('check_work_active', false);
           setTimeout(() => {
-            if(res.body.RESULT.role === "admin")
-              this.router.navigate(['/shop']);
-            else if(res.body.RESULT.role === "marketing")
-              this.router.navigate(['/utm-medium']);
-            else {
-              this.router.navigate(['/work']);
-            }
+              this.router.navigate(['/calllogs']);        
           }, 200);
           
         }else{
