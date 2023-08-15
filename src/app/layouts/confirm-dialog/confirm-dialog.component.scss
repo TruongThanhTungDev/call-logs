@@ -1,0 +1,48 @@
+.modal-content {
+  max-width: 500px !important;
+  box-shadow: 4px 5px 15px 3px #7e7e7e9c !important;
+}
+.modal {
+  top: 10% !important;
+}
+
+.modal-header h4 {
+  font-weight: 600;
+  font-family: "OpenSans-SemiBold", "Segoe UI";
+
+  font-size: 18px;
+}
+.btn-customs2 {
+  // background: #d80303;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  margin: 2px;
+  font-weight: 600;
+  font-family: "OpenSans-SemiBold", "Segoe UI";
+  background: red;
+  padding: 7px 12px;
+  i {
+    font-size: 16px;
+  }
+}
+.btn-customs2:disabled {
+  background: #9da2b7;
+  color: #333333;
+}
+.btn-customs2:hover {
+  background: rgb(231, 49, 49);
+}
+.modal-footer button {
+  text-transform: uppercase;
+}
+.box-shadow-modal {
+  background: #00000080;
+  .modal-dialog {
+    height: 100%;
+    top: 25%;
+  }
+  .modal-content {
+    box-shadow: 4px 5px 15px 3px #7e7e7e9c !important;
+  }
+}

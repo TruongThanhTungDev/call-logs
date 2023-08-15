@@ -1,0 +1,16 @@
+<div class="wrapper">
+    <div class="sidebar" data-color="white" data-active-color="danger">
+        <sidebar-cmp></sidebar-cmp>
+    </div>
+    <ngx-spinner bdColor="rgba(51,51,51,0.8)" size="medium" color="#fff" type="ball-scale-multiple">
+        <p style="font-size: 20px; color: white">Loading...</p>
+    </ngx-spinner>
+    <div class="main-panel">
+        <navbar-cmp></navbar-cmp>
+        <div class="content">
+            <router-outlet></router-outlet>
+        </div>
+        <!-- <footer-cmp></footer-cmp> -->
+    </div>
+</div>
+<!-- <fixedplugin-cmp></fixedplugin-cmp> -->

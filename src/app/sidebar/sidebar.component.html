@@ -1,0 +1,67 @@
+<div class="sidebar-wrapper">
+  <div class="logo">
+    <a routerLink="/dashboard" class="simple-text logo-mini">
+      <div class="logo-image-small">
+        <img src="assets/img/logo.png">
+      </div>
+    </a>
+    <a routerLink="/dashboard" class="simple-text logo-normal">
+      ADSXANH GROUP
+    </a>
+  </div>
+
+  <ul class="nav">
+    <li *ngFor="let menuItem of menuItems;index as i" routerLinkActive="active">
+      <a *ngIf="menuItem.items.length === 0; else elseBlock" style="margin-top: 5px; margin-bottom: 5px;"
+        [routerLink]="[menuItem.path]" [queryParams]="menuItem.params" class="{{menuItem.class}}" class="d-flex">
+        <i class="{{menuItem.icon}}"></i>
+        <p class="nav-text"><span class="nav-title bold">{{menuItem.title}}</span></p>
+      </a>
+      <ng-template #elseBlock>
+        <a (click)="menuItem.show = !menuItem.show" style="margin-top: 5px; margin-bottom: 5px;"
+          [attr.aria-expanded]="!menuItem.show" aria-controls="collapse">
+          <i class="{{menuItem.icon}}"></i>
+          <p class="nav-text">
+            <span class="nav-title bold">{{menuItem.title}}
+              <span *ngIf="menuItem.show" style="right: 0px; position: absolute;"><i class="nc-icon nc-minimal-right"
+                  style="font-size:12px"></i></span>
+              <span *ngIf="!menuItem.show" style="right: 0px; position: absolute;"><i class="nc-icon nc-minimal-up"
+                  style="font-size:12px"></i></span>
+            </span>
+          </p>
+        </a>
+        <ul #collapse="ngbCollapse" [(ngbCollapse)]="menuItem.show" style="list-style: none; padding-left: 0px;">
+          <li class="nav-item nav-item-customs" *ngFor='let item of menuItem.items, index as j'
+            routerLinkActive="active">
+            <a [routerLink]="[item.path]" [queryParams]="item.params" style="text-transform: capitalize;"
+              class="{{item.class}}">{{item.title}}</a>
+          </li>
+        </ul>
+      </ng-template>
+    </li>
+  </ul>
+  <ul class="nav">
+    <li>
+
+    </li>
+  </ul>
+  <div class="div-user-info" *ngIf="info.role == 'admin'" style="position: fixed; bottom: 0;">
+    <ul class="nav">
+      <li>
+        <!-- <a class="d-flex" style="background: #fff;">
+          <i class="fa fa-user-circle-o" style="font-size: 40px;margin-top: 10px;"></i>
+          <div>
+            <p class="nav-text" style="text-transform: capitalize;min-height: 20px;height: 20px;"><span class="nav-title">{{info?info.role:''}}</span></p>
+            <p class="nav-text"><span class="nav-title bold">{{info?info.fullName:''}}</span></p>
+          </div>
+        </a> -->
+        <a class="d-flex" style="background: #fff;" routerLink="/shop">
+          <i class="	fa fa-arrow-left" style="font-size: 25px;margin-top: 10px;"></i>
+          <div>
+            <p class="nav-text"><span class="nav-title bold" style="padding: 10px 0px;">Danh sách cửa hàng</span></p>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</div>

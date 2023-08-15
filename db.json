@@ -1,0 +1,44 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server",
+      "author": "typicode"
+    },
+    {
+      "username": "1",
+      "password": "2",
+      "id": 2
+    },
+    {
+      "username": "123",
+      "password": "123",
+      "id": 3
+    },
+    {
+      "username": "1",
+      "password": "22",
+      "id": 4
+    },
+    {
+      "username": "tit",
+      "password": "tit",
+      "id": 5
+    },
+    {
+      "username": "tanh",
+      "password": "tanh",
+      "id": 6
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}

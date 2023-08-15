@@ -1,0 +1,33 @@
+.img-lang{
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+}
+.langue-sub{
+    padding: 5px;
+    background: #fff;
+    border-radius: 20px;
+}
+.text-time{
+    font-size: 18px;
+    font-weight: bold;
+    width: 215px;
+}
+.input-group{
+    input{
+        border-radius: 0px 20px 20px 0px;
+    }
+    .input-group-text, .input-group-prepend{
+        border-radius: 20px 0px 0px 20px;
+    }
+}
+// @media screen and (max-width: 1200px){
+//     .text-time{
+//         display: none;
+//     }
+// }
+// @media screen and (max-width: 1200px){
+//     .text-time{
+//         display: none;
+//     }
+// }
