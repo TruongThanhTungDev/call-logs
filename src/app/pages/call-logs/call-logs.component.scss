@@ -18,3 +18,57 @@ close-btn {
 .card table tbody tr:hover a {
   color: white !important;
 }
+
+@media only screen and (max-width: 768px) {
+  .date-picker-container {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+  .statistic-container {
+    flex: 1 0 100%;
+    max-width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+}
+@media only screen and (max-width: 476px) and (min-width: 433px) {
+  .statistic-item-call {
+    margin-bottom: 10px;
+  }
+
+  .statistic-item-count {
+    margin-right: 0 !important;
+  }
+}
+@media only screen and (max-width: 431px) {
+  .statistic-item-avg,
+  .statistic-item-count,
+  .statistic-item-call {
+    margin-bottom: 10px;
+  }
+  .statistic-item-avg {
+    margin-right: 6px;
+  }
+  .call-log-main {
+    padding-left: 9px !important;
+    padding-right: 9px !important;
+  }
+}
+@media only screen and (max-width: 430px) and (min-width: 420px) {
+  .statistic-item-avg {
+    margin-right: 9px;
+  }
+  .statistic-item-count,
+  .statistic-item-call {
+    margin-right: 0 !important;
+  }
+}
+@media only screen and (max-width: 419px) {
+  .statistic-item-avg,
+  .statistic-item-count,
+  .statistic-item-call {
+    margin-right: 0 !important;
+  }
+}

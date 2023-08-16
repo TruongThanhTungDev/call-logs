@@ -1,7 +1,6 @@
-
 <nav class="navbar navbar-expand-lg navbar-absolute fixed-top navbar-transparent">
   <div class="container-fluid">
-    
+
     <div class="navbar-wrapper">
       <div class="navbar-toggle">
         <button type="button" class="navbar-toggler" (click)="sidebarToggle()">
@@ -10,7 +9,7 @@
           <span class="navbar-toggler-bar bar3 bg-light"></span>
         </button>
       </div>
-      <a class="click_show" (click)="sidebarToggle()">☰</a>    
+      <a class="click_show" (click)="sidebarToggle()">☰</a>
       <a class="navbar-brand" href="javascript:void(0)">{{getTitle()}}</a>
     </div>
     <!-- <div class="col-6 col-sm-1">
@@ -20,13 +19,14 @@
           <option *ngFor="let obj of shopList" [value]="obj.code">{{obj.code}}</option>
         </select>
     </div> -->
-    <button class="navbar-toggler" type="button" (click)="collapse()"
-      [attr.aria-expanded]="!isCollapsed" aria-controls="collapseExample">
+    <button class="navbar-toggler" type="button" (click)="collapse()" [attr.aria-expanded]="!isCollapsed"
+      aria-controls="collapseExample">
       <span class="navbar-toggler-bar navbar-kebab"></span>
       <span class="navbar-toggler-bar navbar-kebab"></span>
       <span class="navbar-toggler-bar navbar-kebab"></span>
     </button>
-    <div class="collapse navbar-collapse justify-content-end" id="collapseExample" [ngbCollapse]="isCollapsed">
+    <div class="collapse navbar-collapse justify-content-end navbar-container" id="collapseExample"
+      [ngbCollapse]="isCollapsed">
       <form>
         <!-- <div class="input-group no-border">
           <input type="text" value="" class="form-control" placeholder="Search...">
@@ -37,15 +37,21 @@
           </div>
         </div> -->
       </form>
-      <ng-toggle *ngIf="this.info.role==='user' && checkWorkActive" [value]="true" id="toggleActive" [color]="{ unchecked: '#939da2', checked: '#ef8157'}" [disabled]="disableToggle" (change) = "onTriggerWorkActive()"></ng-toggle>
-      <ng-toggle *ngIf="this.info.role==='user' && !checkWorkActive"[value]="false" id="toggleActive" [color]="{ unchecked: '#939da2', checked: '#ef8157'}" [disabled]="disableToggle" (change) = "onTriggerWorkActive()"></ng-toggle>
+      <ng-toggle *ngIf="this.info.role==='user' && checkWorkActive" [value]="true" id="toggleActive"
+        [color]="{ unchecked: '#939da2', checked: '#ef8157'}" [disabled]="disableToggle"
+        (change)="onTriggerWorkActive()"></ng-toggle>
+      <ng-toggle *ngIf="this.info.role==='user' && !checkWorkActive" [value]="false" id="toggleActive"
+        [color]="{ unchecked: '#939da2', checked: '#ef8157'}" [disabled]="disableToggle"
+        (change)="onTriggerWorkActive()"></ng-toggle>
       <ul class="navbar-nav ml-2">
         <li lass="nav-item text-light text-bold text-center mr-2 ml-2">
           <div class="input-group">
             <div class="input-group-prepend bg-light">
-              <span class="input-group-text" id="inputGroup-sizing-default"><i class="fa fa-search mr-2 bold text-primary"></i></span>
+              <span class="input-group-text" id="inputGroup-sizing-default"><i
+                  class="fa fa-search mr-2 bold text-primary"></i></span>
             </div>
-            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" placeholder="Tìm kiếm">
+            <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+              placeholder="Tìm kiếm">
           </div>
         </li>
         <li class="nav-item text-light text-bold text-center mr-2 ml-2">
@@ -53,14 +59,17 @@
         </li>
         <li class="nav-item text-light text-bold text-center mr-2 ml-2">
           <div class="dropdown">
-            <a class="dropdown-toggle langue-sub pl-2 pr-2" type="button" id="langue-sub" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="dropdown-toggle langue-sub pl-2 pr-2" type="button" id="langue-sub" data-toggle="dropdown"
+              aria-haspopup="true" aria-expanded="false">
               <p class="text-uppercase mr-2 text-primary">{{language}}</p>
               <img *ngIf="language === 'vi'" src="../../../assets/img/vietnam-lang.png" class="img-lang ml-2 mr-2">
               <img *ngIf="language === 'en'" src="../../../assets/img/english_flag.png" class="img-lang ml-2 mr-2">
             </a>
             <ul class="dropdown-menu" aria-labelledby="langue-sub">
-              <li (click)="changeLanguage('vi')"><a class="dropdown-item" ><img style="width: 30px;" class="mr-3" src="../../../assets/img/vietnam-lang.png">Tiếng Việt</a></li>
-              <li (click)="changeLanguage('en')"><a class="dropdown-item" ><img style="width: 30px;" class="mr-3" src="../../../assets/img/english_flag.png">Tiếng Anh</a></li>
+              <li (click)="changeLanguage('vi')"><a class="dropdown-item"><img style="width: 30px;" class="mr-3"
+                    src="../../../assets/img/vietnam-lang.png">Tiếng Việt</a></li>
+              <li (click)="changeLanguage('en')"><a class="dropdown-item"><img style="width: 30px;" class="mr-3"
+                    src="../../../assets/img/english_flag.png">Tiếng Anh</a></li>
             </ul>
           </div>
         </li>

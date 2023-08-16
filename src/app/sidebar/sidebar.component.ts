@@ -41,15 +41,15 @@ export class SidebarComponent implements OnInit {
     private store: Store<any>
   ) {
     ROUTES = [
-      {   
-       path: "/calllogs",
-      title: "Thống kê cuộc gọi",
-      icon: "nc-basket",
-      class: "",
-      role: "admin",           
-      params: "",
-      show: true,
-      items: [],
+      {
+        path: "/calllogs",
+        title: "Thống kê cuộc gọi",
+        icon: "fa fa-gear",
+        class: "",
+        role: "admin",
+        params: "",
+        show: true,
+        items: [],
       },
     ];
     this.info = this.localStorage.retrieve("authenticationToken");
@@ -62,16 +62,15 @@ export class SidebarComponent implements OnInit {
     this.store.subscribe((state) => {
       const loadingCompleted = state.common.isLoadCompleted;
       if (loadingCompleted) {
-        this.shopCode = this.localStorage.retrieve("shopcode");       
-          this.setMenu();
-          this.loadData(this.menuItems);
+        this.shopCode = this.localStorage.retrieve("shopcode");
+        this.setMenu();
+        this.loadData(this.menuItems);
       }
     });
   }
 
   setMenu() {
- 
-      this.menuItems =  ROUTES ;
+    this.menuItems = ROUTES;
   }
 
   loadData(list: any): void {

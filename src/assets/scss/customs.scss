@@ -4,7 +4,7 @@ body {
 input:focus {
   outline: none;
 }
-h4{
+h4 {
   margin-bottom: 5px;
 }
 .form-control {
@@ -271,8 +271,8 @@ h4{
   left: 50%;
   transform: translate(-50%, -50%);
   white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .select-custom {
   border-radius: 5px;
@@ -743,103 +743,106 @@ h4{
   }
 }
 
-.don-hang{
+.don-hang {
   padding: 10px;
-  .btn{
+  .btn {
     padding: 8px 10px;
     font-size: 12px;
-  } 
+  }
 }
 
 @media screen and (max-width: 1800px) {
-  body{
+  body {
     font-size: 11px;
   }
-  .navbar{
+  .navbar {
     height: 40px;
     min-height: 40px;
-    .navbar-brand{
+    .navbar-brand {
       font-size: 14px;
     }
-    .text-time{
+    .text-time {
       font-size: 14px !important;
       margin-top: 4px;
     }
-    .navbar-collapse .nav-item a{
+    .navbar-collapse .nav-item a {
       font-size: 11px;
-      .img-lang{
+      .img-lang {
         width: 20px;
         height: 20px;
       }
     }
-    .dropdown{
+    .dropdown {
       margin-top: 4px;
     }
-    .input-group{
+    .input-group {
       margin-top: 4px;
-      .input-group-prepend, input{
+      .input-group-prepend,
+      input {
         height: 32px;
       }
-      
     }
   }
-  .form-control{
+  .form-control {
     font-size: 11px;
   }
-  .main-panel .content{
+  .main-panel .content {
     margin-top: 40px;
   }
-  .card-content-page{
+  .card-content-page {
     padding: 5px;
   }
-  h4{
+  h4 {
     margin-bottom: 0;
     font-size: 14px;
   }
-  .btn{
+  .btn {
     padding: 5px 7px;
     font-size: 11px;
     margin: 3px 1px;
   }
-  .input-search{
+  .input-search {
     margin: 3px !important;
   }
-  .table{
-    td,th{
+  .table {
+    td,
+    th {
       font-size: 11px !important;
       padding: 5px !important;
     }
-    .form-control{
+    .form-control {
       height: 28px !important;
       font-size: 11px;
     }
   }
-  .shop-content{
-    .title-shop{
+  .shop-content {
+    .title-shop {
       font-size: 40px !important;
     }
-    .input-search{
+    .input-search {
       margin: 0 !important;
     }
-    .btn{
+    .btn {
       margin-top: 0px;
       margin-bottom: 0px;
       height: 38px;
     }
   }
-  .sidebar .nav li>a, .off-canvas-sidebar .nav li>a{
+  .sidebar .nav li > a,
+  .off-canvas-sidebar .nav li > a {
     font-size: 11px;
     padding: 5px;
   }
   .content {
-    .boxscroll{
+    .boxscroll {
       min-height: 400px;
     }
-    .boxscroll-2{
+    .boxscroll-2 {
       min-height: 300px;
     }
   }
-  .jqx-widget-content, .jqx-widget-header{
+  .jqx-widget-content,
+  .jqx-widget-header {
     font-size: 11px;
   }
   .btn-trangThai-2 {
@@ -851,124 +854,151 @@ h4{
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
- } 
- .check-box {
-  width: 15px;
-  height: 15px;
   }
-  .don-hang{
-    .input-date{
+  .check-box {
+    width: 15px;
+    height: 15px;
+  }
+  .don-hang {
+    .input-date {
       margin-top: 3px !important;
       height: 25px !important;
     }
-    .btn{
+    .btn {
       padding: 5px;
       font-size: 10px;
       margin: 3px 0px;
     }
-    .tongdoanhso{
+    .tongdoanhso {
       font-size: 13px !important;
     }
-    .tongsoluong{
+    .tongsoluong {
       font-size: 12px !important;
       margin-top: 0px !important;
     }
-    .card-body{
+    .card-body {
       padding-top: 5px;
     }
-    .ghiChu{
+    .ghiChu {
       width: 150px;
       overflow: hidden;
-      white-space: nowrap; 
+      white-space: nowrap;
       text-overflow: ellipsis;
     }
   }
-  .sidebar .logo a.logo-mini, .off-canvas-sidebar .logo a.logo-mini{
+  .sidebar .logo a.logo-mini,
+  .off-canvas-sidebar .logo a.logo-mini {
     width: 35px;
     margin-left: 3px;
   }
-  .sidebar .sidebar-wrapper, .off-canvas-sidebar .sidebar-wrapper, .sidebar, .bootstrap-navbar{
-    width: 60px;
-  }
-  .sidebar .nav i, .off-canvas-sidebar .nav i{
+  .sidebar .nav i,
+  .off-canvas-sidebar .nav i {
     font-size: 16px;
     width: 30px;
   }
-  .sidebar .active>a{
+  .sidebar .active > a {
     width: 40px;
   }
-  .sidebar .active>a .fa-cube{
+  .sidebar .active > a .fa-cube {
     margin-right: 0 !important;
   }
-  .main-panel{
-    padding-left: 60px;
-  }
-  .modal-content{
-    .modal-body{
+  .modal-content {
+    .modal-body {
       padding: 10px !important;
-      h4{
+      h4 {
         font-size: 18px;
       }
-      input, select{
+      input,
+      select {
         height: auto !important;
       }
-      .ng-select-container, .jqx-datetimeinput{
+      .ng-select-container,
+      .jqx-datetimeinput {
         min-height: 30px;
         height: 32px !important;
       }
-      label{
+      label {
         font-size: 11px;
       }
-      .form-group .form-control, .input-group .form-control{
+      .form-group .form-control,
+      .input-group .form-control {
         padding: 8px;
       }
-      .input-search{
-        .input-group-prepend,.form-control{
+      .input-search {
+        .input-group-prepend,
+        .form-control {
           height: 30px !important;
         }
       }
-      .div-center{
+      .div-center {
         margin-top: 0px !important;
         padding: 5px;
       }
-      .td-image .fa{
+      .td-image .fa {
         font-size: 18px;
       }
-      .card{
+      .card {
         margin-bottom: 8px;
       }
-      .title-popup{
+      .title-popup {
         font-size: 16px;
         padding: 6px 35px;
       }
     }
   }
-  .sidebar .logo .simple-text, .off-canvas-sidebar .logo .simple-text{
+  .sidebar .logo .simple-text,
+  .off-canvas-sidebar .logo .simple-text {
     font-size: 14px;
     line-height: 15px;
   }
-  .pagination{margin: 0;}
-  .taoDonHang{
-    .form-group .ng-select .ng-select-container{
+  .pagination {
+    margin: 0;
+  }
+  .taoDonHang {
+    .form-group .ng-select .ng-select-container {
       min-height: 36px !important;
     }
-    .thongTinThem{
+    .thongTinThem {
       height: 108px !important;
     }
-    .btn{
+    .btn {
       padding: 8px 15px !important;
     }
   }
 }
-.taoDonHang{
-  .form-group .ng-select .ng-select-container{
+.taoDonHang {
+  .form-group .ng-select .ng-select-container {
     min-height: 38px;
   }
-  .thongTinThem{
+  .thongTinThem {
     height: 114px;
+  }
+}
+@media only screen and (max-width: 990px) {
+  .navbar-container {
+    > .navbar-nav {
+      width: 215px;
+      background-color: white;
+      float: right;
+      border-radius: 6px;
+      box-shadow: -3px 6px 19px 3px #878787c2;
+      padding: 6px;
+    }
+    .text-time {
+      color: #006eb9;
+    }
+    .nav-item {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      text-align: center !important;
+      color: #006eb9;
+      > a {
+        color: #006eb9 !important;
+      }
+    }
   }
 }
