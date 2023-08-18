@@ -11,13 +11,17 @@ import { DanhMucService } from "app/danhmuc.service";
 import { ConfirmationDialogService } from "app/layouts/confirm-dialog/confirm-dialog.service";
 import { NotificationService } from "app/notification.service";
 import { jqxGridComponent } from "jqwidgets-ng/jqxgrid";
+import { CheckBoxUtil } from "app/shared/util/checkbox-util";
 import $ from "jquery";
 import moment from "moment";
 import { statusLog } from "app/app.constants";
 import { ExcelService } from "app/shared/util/exportExcel.service";
 import { NgxSpinnerService } from "ngx-spinner";
 import dayjs from "dayjs";
-import { DateRanges, TimePeriod } from "ngx-daterangepicker-material/daterangepicker.component";
+import {
+  DateRanges,
+  TimePeriod,
+} from "ngx-daterangepicker-material/daterangepicker.component";
 import { Plugin } from "app/shared/util/plugins";
 @Component({
   selector: "call-logs-cmp",
@@ -28,9 +32,11 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   @ViewChild("gridReference") myGrid: jqxGridComponent;
   source: any;
   plugins = new Plugin();
+
   params = {
     page: 1,
     itemsPerPage: 10,
+    extension: "",
     phone: "",
     calldate: "",
     duration: "",
@@ -41,10 +47,17 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   previousPage = 1;
   totalItems = 0;
   sort = "calldate";
+
   sortType = true;
   isCheckAll = false;
-  thongKe:any = null;
+  thongKe: any = null;
   fields = [
+    {
+      key: "extension",
+      name: "Tài khoản",
+      class: "",
+      style: "",
+    },
     {
       key: "phone",
       name: "Số điện thoại",
@@ -105,20 +118,27 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   // date
   dateRange: TimePeriod = {
     startDate: dayjs(),
-    endDate: dayjs()
+    endDate: dayjs(),
   };
-    date: object;
-    checkSingleSelected = false;
-    checkMultiSelected = false;
-    ranges: DateRanges = {
-        ['Hôm nay']: [dayjs(), dayjs()],
-        ['Hôm qua']: [dayjs().subtract(1, 'days'), dayjs().subtract(1, 'days')],
-        ['7 Ngày qua']: [dayjs().subtract(6, 'days'), dayjs()],
-        ['30 Ngày qua']: [dayjs().subtract(29, 'days'), dayjs()],
-        ['Tháng này']: [dayjs().startOf('month'), dayjs().endOf('month')],
-        ['Tháng trước']: [dayjs().subtract(1, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')],
-        ['3 Tháng trước']: [dayjs().subtract(3, 'month').startOf('month'), dayjs().subtract(1, 'month').endOf('month')]
-    };
+  date: object;
+  checkSingleSelected = false;
+  checkMultiSelected = false;
+  ranges: DateRanges = {
+    ["Hôm nay"]: [dayjs(), dayjs()],
+    ["Hôm qua"]: [dayjs().subtract(1, "days"), dayjs().subtract(1, "days")],
+    ["7 Ngày qua"]: [dayjs().subtract(6, "days"), dayjs()],
+    ["30 Ngày qua"]: [dayjs().subtract(29, "days"), dayjs()],
+    ["Tháng này"]: [dayjs().startOf("month"), dayjs().endOf("month")],
+    ["Tháng trước"]: [
+      dayjs().subtract(1, "month").startOf("month"),
+      dayjs().subtract(1, "month").endOf("month"),
+    ],
+    ["3 Tháng trước"]: [
+      dayjs().subtract(3, "month").startOf("month"),
+      dayjs().subtract(1, "month").endOf("month"),
+    ],
+  };
+
   constructor(
     private dmService: DanhMucService,
     private notificationService: NotificationService,
@@ -130,6 +150,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     this.source = {
       localdata: [],
       datafields: [
+        { name: "extension", type: "Tài khoản" },
         { name: "phone", type: "Số điện thoại" },
         { name: "name", type: "string" },
         { name: "status", type: "string" },
@@ -145,14 +166,12 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       this.myGrid.render();
     });
     this.dateRange = {
-      startDate: dayjs().subtract(6, 'days'),
-      endDate: dayjs().add(1, 'days')
-    };;
+      startDate: dayjs().subtract(6, "days"),
+      endDate: dayjs().add(1, "days"),
+    };
   }
 
-  ngOnInit() {
-  
-  }
+  ngOnInit() {}
   ngAfterViewInit(): void {}
   ngDoCheck() {
     if (
@@ -169,7 +188,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       page: this.params.page - 1,
       size: this.params.itemsPerPage,
       filter: this.filterData(),
-      sort: [this.sort, this.sortType ? "desc" : "asc"]
+      sort: [this.sort, this.sortType ? "desc" : "asc"],
     };
     this.dmService.query(payload, `${this.REQUEST_URL}`).subscribe(
       (res: HttpResponse<any>) => {
@@ -182,11 +201,8 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
             this.params.page = 1;
             this.loadData();
           }
-        }else{
-          this.notificationService.showError(
-            res.body.MESSAGE,
-            "Error message"
-          );
+        } else {
+          this.notificationService.showError(res.body.MESSAGE, "Error message");
         }
       },
       () => {
@@ -195,33 +211,41 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     );
   }
 
-  getThongKe(){
+  getThongKe() {
     var date = JSON.parse(JSON.stringify(this.dateRange));
-    date.endDate = date.endDate.replace("23:59:59","00:00:00");
-    let startDate = moment(date.startDate).format('YYYYMMDD') + '000000';
-    let endDate = moment(date.endDate).format('YYYYMMDD') + "235959";
-    this.dmService.get(this.REQUEST_URL + '/statisticCallLogs?fromCallDate='+startDate+'&toCallDate='+endDate).subscribe(
-      (res: HttpResponse<any>) => {
-        if (res.body.CODE === 200) {
-          const data = res.body.RESULT;
-          if(data.length > 0){
-            this.thongKe = data[0]
-          }else{
-            this.thongKe=null;
+    date.endDate = date.endDate.replace("23:59:59", "00:00:00");
+    let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
+    let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
+    this.dmService
+      .get(
+        this.REQUEST_URL +
+          "/statisticCallLogs?fromCallDate=" +
+          startDate +
+          "&toCallDate=" +
+          endDate
+      )
+      .subscribe(
+        (res: HttpResponse<any>) => {
+          if (res.body.CODE === 200) {
+            const data = res.body.RESULT;
+            if (data.length > 0) {
+              this.thongKe = data[0];
+            } else {
+              this.thongKe = null;
+            }
+          } else {
+            this.notificationService.showError(
+              res.body.MESSAGE,
+              "Error message"
+            );
+            this.thongKe = null;
           }
-        }else{
-          this.notificationService.showError(
-            res.body.MESSAGE,
-            "Error message"
-          );
-          this.thongKe=null;
+        },
+        () => {
+          this.thongKe = null;
+          console.error();
         }
-      },
-      () => {
-        this.thongKe=null;
-        console.error();
-      }
-    );
+      );
   }
 
   loadPage(page: number): void {
@@ -245,10 +269,13 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     const filter = [];
     this.params.page = 1;
     var date = JSON.parse(JSON.stringify(this.dateRange));
-        date.endDate = date.endDate.replace("23:59:59","00:00:00");
-        let startDate = moment(date.startDate).format('YYYYMMDD') + '000000';
-        let endDate = moment(date.endDate).format('YYYYMMDD') + "235959";
-    filter.push(`calldate >= ${startDate};calldate <= ${endDate}` );
+    date.endDate = date.endDate.replace("23:59:59", "00:00:00");
+    let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
+    let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
+    filter.push(`calldate >= ${startDate};calldate <= ${endDate}`);
+    if (this.params.extension) {
+      filter.push(`extension=="*${this.params.extension.trim()}*"`);
+    }
     if (this.params.phone) {
       filter.push(`phone=="*${this.params.phone.trim()}*"`);
     }
@@ -290,7 +317,9 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     this.shopcode = item.id;
   }
   public convertDateTime(date) {
-    return date ? moment(date,"YYYYMMDDhhmmss").format("DD/MM/YYYY hh:mm:ss") : "";
+    return date
+      ? moment(date, "YYYYMMDDhhmmss").format("DD/MM/YYYY hh:mm:ss")
+      : "";
   }
   convertTime(time) {
     const duration = moment(time, "seconds");
@@ -323,21 +352,18 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   exportTOExcel(): void {
     this.spinner.show();
     const payload = {
-      page:0,
+      page: 0,
       size: 100000,
       filter: this.filterData(),
-      sort: [this.sort, this.sortType ? "desc" : "asc"]
+      sort: [this.sort, this.sortType ? "desc" : "asc"],
     };
     this.dmService.query(payload, `${this.REQUEST_URL}`).subscribe(
       (res: HttpResponse<any>) => {
         if (res.body.CODE === 200) {
           const list = res.body.RESULT.content;
           this.exportExcel(list);
-        }else{
-          this.notificationService.showError(
-            res.body.MESSAGE,
-            "Error message"
-          );
+        } else {
+          this.notificationService.showError(res.body.MESSAGE, "Error message");
           this.spinner.hide();
         }
       },
@@ -351,6 +377,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   exportExcel(listExport: any): void {
     const title = "CALL LOGS";
     const header = [
+      "Tài khoản",
       "Số điện thoại",
       "Thời gian",
       "Thời lượng",
@@ -360,13 +387,16 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     ];
     const name = "LS_CALLLOGS_" + moment(new Date()).format("DDMMYYYY");
     const data = [];
-    const column = [25, 25, 20, 20, 45, 15];
+    const column = [10, 15, 25, 20, 20, 45, 15];
     const footer = "F";
-    const align = ["left", "left", "left", "left", "left", "left"];
+    const align = ["left", "left", "left", "left", "left", "left", "left"];
     for (let i = 0; i < listExport.length; i++) {
       const entity = [
+        listExport[i].extension,
         listExport[i].phone,
-        listExport[i].calldate?this.convertDateTime(listExport[i].calldate):'',
+        listExport[i].calldate
+          ? this.convertDateTime(listExport[i].calldate)
+          : "",
         listExport[i].duration,
         listExport[i].status,
         listExport[i].recording,
