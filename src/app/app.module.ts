@@ -31,9 +31,16 @@ import { StoreModule } from "@ngrx/store";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { commonReducer } from "./shared/store/common/common.reducers";
 import { environment } from "environments/environment";
+import { ThemSuaXoaAccountComponent } from "./shared/popup/them-sua-xoa-account/them-sua-xoa-account.component";
+import { SharedModule } from "./shared/popup/shared.module";
 
 @NgModule({
-  declarations: [AppComponent, AdminLayoutComponent, LogiinComponent],
+  declarations: [
+    AppComponent,
+    AdminLayoutComponent,
+    LogiinComponent,
+    ThemSuaXoaAccountComponent,
+  ],
   imports: [
     BrowserAnimationsModule,
     RouterModule.forRoot(AppRoutes, {
@@ -51,6 +58,7 @@ import { environment } from "environments/environment";
     FormsModule,
     NgxWebstorageModule.forRoot({ prefix: "", separator: "" }),
     NgSelectModule,
+    SharedModule,
     jqxGridModule,
     jqxPivotGridModule,
     NgxDaterangepickerMd,
