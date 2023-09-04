@@ -7,7 +7,7 @@
             <h4 class="text-primary mt-2 bold">Call Logs</h4>
           </div>
           <div class="col-12 d-flex call-log-statistic">
-            <button type="button" class="btn bg-success mr-1" (click)="loadData()">
+            <button type="button" class="btn bg-primary mr-1" (click)="loadData()">
               <i class="fa-solid fa-arrows-rotate"></i> Làm mới
             </button>
             <button type="button" class="btn bg-green mr-1" (click)="exportTOExcel()">
@@ -115,7 +115,7 @@
               <tr *ngFor="let item of data, let i=index" [key]="item.id"
                 [ngClass]="{'tr-selected': listSelected.includes(item.id)}">
                 <td class="text-center">
-                  {{(10* (params.page - 1)) + i + 1}}
+                  {{(params.itemsPerPage* (params.page - 1)) + i + 1}}
                 </td>
                 <td>
                   {{item.extension}}
