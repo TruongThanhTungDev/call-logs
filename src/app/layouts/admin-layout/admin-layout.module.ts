@@ -15,6 +15,8 @@ import { ExcelService } from "app/shared/util/exportExcel.service";
 import { NgSelectModule } from "@ng-select/ng-select";
 import { AccountComponent } from "app/pages/account/account.component";
 import { DepartmentComponent } from "app/pages/department/department.component";
+import { WorkComponent } from "app/pages/work/work.component";
+import { DataComponent } from "app/pages/data/data.component";
 @NgModule({
   imports: [
     CommonModule,
@@ -28,7 +30,14 @@ import { DepartmentComponent } from "app/pages/department/department.component";
     ReactiveFormsModule,
     NgxDaterangepickerMd.forRoot(),
   ],
-  declarations: [CallLogsComponent, AccountComponent, DepartmentComponent],
+
+  declarations: [
+    CallLogsComponent,
+    AccountComponent,
+    WorkComponent,
+    DataComponent,
+    DepartmentComponent,
+  ],
   providers: [ExcelService],
 })
 export class AdminLayoutModule {}

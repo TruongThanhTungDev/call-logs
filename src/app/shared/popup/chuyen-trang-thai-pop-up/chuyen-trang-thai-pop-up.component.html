@@ -1,0 +1,113 @@
+<div class="modal-body">
+  <div class="text-center" style="font-size: 18px">
+    <b class="title-popup">Xử lý chuyển trạng thái</b>
+    <button class="btn btn-link" style="position: absolute; right: 0px; top: -7px" (click)="dismiss()">
+      x
+    </button>
+  </div>
+  <div class="mt-2 mb-2">
+    <div class="">
+      <h4 class="bold text-primary">Chọn trạng thái</h4>
+    </div>
+    <div class="form-group form-outline">
+      <select name="" id="" class="form-control" [(ngModel)]="status">
+        <option value="1">Đã tiếp nhận</option>
+        <option value="2">Đang xử lý</option>
+        <option value="3">KNM L1</option>
+        <option value="4">KNM L2</option>
+        <option value="5">KNM L3</option>
+        <option value="6">Thất bại</option>
+          <option *ngIf="!isHideOption" value="8">Đã in đơn</option>
+      </select>
+    </div>
+  </div>
+  <div class="">
+    <h4 class="bold text-primary mt-1">Danh sách công việc</h4>
+  </div>
+  <div>
+    <div class="mt-2">
+      <div class="table-popup" style="height:480px">
+        <table id="" class="table radius m-0 table-hover" width="100%" cellspacing="0" cellpadding="0" border="0">
+          <thead>
+            <tr>
+              <th style="width: 50px;" class="th-f">#</th>
+              <th style="width: 170px;">Trạng thái</th>
+              <th style="width: 150px;">Thời gian</th>
+              <th style="width: 200px;">Khách hàng</th>
+              <th style="width: 120px;">Số điện thoại</th>
+              <th>Sản phẩm</th>
+              <th class="th-fi" style="width: 300px;">Địa chỉ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr [ngClass]="{'tr-selected': selectedCT === i}" *ngFor="let entity of data, index as i"
+              (click)="onSelectedCT(i)" (dblclick)="onEditCT(entity)">
+              <td>
+                {{i+1}}
+              </td>
+              <td>
+                <div *ngIf="entity.status === 0" class="div-trangThai text-white">
+                  <p class="btn-info btn-trangThai-2 ">Mới</p>
+                </div>
+                <div *ngIf="entity.status === 1" class="div-trangThai text-white">
+                  <p class="btn-primary btn-trangThai-2 "><i class="fa fa-file mr-1"></i> Đã tiếp nhận</p>
+                </div>
+                <div *ngIf="entity.status === 2" class="div-trangThai text-white">
+                  <p class="btn-orange btn-trangThai-2 "><i class="fa fa-wrench mr-1"></i> Đang xử lý</p>
+                </div>
+                <div *ngIf="entity.status === 3" class="div-trangThai text-white">
+                  <p class="btn-warning btn-trangThai-2 "><i class="fas fa-phone-slash mr-1"></i> KNM L1</p>
+                </div>
+                <div *ngIf="entity.status === 4" class="div-trangThai text-white">
+                  <p class="btn-warning btn-trangThai-2 "><i class="fas fa-phone-slash mr-1"></i> KNM L2</p>
+                </div>
+                <div *ngIf="entity.status === 5" class="div-trangThai text-white">
+                  <p class="btn-warning btn-trangThai-2 "><i class="fas fa-phone-slash mr-1"></i> KNM L3</p>
+                </div>
+                <div *ngIf="entity.status === 6" class="div-trangThai text-white">
+                  <p class="btn-danger btn-trangThai-2 "><i class="fa fa-times-circle mr-1"></i> Thất bại</p>
+                </div>
+                <div *ngIf="entity.status === 7" class="div-trangThai text-white">
+                  <p class="btn-success btn-trangThai-2 "><i class="fa fa-check-circle mr-1"></i> Thành công</p>
+                </div>
+                <div *ngIf="entity.status === 8" class="div-trangThai text-white">
+                  <p class="btn-purple btn-trangThai-2 "><i class="fa fa-print mr-1"></i> Đã in đơn</p>
+                </div>
+                <div *ngIf="entity.status === 9" class="div-trangThai text-white">
+                  <p class="btn-gray btn-trangThai-2 "><i class="fa fa-files-o mr-1"></i> Trùng</p>
+                </div>
+                <div *ngIf="entity.status === 10" class="div-trangThai text-white">
+                  <p class="btn-danger btn-trangThai-2 "><i class="fa fa-times-circle mr-1"></i> Hàng hoàn</p>
+                </div>
+                <div *ngIf="entity.status === 11" class="div-trangThai text-white">
+                  <p class="btn-danger btn-trangThai-2 "><i class="fa fa-times-circle mr-1"></i> Gửi giao hàng lỗi</p>
+                </div>
+              </td>
+              <td>
+                {{entity.ngay}}
+              </td>
+              <td>
+                {{entity.name}}
+              </td>
+              <td>
+                {{entity.phone}}
+              </td>
+              <td>
+                {{entity.product}}
+              </td>
+              <td>
+                {{entity.street}}
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer mt-2 mb-2">
+  <button type="" class="title-popup" (click)="assignWork()">
+    <i class="fa fa-save mr-1"></i> Lưu thông tin
+  </button>
+</div>

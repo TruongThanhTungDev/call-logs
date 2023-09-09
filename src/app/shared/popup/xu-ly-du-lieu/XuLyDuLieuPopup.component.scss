@@ -1,0 +1,79 @@
+.modal-content {
+  max-width: 500px !important;
+  max-height: calc(100vh - 3.75rem) !important;
+  overflow-y: scroll !important;
+}
+
+.modal-header h4 {
+  font-weight: 600;
+  font-family: "OpenSans-SemiBold", "Segoe UI";
+
+  font-size: 18px;
+}
+h4{
+  font-size: 22px;
+}
+
+.btn-customs2 {
+  // background: #d80303;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 14px;
+  margin: 2px;
+  font-weight: 600;
+  font-family: "OpenSans-SemiBold", "Segoe UI";
+  background: red;
+  padding: 7px 12px;
+  i {
+    font-size: 16px;
+  }
+}
+.btn-customs2:disabled {
+  background: #9da2b7;
+  color: #333333;
+}
+.btn-customs2:hover {
+  background: rgb(231, 49, 49);
+}
+.modal-footer button {
+  text-transform: uppercase;
+}
+th {
+  padding: 0px;
+}
+.form-group label{
+  font-size: 14px;
+  margin-bottom: 0;
+}
+.form-group .btn{
+  margin: 6px 1px;
+}
+.btn-number-left{
+    width: 20%;
+    border-left: 1px solid #006EB9;
+    border-top: 1px solid #006EB9;
+    border-bottom: 1px solid #006EB9;
+    background: #fff;
+    color: #212529;
+}
+.btn-number-right{
+    width: 20%;
+    border-right: 1px solid #006EB9;
+    border-top: 1px solid #006EB9;
+    border-bottom: 1px solid #006EB9;
+    background: #fff;
+    color: #212529;
+}
+.table-popup{
+  td{
+    background-color: #ecf7ff;
+    border-color: #fff;
+  }
+  input{
+    outline:none;
+  }
+}
+.btn-select{
+  border: 1px solid green;
+  box-shadow: #03cf1a 0px 0px 4px 4px;
+}

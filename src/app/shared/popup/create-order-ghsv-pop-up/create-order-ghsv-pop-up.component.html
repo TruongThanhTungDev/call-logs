@@ -1,0 +1,178 @@
+<div class="bg-popup-info">
+  <div class="modal-body">
+    <div class="text-center" style="font-size: 18px">
+      <b class="title-popup">Tạo đơn hàng trên Giao Hàng Siêu Việt</b>
+      <button
+        class="btn btn-link"
+        style="position: absolute; right: 0px; top: -7px"
+        [disabled]="creatingOrder"
+        (click)="dismiss()"
+      >
+        <i class="fa fa-close"></i>
+      </button>
+    </div>
+    <div class="mt-5 mb-2">
+      <div class="row">
+        <div class="mb-1 col-12">
+          <div class="row">
+            <div class="col-6 d-flex">
+              <i
+                class="fas fa-pen fa-lg mr-2"
+                style="max-height: 33px; line-height: 33px"
+              ></i>
+              <h4 style="margin: 0"> Thông tin thêm</h4>
+            </div>
+            <div class="col-2 d-flex">
+              <h5 class="text-primary text-bold">Đơn đã xử lý: {{indexOfOrder}}/{{listEntity.length}}</h5>
+            </div>
+            <div class="col-2 d-flex">
+              <h5 class="text-success text-bold">Đơn thành công: {{successOrder}}</h5>
+            </div>
+            <div class="col-2 d-flex">
+              <h5 class="text-danger text-bold">Đơn thất bại: {{failOrder}}</h5>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group form-outline mb-1 col-2">
+              <label class="text-primary">Chọn cấu hình vận chuyển *</label>
+              <ng-select [(ngModel)]="selectedShippingGroup" name="listSelect" [multiple]="false" [clearable]="true" placeholder="Chọn cấu hình vận chuyển *" (change)="loadDataAccountShipping()">
+                <ng-option *ngFor="let obj of shippingGroupList" [value]="obj">{{obj.name}}</ng-option>
+              </ng-select>
+            </div>
+            <div class="form-group form-outline mb-1 col-2">
+              <label class="text-primary">Chọn tài khoản vận chuyển *</label>
+              <ng-select [(ngModel)]="selectedAccountShipping" name="listSelect" [multiple]="false" [clearable]="true" placeholder="Chọn cấu hình vận chuyển *" (change)="loadDataShop()">
+                <ng-option *ngFor="let obj of accountShippingList" [value]="obj">{{obj.name}}</ng-option>
+              </ng-select>
+            </div>
+            <div class="form-group form-outline mb-1 col-2">
+              <label class="text-primary">Chọn shop *</label>
+              <ng-select [(ngModel)]="selectedShippingShop" name="listSelect" [multiple]="false" [clearable]="true" placeholder="Chọn tài khoản vận chuyển *">
+                <ng-option *ngFor="let obj of shippingShopList" [value]="obj">{{obj.name}}</ng-option>
+              </ng-select>
+            </div>
+            <div class="form-group form-outline mb-1 col-3">
+              <label class="text-primary">Chọn cấu hình giao hàng *</label>
+              <ng-select [(ngModel)]="delivery" name="listSelect" [multiple]="false" [clearable]="true" placeholder="Chọn tài khoản vận chuyển *">
+                <ng-option *ngFor="let obj of deliveries" [value]="obj">{{obj.name}}</ng-option>
+              </ng-select>
+            </div>
+            <div class="form-group form-outline mb-1 col-3">
+              <label class="text-primary">Chọn cấu hình thu hộ *</label>
+              <ng-select [(ngModel)]="collect" name="listSelect" [multiple]="false" [clearable]="true" placeholder="Chọn tài khoản vận chuyển *">
+                <ng-option *ngFor="let obj of collects" [value]="obj">{{obj.name}}</ng-option>
+              </ng-select>
+            </div>
+            <div class="form-group form-outline mb-1 col-12">
+              <label class="text-primary">Ghi chú giao hàng</label>
+              <input type="text" class="form-control" [(ngModel)]="noteShipping">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="">
+      <h4 class="bold text-primary mt-1">Danh sách đơn hàng</h4>
+    </div>
+    <div>
+      <div class="mt-2">
+        <div class="table-popup" style="height: 480px">
+          <table
+            id=""
+            class="table radius m-0 table-hover"
+            width="100%"
+            cellspacing="0"
+            cellpadding="0"
+            border="0"
+          >
+            <thead>
+              <tr>
+                <th style="width: 50px" class="th-f">#</th>
+                <th style="width: 160px">Trạng thái</th>
+                <th style="width: 150px">Thời gian</th>
+                <th style="width: 200px">Khách hàng</th>
+                <th style="width: 120px">Số điện thoại</th>
+                <th >Sản phẩm</th>
+                <th style="width: 300px">Địa chỉ</th>
+                <th class="th-fi" style="width: 300px">Ghi chú giao hàng lỗi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                [ngClass]="{ 'tr-selected': selectedCT === i }"
+                *ngFor="let entity of listEntity; index as i"
+                (click)="onSelectedCT(i)"
+                (dblclick)="onEditCT(entity)"
+              >
+                <td>
+                  {{ i + 1 }}
+                </td>
+                <td>
+                  <div
+                    *ngIf="entity.status === 7"
+                    class="div-trangThai text-white"
+                  >
+                    <p class="btn-success btn-trangThai-2">
+                      <i class="fa fa-check-circle mr-1"></i> Thành công
+                    </p>
+                  </div>
+                  <div
+                    *ngIf="entity.status === 8"
+                    class="div-trangThai text-white"
+                  >
+                    <p class="btn-purple btn-trangThai-2">
+                      <i class="fa fa-print mr-1"></i> Đã in đơn
+                    </p>
+                  </div>
+                  <div
+                    *ngIf="entity.status === 11"
+                    class="div-trangThai text-white"
+                  >
+                    <p class="btn-danger btn-trangThai-2">
+                      <i class="fa fa-times-circle mr-1"></i> Đơn gửi lỗi
+                    </p>
+                  </div>
+                </td>
+                <td>
+                  {{ entity.ngay }}
+                </td>
+                <td>
+                  {{ entity.name }}
+                </td>
+                <td>
+                  {{ entity.phone }}
+                </td>
+                <td>
+                  {{ entity.product }}
+                </td>
+                <td>
+                  {{ entity.street }}
+                </td>
+                <td>
+                  {{entity.noteShipping}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer mt-2 mb-2">
+    <!-- <button type="" class="title-popup" (click)="createOrderGHSV()">
+      <i class="fas fa-shopping-bag mr-1"></i> Tạo đơn hàng
+    </button> -->
+    <button type="" class="btn btn-success" (click)="startOrderGHSV()" [disabled]="creatingOrder">
+      <span *ngIf="!creatingOrder">
+        <i class="fas fa-play"></i> Bắt đầu lên đơn hàng
+      </span>
+      <span *ngIf="creatingOrder">
+        <i class="fas fa-spinner fa-spin"></i>
+      </span>
+    </button>
+    <button type="" class="btn btn-warning" (click)="pauseOrderGHSV()" [disabled]="!creatingOrder">
+      <i class="fas fa-pause"></i> Tạm dừng lên đơn
+    </button>
+  </div>
+</div>

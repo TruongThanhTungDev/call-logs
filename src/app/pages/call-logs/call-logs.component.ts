@@ -294,6 +294,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     if (this.params.recording) {
       filter.push(`recording=="${this.params.recording}"`);
     }
+    filter.push(`status=="ANSWERED";extension>2010`)
     return filter.join(";");
   }
   public checkAll() {
@@ -318,7 +319,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   }
   public convertDateTime(date) {
     return date
-      ? moment(date, "YYYYMMDDhhmmss").format("DD/MM/YYYY hh:mm:ss")
+      ? moment(date, "YYYYMMDDhhmmss").format("DD/MM/YYYY HH:mm:ss")
       : "";
   }
   convertTime(time) {

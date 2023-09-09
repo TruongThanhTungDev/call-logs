@@ -33,6 +33,12 @@ import { commonReducer } from "./shared/store/common/common.reducers";
 import { environment } from "environments/environment";
 import { ThemSuaXoaAccountComponent } from "./shared/popup/them-sua-xoa-account/them-sua-xoa-account.component";
 import { SharedModule } from "./shared/popup/shared.module";
+import { ChuyenTrangThaiPopUpComponent } from "./shared/popup/chuyen-trang-thai-pop-up/chuyen-trang-thai-pop-up.component";
+import { CreateOrderGHSVPopUpComponent } from "./shared/popup/create-order-ghsv-pop-up/create-order-ghsv-pop-up.component";
+import { GiaoViecPopUpComponent } from "./shared/popup/giao-viec-pop-up/giao-viec-pop-up.component";
+import { TongKetDuLieuPopupComponent } from "./shared/popup/tong-ket-du-lieu/TongKetDuLieuPopup.component";
+import { TuDongGiaoViecComponent } from "./shared/popup/tu-dong-giao-viec/tu-dong-giao-viec.component";
+import { XuLyDuLieuPopupComponent } from "./shared/popup/xu-ly-du-lieu/XuLyDuLieuPopup.component";
 
 @NgModule({
   declarations: [
@@ -40,6 +46,12 @@ import { SharedModule } from "./shared/popup/shared.module";
     AdminLayoutComponent,
     LogiinComponent,
     ThemSuaXoaAccountComponent,
+    ChuyenTrangThaiPopUpComponent,
+    CreateOrderGHSVPopUpComponent,
+    GiaoViecPopUpComponent,
+    TongKetDuLieuPopupComponent,
+    TuDongGiaoViecComponent,
+    XuLyDuLieuPopupComponent
   ],
   imports: [
     BrowserAnimationsModule,
