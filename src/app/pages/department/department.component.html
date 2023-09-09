@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-content-page">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-12">
+            <h4 class="text-primary mt-2 bold">Phòng ban</h4>
+          </div>
+        </div>
+        <div class="row justify-content-between align-items-center">
+          <div class="col-6 d-flex justify-content-start">
+            <div class="mr-1">
+              <button class="btn btn-success">
+                <i class="fa fa-plus mr-1"></i>
+                Thêm phòng ban
+              </button>
+            </div>
+            <div class="mr-1">
+              <button class="btn btn-danger">
+                <i class="fa fa-trash mr-1"></i>
+                Xóa
+              </button>
+            </div>
+            <button type="button" class="btn btn-primary d-flex align-items-center">
+              <i class="fa fa-refresh mr-1"></i>
+              Làm mới
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body pt-0 d-flex flex-column">
+        <div class="boxscroll grow">
+          <table id="shop-table" class="table radius m-0 table-hover" style="min-width: 1200px; width: 100%;">
+            <thead>
+              <tr>
+                <th *ngFor="let field of fields" [key]="field.key" [ngStyle]="field.style">
+                  {{ field.label }}
+                </th>
+              </tr>
+            </thead>
+            <tbody *ngIf="data.length">
+              <tr *ngFor="let item of data" [key]="item.id" [ngClass]="{'tr-selected': listSelected.includes(item.id)}"
+                (dblclick)="createAccount(itemSelected)" (click)="selectRow(item)">
+                <td>
+                  {{item.name}}
+                </td>
+                <td>
+                  {{item.note}}
+                </td>
+                <td>
+                  {{item.isDefault ? 'Mặc định' : 'Không'}}
+                </td>
+                <td style="width:10%">
+                  <span *ngIf="item.status == 1" class="badge badge-success">Hoạt động</span>
+                  <span *ngIf="item.status == 0" class="badge badge-danger">Khóa</span>
+                </td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="!data.length">
+              Không có dữ liệu
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer d-flex justify-content-right" style="margin-top: auto;">
+        <nav aria-label="Page navigation">
+          <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="3"
+            [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)">
+          </ngb-pagination>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
