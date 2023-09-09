@@ -1,0 +1,353 @@
+<div class="">
+  <div class="modal-body position-relative" style="max-height: calc(100vh - 8.75rem); overflow: auto">
+    <div class="text-center" style="font-size: 18px">
+      <b class="title-popup">Xử lý thông tin khách hàng</b>
+      <button class="btn btn-link" style="position: absolute; right: 0px; top: -7px" (click)="dismiss()">
+        <i class="fa-solid fa-x" style="font-size: 18px;"></i>
+      </button>
+    </div>
+    <div class="row mt-1">
+      <div class="col-12">
+        <h4 class="bold text-primary mt-3">Thông tin Khách hàng</h4>
+      </div>
+      <div class="col-8">
+        <div class="row m-0 p-0">
+          <div *ngFor="let item of cauHinhDonHang.thongTinKhachHang"
+            class="form-group form-outline mb-1 pl-0 {{item.class}}">
+            <label class="text-primary"><i *ngIf="item.key=='name'" class="fa fa-user mr-1"></i><i
+                *ngIf="item.key=='phone'" class="fa fa-phone mr-1"></i> {{item.label}}</label>
+            <input type="text" name="" placeholder="" class="form-control form-control-lg" [disabled]="disableInput"
+              style="height: 2.5rem; background-color: white" [(ngModel)]="cauHinhDonHang.object[item.key]" />
+          </div>
+        </div>
+        <div class="row m-0 p-0">
+          <div class="col-12 pl-0">
+            <h4 class="bold text-primary mt-2">Thông tin địa chỉ</h4>
+          </div>
+          <div *ngFor="let item of cauHinhDonHang.thongTinDiaChi"
+            class="form-group form-outline mb-1 pl-0 {{item.class}}">
+            <div *ngIf="item.key == 'province'">
+              <label class="text-primary"><i class="fa fa-map-marker mr-1"></i> {{item.label}}</label>
+              <ng-select [items]="provinces" bindLabel="name" bindValue="name" (change)="getDistrict($event)"
+                [(ngModel)]="cauHinhDonHang.object.province" placeholder="Thành phố/Tỉnh" [disabled]="disableInput">
+              </ng-select>
+            </div>
+            <div *ngIf="item.key == 'district'">
+              <label class="text-primary"><i class="fa fa-map-marker mr-1"></i> {{item.label}}</label>
+              <ng-select [items]="districts" bindLabel="name" bindValue="name" (change)="getWard($event)"
+                [(ngModel)]="cauHinhDonHang.object.district" placeholder="Quận/Huyện" [disabled]="disableInput">
+              </ng-select>
+
+            </div>
+            <div *ngIf="item.key == 'ward'">
+              <label class="text-primary"><i class="fa fa-map-marker mr-1"></i> {{item.label}}</label>
+              <ng-select [items]="wards" bindLabel="name" bindValue="name" [(ngModel)]="cauHinhDonHang.object.ward"
+                (change)="onChangeWard($event)" placeholder="Phường/Xã" [disabled]="disableInput">
+              </ng-select>
+            </div>
+            <div *ngIf="(item.key != 'province' && item.key != 'district' && item.key != 'ward')">
+              <label class="text-primary">{{item.label}}</label>
+              <input type="text" name="" placeholder="  " maxlength="" class="form-control form-control-lg"
+                [disabled]="disableInput" style="height: 2.5rem; background-color: white"
+                [(ngModel)]="cauHinhDonHang.object[item.key]" />
+            </div>
+          </div>
+        </div>
+        <div class="row m-0 p-0" *ngIf="cauHinhDonHang.thongTinSanPham.length > 0">
+          <div class="col-12 pl-0">
+            <h4 class="bold text-primary mt-2">Thông tin sản phẩm</h4>
+          </div>
+          <div *ngFor="let item of cauHinhDonHang.thongTinSanPham"
+            class="form-group form-outline mb-1 pl-0 {{item.class}}">
+            <label class="text-primary"><i class="fa fa-archive mr-1"></i> {{item.label}}</label>
+            <input type="text" name="" placeholder="" class="form-control form-control-lg" [disabled]="disableInput"
+              style="height: 2.5rem; background-color: white" [(ngModel)]="cauHinhDonHang.object[item.key]" />
+          </div>
+        </div>
+        <div class="row m-0 p-0" *ngIf="cauHinhDonHang.thongTinGhiChu.length > 0">
+          <div class="col-12 pl-0">
+            <h4 class="bold text-primary mt-2">Thông tin ghi chú</h4>
+          </div>
+          <div *ngFor="let item of cauHinhDonHang.thongTinGhiChu"
+            class="form-group form-outline mb-1 pl-0 {{item.class}}">
+            <label class="text-primary"><i class="fa fa-archive mr-1"></i> {{item.label}}</label>
+            <input type="text" name="" placeholder="" class="form-control form-control-lg" [disabled]="disableInput"
+              style="height: 2.5rem; background-color: white" [(ngModel)]="cauHinhDonHang.object[item.key]" />
+          </div>
+        </div>
+        <div class="row m-0 p-0">
+          <div class="col-12 pl-0">
+            <h4 class="bold text-primary mt-4 mb-2">Thông tin đơn hàng</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-4">
+        <div class="row m-0 p-0 btn-xltt">
+          <div class="form-group form-outline col-6 mb-1 pl-0">
+            <label class="text-primary">Trạng thái</label>
+            <button type="" [ngClass]="{ 'btn-select': data.status == 2 }" class="btn btn-orange w-100"
+              (click)="save(2)" [disabled]="disableInput">
+              <i class="fa fa-wrench mr-1"></i> Đang xử lý
+            </button>
+          </div>
+          <div class="form-group form-outline col-6 mb-1 pr-0">
+            <label class="text-primary"> &nbsp; </label>
+            <button type="" [ngClass]="{ 'btn-select': data.status == 3 }" class="btn btn-warning w-100"
+              (click)="save(3)" [disabled]="disableInput">
+              <i class="fas fa-phone-slash mr-1"></i> KNM L1
+            </button>
+          </div>
+          <div class="form-group form-outline col-6 mb-1 pl-0">
+            <button type="" [ngClass]="{ 'btn-select': data.status == 4 }" class="btn btn-warning w-100"
+              (click)="save(4)" [disabled]="disableInput">
+              <i class="fas fa-phone-slash mr-1"></i> KNM L2
+            </button>
+          </div>
+          <div class="form-group form-outline col-6 mb-1 pr-0">
+            <button type="" [ngClass]="{ 'btn-select': data.status == 5 }" class="btn btn-warning w-100"
+              (click)="save(5)" [disabled]="disableInput">
+              <i class="fas fa-phone-slash mr-1"></i> KNM L3
+            </button>
+          </div>
+          <div class="form-group form-outline col-6 mb-1 pl-0">
+            <button type="" [ngClass]="{ 'btn-select': data.status == 6 }" class="btn btn-danger w-100"
+              (click)="save(6)" [disabled]="disableInput">
+              <i class="fa fa-times-circle mr-1"></i> Thất bại
+            </button>
+          </div>
+          <div class="form-group form-outline col-6 mb-1 pr-0">
+            <button type="" [ngClass]="{ 'btn-select': data.status == 9 }" class="btn btn-gray w-100" (click)="save(9)"
+              [disabled]="disableInput">
+              <i class="fa fa-files-o mr-1"></i> Trùng
+            </button>
+          </div>
+          <div class="form-group form-outline col-6 mb-1 pl-0">
+            <button type="" [ngClass]="{ 'btn-select': data.status == 7 }" class="btn btn-success w-100"
+              (click)="save(7)" [disabled]="disableInput">
+              <i class="fa fa-check-circle mr-1"></i> Thành công
+            </button>
+          </div>
+          <div class="form-group form-outline col-12 mb-1 pl-0">
+            <label class="text-primary">Chọn nhanh</label>
+            <ng-select name="" id="" [(ngModel)]="data.note" style="border: none" [disabled]="disableInput">
+              <ng-option value="KH yêu cầu hủy đơn (Khách muốn được chọn hàng)">KH yêu cầu hủy
+                đơn (Khách muốn được
+                chọn hàng)
+              </ng-option>
+              <ng-option value="KH yêu cầu hủy đơn (Khách muốn bóc tung ra kiểm tra ) ">KH yêu cầu hủy đơn (Khách muốn
+                bóc tung ra kiểm tra )
+              </ng-option>
+              <ng-option value="KH yêu cầu hủy đơn (Khách đi công tác) ">KH yêu cầu hủy đơn (Khách đi công tác)
+              </ng-option>
+              <ng-option value="KH yêu cầu hủy đơn (Khách muốn nhận kiện y hệt video) ">KH yêu cầu hủy đơn (Khách muốn
+                nhận kiện y hệt video)
+              </ng-option>
+              <ng-option value="KH yêu cầu hủy đơn (Khách lâu quá không muốn nhận nữa) ">KH yêu cầu hủy đơn (Khách lâu
+                quá không muốn nhận nữa)
+              </ng-option>
+              <ng-option value="KH yêu cầu hủy đơn (Khách đặt chỗ khác rồi) ">KH yêu cầu hủy đơn (Khách đặt chỗ khác
+                rồi)
+              </ng-option>
+              <ng-option value="KH yêu cầu hủy đơn (Khách không còn nhu cầu) ">KH yêu cầu hủy đơn (Khách không còn nhu
+                cầu)
+              </ng-option>
+              <ng-option value="KH yêu cầu hủy đơn (Khách nhắn tin y/c hủy đơn) ">KH yêu cầu hủy đơn (Khách nhắn tin y/c
+                hủy đơn)
+              </ng-option>
+              <ng-option value="KH yêu cầu hủy đơn (Khách đọc được bình luận xấu) ">KH yêu cầu hủy đơn (Khách đọc được
+                bình luận xấu)
+              </ng-option>
+              <ng-option value="KH không đặt (do đặt nhầm, con nghịch, chỉ bấm vào xem) ">KH không đặt (do đặt nhầm, con
+                nghịch, chỉ bấm vào xem)
+              </ng-option>
+              <ng-option value="KH không đặt (nhầm số ĐT) ">KH không đặt (nhầm số ĐT)
+              </ng-option>
+              <ng-option value="Sai SĐT ">Sai SĐT </ng-option>
+              <ng-option value="Trùng số (Đã lên đơn, đặt cùng đơn trong ngày ) ">Trùng số (Đã lên đơn, đặt cùng đơn
+                trong ngày )
+              </ng-option>
+              <ng-option value="Trùng số (KH đặt lại khiếu nại) ">Trùng số (KH đặt lại khiếu nại)
+              </ng-option>
+              <ng-option value="KNM (Gọi quá 5 ngày) ">KNM (Gọi quá 5 ngày)
+              </ng-option>
+            </ng-select>
+          </div>
+          <div class="form-group form-outline col-6 mb-1 pr-0"></div>
+          <!-- <div class="form-group form-outline col-6 mb-1 mt-2 pl-0">
+          <label class="text-primary">Gọi điện</label>
+          <button type="" class="btn btn-danger w-100">
+            <i class="fa fa-phone mr-1"></i> {{ data ? data.phone : "" }}
+          </button>
+        </div>
+        <div class="form-group form-outline col-6 mb-1 mt-2 pr-0">
+          <label class="text-primary">&nbsp;</label>
+          <button type="" class="btn btn-orange w-100">
+            <i class="fa fa-volume-control-phone"></i> Đang gọi
+          </button>
+        </div> -->
+          <div class="form-group form-outline col-12 mb-1 pr-0">
+            <iframe *ngIf="link" [src]="link" frameborder="0" width="100%" allow="autoplay; camera; microphone"
+              id="callFrame" height="100px"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mt-1">
+      <!-- <div class="form-group form-outline col-12 mb-1">
+        <label class="text-primary"><i class="fa fa-archive mr-1"></i> Sản phẩm</label>
+        <input type="text" name="product" [(ngModel)]="data.product" placeholder="  " maxlength=""
+          class="form-control form-control-lg" style="height: 2.5rem" [disabled]="disableInput" />
+      </div> -->
+      <div class="form-group form-outline col-12 mb-1">
+        <label class="text-primary"><i class="fa fa-archive mr-1"></i> Loại sản phẩm</label>
+        <ng-select [multiple]="false" [(ngModel)]="selectedProductEntity" (change)="onChangeProduct($event)"
+          placeholder="Chọn sản phẩm" [disabled]="disableInput">
+          <ng-option *ngFor="let obj of listProduct" [value]="obj">{{ obj.product ? obj.product.name : "" }} | {{
+            obj.code }} |
+            {{ obj.properties }} | {{ obj ? plugins.formatNumber(obj.price) : 0 }}đ <br />
+            CTB:
+            <span class="text-primary bold">{{ obj.availableQuantity }}</span>
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="form-group table-popup form-outline col-12 mb-1 pt-4" style="max-height: 300px; min-width: 1000px">
+        <table class="table radius m-0 table-hover">
+          <thead>
+            <tr>
+              <th style="width: 35px" class="text-center th-f">
+                <input class="check-box" type="checkbox" [disabled]="disableInput" />
+              </th>
+              <th>Sản phẩm</th>
+              <th style="width: 10%">Mã SP</th>
+              <th style="width: 12%">Mã mẫu mã</th>
+              <th style="width: 15%">Thông tin chi tết</th>
+              <th style="width: 10%; text-align: center">Số lượng</th>
+              <th class="text-right" style="width: 12%">Đơn giá</th>
+              <th class="text-right" style="width: 13%">Thành tiền</th>
+              <th style="width: 50px" class="th-fi"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let obj of listProductType; index as i">
+              <td class="text-center">
+                <input class="check-box" type="checkbox" [disabled]="disableInput" />
+              </td>
+              <td>{{ obj.product.product.name }}</td>
+              <td>{{ obj.product.product.code }}</td>
+              <td>
+                {{ obj.product.code }}
+              </td>
+              <td>
+                {{ obj.product.properties }}
+              </td>
+              <td>
+                <div class="d-flex w-100">
+                  <div class="text-center btn-number-left" (click)="onChangeQuantityClick(i, false)">
+                    -
+                  </div>
+                  <input type="number" [(ngModel)]="listProductType[i].quantity" class="text-center"
+                    style="width: 60%; border: 1px solid #006eb9" min="1" (change)="onChangeQuantity(i)"
+                    [disabled]="disableInput" />
+                  <div class="text-center btn-number-right" (click)="onChangeQuantityClick(i, true)">
+                    +
+                  </div>
+                </div>
+              </td>
+              <td class="text-right">{{ obj ? plugins.formatNumber(obj.product.price) : 0 }}đ</td>
+              <td class="text-right">{{ obj ? plugins.formatNumber(obj.price) : 0 }}đ</td>
+              <td class="text-danger text-center">
+                <i class="fa fa-trash" (click)="removeFromListProductType(i)"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="col-12">
+        <hr style="margin: 5px 0px; border-top: 2px solid #006eb9" />
+      </div>
+      <!-- <div class="form-group form-outline col-12 mb-1 pl-0">
+      <label class="text-primary">Chi phí</label>
+      <input type="number" name="price" [(ngModel)]="data.cost"  placeholder="  " min="0" step="1000"
+        class="form-control form-control-lg" style="height:2.5rem ;" >
+    </div> -->
+      <div class="form-group form-outline col-12 mb-1 table-popup">
+        <table class="table radius m-0 text-center bold">
+          <tbody>
+            <tr>
+              <td style="width: 80%">TỔNG TIỀN</td>
+              <td>{{ toltalProduct ? plugins.formatNumber(toltalProduct) : 0 }}đ</td>
+            </tr>
+            <tr>
+              <td>GIẢM GIÁ</td>
+              <td>
+                <input type="text" name="total" style="border: 0" [(ngModel)]="data.discount" placeholder="  "
+                  (change)="getPrice()" class="text-center" [disabled]="disableInput" />
+              </td>
+            </tr>
+            <tr>
+              <td>PHÍ SHIP</td>
+              <td>
+                <input type="text" name="price" style="border: 0" [(ngModel)]="data.deliveryFee" (change)="getPrice()"
+                  class="text-center" [disabled]="disableInput" />
+              </td>
+            </tr>
+            <tr>
+              <td>CHI PHÍ HOÀN</td>
+              <td>
+                <input type="text" name="price" style="border: 0" [(ngModel)]="this.data.cogs" (change)="getPrice()"
+                  class="text-center" disabled />
+              </td>
+            </tr>
+            <tr>
+              <td class="bg-primary text-white">TỔNG THANH TOÁN</td>
+              <td class="bg-primary text-white">
+                {{ data ? plugins.formatNumber(data.price) : 0 }}đ
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- <div class="form-group form-outline col-4 mb-1">
+      <label class="text-primary"> Lý do </label>
+      <ng-select
+        [multiple]="false"
+        [(ngModel)]="data.reason"
+        placeholder="Lý do"
+      >
+        <ng-option value="KNM">KNM</ng-option>
+        <ng-option value="Sai SĐT">Sai SĐT</ng-option>
+        <ng-option value="KH Không đặt">KH Không đặt</ng-option>
+        <ng-option value="KH yêu cầu huỷ đơn">KH yêu cầu huỷ đơn</ng-option>
+        <ng-option value="KH y/c sỉ-SLL">KH y/c sỉ-SLL</ng-option>
+      </ng-select>
+    </div> -->
+    </div>
+    <table class="table table-bordered" style="width: 100%">
+      <tbody>
+        <tr>
+          <td colspan="4" class="text-center">
+            <qrcode [qrdata]="data.phone" [width]="200" [errorCorrectionLevel]="'M'"></qrcode>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="4">
+            <p (click)="toggleGrid()" class="text-bold">
+              Lịch sử đặt hàng <span class="fa fa-arrow-down"></span>
+            </p>
+            <p *ngIf="showGrid">
+              <jqxGrid #gridReference [width]="'100%'" [source]="dataAdapter" [columns]="columns"
+                [columnsresize]="true">
+              </jqxGrid>
+            </p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="modal-footer mt-2 mb-2">
+    <button type="" class="title-popup" (click)="save(data.status)">
+      <i class="fa fa-save mr-1"></i> Lưu thông tin
+    </button>
+  </div>
+</div>

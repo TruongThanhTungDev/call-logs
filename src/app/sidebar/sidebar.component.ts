@@ -61,6 +61,26 @@ export class SidebarComponent implements OnInit {
         show: true,
         items: [],
       },
+      {
+        path: "/work",
+        title: "Chấm công",
+        icon: "fa fa-user",
+        class: "",
+        role: "admin",
+        params: "",
+        show: true,
+        items: [],
+      },
+      {
+        path: "/data",
+        title: "Order",
+        icon: "fa fa-archive",
+        class: "",
+        role: "admin",
+        params: "",
+        show: true,
+        items: [],
+      },
     ];
     this.info = this.localStorage.retrieve("authenticationToken");
     this.shop = this.localStorage.retrieve("shop");

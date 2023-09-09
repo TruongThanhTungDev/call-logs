@@ -1,0 +1,366 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="card card-content-page don-hang">
+      <div class="card-header">
+        <div class="row">
+          <div class="col-12 col-sm-8">
+            <button *ngIf="!isShowButton" type="button" class="btn btn-primary mr-1" (click)="assignWork()"
+              [hidden]="this.info.role === 'user'" [disabled]="listCheck.length === 0">
+              Giao việc ({{plugins.formatNumber(listCheck.length)}})
+            </button>
+            <button *ngIf="!isShowButton" type="" class="btn btn-orange mr-1" (click)="openAutoAssignWork()"
+              [hidden]="this.info.role === 'user'">
+              Giao việc nhanh
+            </button>
+            <button type="" class="btn btn-success mr-1" (click)="loadDataExcel()" [hidden]="this.info.role === 'user'">
+              <i class="fa fa-file-excel-o mr-1"></i> Xuất Excel
+            </button>
+            <button type="" class="btn btn-primary mr-1" (click)="openChangeStatus()"
+              [disabled]="checkStatusActive || listCheck.length === 0">
+              <i class="fa fa-cubes mr-1"></i> Thao tác ({{plugins.formatNumber(listCheck.length)}})
+            </button>
+            <button type="" class="btn btn-primary mr-1" (click)="openPortalCall()"
+              [hidden]="this.info.role === 'admin'" [disabled]="checkStatusActive">
+              Mở portal call
+            </button>
+          </div>
+          <div class="col-12 col-sm-4 text-right">
+            <button type="" class="btn btn-primary mr-1" (click)="refresh()" [disabled]="checkStatusActive">
+              <i class="fa fa-refresh mr-1"></i> Làm mới
+            </button>
+            <input class="form-control pl-3 input-date" style="
+                margin-top: 10px;
+                width: 60%;
+                float: right;
+                height: 33px;
+                border-radius: 5px;
+                border: 1px solid #006eb9;
+              " type="text" ngxDaterangepickerMd [(ngModel)]="dateRange" opens="left" [ranges]="ranges"
+              [locale]="{format: 'DD/MM/YYYY'}" [showCustomRangeLabel]="true" [alwaysShowCalendars]="true"
+              (ngModelChange)="loadData()" />
+          </div>
+          <div class="col-12 text-center btn-status-data">
+            <button *ngIf="!isUser" type="" class="btn btn-info btn-sm mr-1"
+              [ngClass]="{ 'btn-selected': ftTrangThai === 0 }" (click)="getByStatus(0)" [disabled]="checkStatusActive">
+              Mới ({{ countList[0] }})
+            </button>
+            <button type="" class="btn btn-primary btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 1 }"
+              (click)="getByStatus(1)" [disabled]="checkStatusActive">
+              <i class="fa fa-file mr-1"></i> Đã tiếp nhận ({{ countList[1] }})
+            </button>
+            <button type="" class="btn btn-orange btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 2 }"
+              (click)="getByStatus(2)" [disabled]="checkStatusActive">
+              <i class="fa fa-wrench mr-1"></i> Đang xử lý ({{ countList[2] }})
+            </button>
+            <button type="" class="btn btn-warning btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 3 }"
+              (click)="getByStatus(3)" [disabled]="checkStatusActive">
+              <i class="fas fa-phone-slash mr-1"></i> KNM L1 ({{
+              countList[3]
+              }})
+            </button>
+            <button type="" class="btn btn-warning btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 4 }"
+              (click)="getByStatus(4)" [disabled]="checkStatusActive">
+              <i class="fas fa-phone-slash mr-1"></i> KNM L2 ({{
+              countList[4]
+              }})
+            </button>
+            <button type="" class="btn btn-warning btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 5 }"
+              (click)="getByStatus(5)" [disabled]="checkStatusActive">
+              <i class="fas fa-phone-slash mr-1"></i> KNM L3 ({{
+              countList[5]
+              }})
+            </button>
+            <button type="" class="btn btn-danger btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 6 }"
+              (click)="getByStatus(6)" [disabled]="checkStatusActive">
+              <i class="fa fa-times-circle mr-1"></i> Thất bại ({{
+              countList[6]
+              }})
+            </button>
+            <button type="" class="btn btn-gray btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 9 }"
+              (click)="getByStatus(9)" [disabled]="checkStatusActive">
+              <i class="fa fa-files-o mr-1"></i> Trùng ({{ countList[9] }})
+            </button>
+          </div>
+          <div class="col-12 text-center" *ngIf="this.info && this.info.role === 'admin'">
+            <p class="text-primary mb-0 tongdoanhso" style="font-size: 20px">
+              Tổng số đơn: <span class="bold">{{ plugins.formatNumber(tongDon) }}</span>&nbsp;&nbsp;&nbsp;&nbsp;Doanh
+              số:
+              <span class="bold">{{
+                revenue
+                }}</span>
+            </p>
+            <p class="text-primary mb-0 mt-2 tongsoluong" style="font-size: 16px">
+              TLC tổng:
+              <span class="bold">{{
+                plugins.formatNumber(((countList[7] + countList[8] + countGiaoHang) / tongDon) * 100)
+                }}%</span>, TLC đã xử lý:
+              <span class="bold">{{
+                plugins.formatNumber(((countList[7] + countList[8] + countGiaoHang) /
+                (tongDon - countList[0] - countList[1])) *
+                100)
+                }}%</span>, TLC duy nhất:
+              <span class="bold">{{
+                plugins.formatNumber(((countList[7] + countList[8] + countGiaoHang) / (tongDon - countList[9])) *
+                100)
+                }}%</span>, TLC duy nhất đã xử lý:
+              <span class="bold">{{
+                plugins.formatNumber(((countList[7] + countList[8] + countGiaoHang) /
+                (tongDon - countList[0] - countList[1] - countList[9])) *
+                100)
+                }}%</span>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="boxscroll">
+          <table id="" class="table radius m-0 table-hover" style="min-width: 1200px" width="100%" cellspacing="0"
+            cellpadding="0" border="0">
+            <thead>
+              <tr>
+                <th class="th-f" style="width: 20px">STT</th>
+                <th (click)="sortData('status')" style="width: 160px">
+                  Trạng thái <i class="fa fa-sort"></i>
+                </th>
+                <th style="width: 50px" class="text-center">
+                  <input class="check-box" type="checkbox" (change)="checkAll()" [(ngModel)]="checkAllValues"
+                    name="checkAllValues" />
+                </th>
+                <th (click)="sortData('date')" style="width: 150px;">
+                  Thời gian <i class="fa fa-sort"></i>
+                </th>
+                <th>Khách hàng</th>
+                <th>Số điện thoại</th>
+                <th (click)="sortData('product')">
+                  Sản phẩm <i class="fa fa-sort"></i>
+                </th>
+                <th (click)="sortData('account.fullName')">
+                  Nhân viên <i class="fa fa-sort"></i>
+                </th>
+                <th (click)="sortData('price')">
+                  Doanh số <i class="fa fa-sort"></i>
+                </th>
+                <th>
+                  Mã vận chuyển
+                </th>
+                <th>
+                  Tài khoản vận chuyển
+                </th>
+                <th class="th-fi">
+                  Người lên đơn
+                </th>
+              </tr>
+              <tr class="table-search">
+                <th>#</th>
+                <th class="text-center">
+                  <select class="form-control" [(ngModel)]="ftTrangThai" (change)="loadData()">
+                    <option *ngIf="!isUser" value="0,1,2,3,4,5,6,9">Tất cả</option>
+                    <option *ngIf="!isUser" value="0">Mới</option>
+                    <option value="1">Đã tiếp nhận</option>
+                    <option value="2">Đang xử lý</option>
+                    <option value="3">KNM L1</option>
+                    <option value="4">KNM L2</option>
+                    <option value="5">KNM L3</option>
+                    <option value="6">Thất bại</option>
+                    <option value="9">Trùng</option>
+                  </select>
+                </th>
+                <th></th>
+                <th>
+                  <input type="date" [(ngModel)]="ftThoiGian" class="form-control form-control-sm"
+                    placeholder="Tìm kiếm" />
+                </th>
+                <th>
+                  <input type="text" [(ngModel)]="ftKhachHang" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
+                </th>
+                <th>
+                  <input type="text" [(ngModel)]="ftSdt" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
+                </th>
+                <th>
+                  <input type="text" [(ngModel)]="ftSanPham" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
+                </th>
+                <th>
+                  <input type="text" [(ngModel)]="ftNhanVien" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
+                </th>
+                <th>
+                  <input type="number" [(ngModel)]="ftDoanhSo" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
+                </th>
+                <th>
+                  <input type="text" [(ngModel)]="ftMaVanChuyen" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
+                </th>
+                <th>
+                  <input type="text" [(ngModel)]="ftTaiKhoanVC" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
+                </th>
+                <th>
+                  <input type="text" [(ngModel)]="ftNguoiVC" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr [ngClass]="{ 'tr-selected': selectedId === entity.id }" *ngFor="let entity of listEntity; index as i"
+                (click)="onRowSelect(entity)" (dblclick)="onRowdblclick(entity)">
+                <td>
+                  {{(page-1)*itemsPerPage + i + 1}}
+                </td>
+                <td>
+                  <div *ngIf="entity.status === 0" class="div-trangThai text-white">
+                    <p class="btn-info btn-trangThai-2">Mới</p>
+                  </div>
+                  <div *ngIf="entity.status === 1" class="div-trangThai text-white">
+                    <p class="btn-primary btn-trangThai-2">
+                      <i class="fa fa-file mr-1"></i> Đã tiếp nhận
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 2" class="div-trangThai text-white">
+                    <p class="btn-orange btn-trangThai-2">
+                      <i class="fa fa-wrench mr-1"></i> Đang xử lý
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 3" class="div-trangThai text-white">
+                    <p class="btn-warning btn-trangThai-2">
+                      <i class="fas fa-phone-slash mr-1"></i> KNM L1
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 4" class="div-trangThai text-white">
+                    <p class="btn-warning btn-trangThai-2">
+                      <i class="fas fa-phone-slash mr-1"></i> KNM L2
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 5" class="div-trangThai text-white">
+                    <p class="btn-warning btn-trangThai-2">
+                      <i class="fas fa-phone-slash mr-1"></i> KNM L3
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 6" class="div-trangThai text-white">
+                    <p class="btn-danger btn-trangThai-2">
+                      <i class="fa fa-times-circle mr-1"></i> Thất bại
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 7" class="div-trangThai text-white">
+                    <p class="btn-success btn-trangThai-2">
+                      <i class="fa fa-check-circle mr-1"></i> Thành công
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 8" class="div-trangThai text-white">
+                    <p class="btn-purple btn-trangThai-2">
+                      <i class="fa fa-print mr-1"></i> Đã in đơn
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 9" class="div-trangThai text-white">
+                    <p class="btn-gray btn-trangThai-2">
+                      <i class="fa fa-files-o mr-1"></i> Trùng
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 10" class="div-trangThai text-white">
+                    <p class="btn-danger btn-trangThai-2">
+                      <i class="fa fa-times-circle mr-1"></i> Hàng hoàn
+                    </p>
+                  </div>
+                  <div *ngIf="entity.status === 11" class="div-trangThai text-white">
+                    <p class="btn-danger btn-trangThai-2">
+                      <i class="fa fa-times-circle mr-1"></i> Đơn gửi lỗi
+                    </p>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <input class="check-box" type="checkbox" [id]="'check' + i" (change)="checkOnIndex(i)"
+                    [(ngModel)]="checkBoxValues[i]" />
+                </td>
+                <td>{{ entity.ngay }}</td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.phone }}</td>
+                <td>{{ entity.product }}</td>
+                <td>{{ entity.nhanvien }}</td>
+                <td>
+                  {{ entity ? plugins.formatNumber(entity.price) : "" }}{{ entity.price ? "đ" : "" }}
+                </td>
+                <td>
+                  {{ entity.shippingCode}}
+                </td>
+                <td>
+                  {{ entity.shippingAccount?entity.shippingAccount.name:''}}
+                </td>
+                <td>
+                  {{ entity.shippingCreator?entity.shippingCreator.userName:''}}
+                </td>
+              </tr>
+              <tr *ngIf="listEntity.length === 0">
+                <td class="bg-gray" colspan="12">Không có dữ liệu!</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer d-flex justify-content-right">
+        <select name="" id="" class="select-itemsPage" [(ngModel)]="itemsPerPage" (change)="loadData()"
+          style="float: left">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="500">500</option>
+          <option value="1000">1000</option>
+          <option value="5000">5000</option>
+        </select>
+        <nav aria-label="Page navigation">
+          <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="3"
+            [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)">
+          </ngb-pagination>
+        </nav>
+      </div>
+      <div class="col-lg-12 table-responsive" #TABLE #table style="display: none">
+        <div style="padding-bottom: 10px; padding-top: 10px">
+          <div class="row">
+            <div class="col-sm-12">
+              <button (click)="loadDataExcel()" class="btn btn-success">
+                ExportTOExcel
+              </button>
+            </div>
+          </div>
+        </div>
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th>Mã</th>
+              <th>Ngày</th>
+              <th>Tên KH</th>
+              <th>SĐT</th>
+              <th>Sản phẩm</th>
+              <th>Số lượng</th>
+              <th>Giá</th>
+              <th>Địa chỉ</th>
+              <th>Xã</th>
+              <th>Huyện</th>
+              <th>Tỉnh</th>
+              <th>Ghi chú</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let obj of listEntity">
+              <td>{{ obj.id }}</td>
+              <td>{{ obj.date ? formatDate(obj.date) : "" }}</td>
+              <td>{{ obj.name }}</td>
+              <td>{{ obj.phone }}</td>
+              <td>{{ obj.productNames }}</td>
+              <td>{{ obj.quantity }}</td>
+              <td>{{ obj.price }}</td>
+              <td>{{ obj.street }}</td>
+              <td>{{ obj.ward }}</td>
+              <td>{{ obj.district }}</td>
+              <td>{{ obj.state }}</td>
+              <td>{{ obj.message }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
