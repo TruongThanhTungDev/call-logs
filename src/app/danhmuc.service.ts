@@ -6,15 +6,10 @@ import { Observable, Subject } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export class DanhMucService {
-  // public resourceUrl = 'https://dhftech.store';
-  // public resourceUrl = 'https://adsxanhgroup.store';
-  // public resourceUrl = 'https://crm.adsxanh-market.com';
-  // public resourceUrl = 'https://adsxanh-market.com';
-
   public resourceAddress = "https://api.mysupership.vn/v1/partner/areas";
   public resourceGHSV = "https://api.ghsv.vn/v1";
 
-  public resourceUrl = 'https://adsxanhtech-test.store';
+  public resourceUrl = "http://103.75.184.157:8080";
   // public resourceUrl = "http://localhost:8080";
   private subject = new Subject<any>();
   constructor(protected http: HttpClient) {}
@@ -120,10 +115,7 @@ export class DanhMucService {
     });
   }
 
-  
-  get(
-    requestUrl: any,
-  ): Observable<HttpResponse<any>> {
+  get(requestUrl: any): Observable<HttpResponse<any>> {
     return this.http.get<any>(this.resourceUrl + requestUrl, {
       observe: "response",
     });

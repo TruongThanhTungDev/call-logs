@@ -5,7 +5,32 @@ import { Component } from "@angular/core";
   templateUrl: "./department.component.html",
 })
 export class DepartmentComponent {
-  fields: any[] = [];
+  fields: any[] = [
+    {
+      label: "Mã phòng ban",
+      key: "code",
+      class: "",
+      style: "width: 15%",
+    },
+    {
+      label: "Tên phòng ban",
+      key: "name",
+      class: "",
+      style: "width: 45%",
+    },
+    {
+      label: "Trạng thái",
+      key: "status",
+      class: "",
+      style: "width: 15%",
+    },
+    {
+      label: "Ghi chú",
+      key: "note",
+      class: "",
+      style: "width: 25%",
+    },
+  ];
   data: any[] = [];
   totalItems = 0;
   page = 0;
