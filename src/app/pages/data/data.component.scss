@@ -3,3 +3,21 @@
 //         padding: 8px 10px !important;
 //     }
 // }
+@media only screen and (max-width: 694px) {
+  .btn-right-container,.btn-left-container {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  .btn-right-container {
+    display: flex;
+    .input-date {
+      float: none!important;
+    }
+  }
+  .ng-star-inserted {
+    >.md-drppicker {
+      min-width: 200px!important;
+      left: 30%!important;
+    }
+  }
+}
