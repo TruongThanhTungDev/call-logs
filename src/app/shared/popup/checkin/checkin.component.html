@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <div style="font-size: 24px;">
+        <p class="m-0">Thông tin checkin</p>
+        <button class="btn btn-link" style="position: absolute;right: 0px;top: -7px;" (click)="dismiss()">x</button>
+    </div>
+</div>
+<div class="modal-body row pl-5 pr-5 pt-4 pb-4">
+    <table class="table table-bordered mb-0">
+        <tr>
+            <td style="width:30%" class="bold">Check In: </td>
+            <td>{{this.time}}</td>
+        </tr>
+        <tr>
+            <td style="width:30%" class="bold">Shop code: </td>
+            <td> <select [(ngModel)]="shopCode" class="form-control select-custom pl-3 ">
+                    <option *ngFor="let obj of shopList" [value]="obj.code">{{obj.code}}</option>
+                </select></td>
+        </tr>
+        <tr>
+            <td style="width:30%" class="bold">Line: </td>
+            <td> <select [(ngModel)]="line" class="form-control select-custom pl-3 ">
+                    <option [value]=0 selected>Trống</option>
+                    <option *ngFor="let obj of lineList" [value]="obj.id">Line-{{obj.id}}</option>
+                </select></td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+    <button (click)="save()" type="" class="btn btn-primary">Xác nhận</button>
+    <button (click)="dismiss()" type="button" class="btn btn-danger">Hủy</button>
+</div>

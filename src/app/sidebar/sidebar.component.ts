@@ -52,29 +52,36 @@ export class SidebarComponent implements OnInit {
         items: [],
       },
       {
-        path: "/account",
+        path: "/notF",
         title: "Nhân viên",
         icon: "fa fa-user",
         class: "",
-        role: "admin",
+        role: "user",
         params: "",
         show: true,
-        items: [],
+        items: [
+          {
+            path: "/work",
+            title: "Chấm công",
+            icon: "nc-basket",
+            class: "",
+            role: "user",
+            params: "",
+          },
+          {
+            path: "/account",
+            title: "Nhân viên",
+            icon: "nc-basket",
+            class: "",
+            role: "user",
+            params: {},
+          },
+        ],
       },
       {
         path: "/department",
         title: "Phòng ban",
         icon: "fa fa-briefcase",
-        class: "",
-        role: "admin",
-        params: "",
-        show: true,
-        items: [],
-      },
-      {
-        path: "/work",
-        title: "Chấm công",
-        icon: "fa fa-user",
         class: "",
         role: "admin",
         params: "",
@@ -93,49 +100,17 @@ export class SidebarComponent implements OnInit {
       },
     ];
     this.info = this.localStorage.retrieve("authenticationToken");
-    this.shop = this.localStorage.retrieve("shop");
-    this.dmService.getClickEvent().subscribe(() => {
-      this.shop = this.localStorage.retrieve("shop");
-    });
   }
   ngOnInit() {
     this.store.subscribe((state) => {
       const loadingCompleted = state.common.isLoadCompleted;
       if (loadingCompleted) {
-        this.shopCode = this.localStorage.retrieve("shopcode");
         this.setMenu();
-        this.loadData(this.menuItems);
       }
     });
   }
 
   setMenu() {
     this.menuItems = ROUTES;
-  }
-
-  loadData(list: any): void {
-    list.forEach((e) => {
-      if (e.params) {
-        e.params.shopCode = this.shopCode;
-      }
-      if (e.items.length > 0) {
-        for (let i = 0; i < e.items.length; i++) {
-          if (e.items[i].params) {
-            e.items[i].params.shopCode = this.shopCode;
-          }
-        }
-      }
-    });
-  }
-  public loadShopList() {
-    this.dmService.getOption(null, this.SHOP_URL, `?status=1`).subscribe(
-      (res: HttpResponse<any>) => {
-        this.shopInfo = res.body.RESULT[0];
-        this.setMenu();
-      },
-      () => {
-        console.error();
-      }
-    );
   }
 }

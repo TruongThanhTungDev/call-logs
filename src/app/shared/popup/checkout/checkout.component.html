@@ -1,0 +1,34 @@
+<div class="modal-header">
+    <div style="font-size: 24px;">
+        <p class="m-0">Thông tin checkout</p>
+        <button class="btn btn-link" style="position: absolute;right: 0px;top: -7px;" (click)="dismiss()">x</button>
+    </div>
+</div>
+<div class="modal-body row pl-5 pr-5 pt-4 pb-4">
+    <table class="table table-bordered mb-0">
+        <tr>
+            <td style="width:30%" class="bold">Check In: </td>
+            <td>{{data.timeIn}}</td>
+        </tr>
+        <tr>
+            <td class="bold">Check Out:</td>
+            <td>{{checkOut}}</td>
+        </tr>
+        <tr>
+            <td class="bold">Tổng đơn:</td>
+            <td>{{data.totalOrder}}</td>
+        </tr>
+        <tr>
+            <td class="bold">Đơn xử lý</td>
+            <td>{{data.processedOrder}}</td>
+        </tr>
+        <tr>
+            <td class="bold">Đơn hoàn thành:</td>
+            <td>{{data.successOrder}}</td>
+        </tr>
+    </table>
+</div>
+<div class="modal-footer">
+    <button (click)="save()" type="" class="btn btn-primary">Xác nhận</button>
+    <button (click)="dismiss()" type="button" class="btn btn-danger">Hủy</button>
+</div>
