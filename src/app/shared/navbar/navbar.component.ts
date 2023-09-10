@@ -68,7 +68,7 @@ export class NavbarComponent implements OnInit {
     //   this.sidebarClose();
     // });
 
-    // this.getAccountStatus();
+    this.getAccountStatus();
     this.getTime();
   }
 
@@ -97,18 +97,14 @@ export class NavbarComponent implements OnInit {
   }
   getAccountStatus(): void {
     this.disableToggle = true;
-    const entity = {
-      nhanVienId: this.info.id,
-    };
     this.store.dispatch({
       type: "SET_LOADING_COMPLETED",
       payload: false,
     });
-    this.dmService
-      .postOption(entity, "/api/v1/work/checkWorkActive", "")
-      .subscribe(
-        (res: HttpResponse<any>) => {
-          if (res.body.CODE === 200) {
+    this.dmService.post("/api/v1/work/checkActive", "").subscribe(
+      (res: any) => {
+        if (res.statusCode === 200) {
+          if (res.result) {
             this.checkWorkActive = true;
             this.local.store("check_work_active", true);
             this.store.dispatch({
@@ -122,18 +118,25 @@ export class NavbarComponent implements OnInit {
               payload: true,
             });
           }
-          this.disableToggle = false;
-        },
-        () => {
+        } else {
           this.checkWorkActive = false;
-          this.disableToggle = false;
-          console.error();
           this.store.dispatch({
             type: "SET_LOADING_COMPLETED",
             payload: true,
           });
         }
-      );
+        this.disableToggle = false;
+      },
+      () => {
+        this.checkWorkActive = false;
+        this.disableToggle = false;
+        console.error();
+        this.store.dispatch({
+          type: "SET_LOADING_COMPLETED",
+          payload: true,
+        });
+      }
+    );
   }
   sidebarToggle() {
     if (this.sidebarVisible === false) {
