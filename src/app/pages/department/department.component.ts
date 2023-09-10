@@ -16,9 +16,9 @@ import { NgxSpinnerService } from "ngx-spinner";
 export class DepartmentComponent implements OnInit {
   REQUEST_URL = "/api/v1/department";
   deparmentName: "";
- 
+
   selectedEntity: any;
-  listSelected: any[]=[];
+  listSelected: any[] = [];
   fields: any[] = [
     {
       label: "Mã phòng ban",
@@ -45,13 +45,13 @@ export class DepartmentComponent implements OnInit {
       style: "width: 25%",
     },
   ];
-  data= [];
+  data = [];
   params = {
     page: 1,
     itemsPerPage: 10,
-    name:"",
-    code:"",
-    status:"",
+    name: "",
+    code: "",
+    status: "",
   };
   previousPage = 1;
   totalItems = 0;
@@ -67,7 +67,7 @@ export class DepartmentComponent implements OnInit {
   }
   public filterData() {
     const filter = [];
-    this.params.page=1;
+    this.params.page = 1;
     filter.push("id>0");
     if (this.params.name) {
       filter.push(`name=="*${this.params.name.trim()}*"`);
@@ -78,7 +78,7 @@ export class DepartmentComponent implements OnInit {
     if (this.params.code) {
       filter.push(`code=="*${this.params.code.trim()}*"`);
     }
-    
+
     return filter.join(";");
   }
   loadData() {
@@ -101,7 +101,6 @@ export class DepartmentComponent implements OnInit {
         console.error();
       }
     );
-
   }
   loadPage(page: number): void {
     if (page !== this.previousPage) {
@@ -111,7 +110,7 @@ export class DepartmentComponent implements OnInit {
   }
 
   editDepartment(department: any) {
-    this.selectedEntity=department;
+    this.selectedEntity = department;
     const modalRef = this.modalService.open(DepartmentPopup, {
       size: "lg",
       backdrop: "static",
@@ -149,29 +148,27 @@ export class DepartmentComponent implements OnInit {
       .then((confirmed: any) => {
         if (confirmed) {
           this.spinner.show();
-          this.dmService
-            .delete(id, this.REQUEST_URL)
-            .subscribe(
-              (res: HttpResponse<any>) => {
-                if (res.body.statusCode === 200) {
-                  this.spinner.hide();
-                  this.notificationService.showSuccess(
-                    "Xóa thành công",
-                    "Success"
-                  );
-                  setTimeout(() => {
-                    this.loadData();
-                  }, 100);
-                } else {
-                  this.spinner.hide();
-                  this.notificationService.showError("Xóa thất bại", "Fail");
-                }
-              },
-              () => {
+          this.dmService.delete(id, this.REQUEST_URL).subscribe(
+            (res: HttpResponse<any>) => {
+              if (res.body.statusCode === 200) {
                 this.spinner.hide();
-                console.error();
+                this.notificationService.showSuccess(
+                  "Xóa thành công",
+                  "Success"
+                );
+                setTimeout(() => {
+                  this.loadData();
+                }, 100);
+              } else {
+                this.spinner.hide();
+                this.notificationService.showError("Xóa thất bại", "Fail");
               }
-            );
+            },
+            () => {
+              this.spinner.hide();
+              console.error();
+            }
+          );
         }
       })
       .catch(() => console.error());
@@ -180,18 +177,22 @@ export class DepartmentComponent implements OnInit {
     const index = this.data.findIndex((el: any) => el.id === item.id);
     if (index !== -1) {
       this.listSelected.splice(index, 1);
-      this.selectedEntity=item;
+      this.selectedEntity = item;
     } else {
       this.listSelected.push(item);
-      this.selectedEntity=null;
+      this.selectedEntity = null;
     }
   }
   reset() {
-    this.selectedEntity="";
+    this.selectedEntity = "";
     this.loadData();
   }
 
-  selectItem(deparment:any){
-    this.selectedEntity=deparment;
+  selectItem(department: any) {
+    if (this.selectedEntity && department.id === this.selectedEntity.id) {
+      this.selectedEntity = null;
+    } else {
+      this.selectedEntity = department;
+    }
   }
 }
