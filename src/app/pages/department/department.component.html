@@ -60,7 +60,7 @@
               </tr>
             </thead>
             <tbody *ngIf="data.length">
-              <tr *ngFor="let item of data;index as i" [key]="item.id" (dblclick)="editDepartment(selectedEntity)"
+              <tr *ngFor="let item of data;index as i" [key]="item.id" (dblclick)="editDepartment(item)"
                 [class]="{'tr-selected': selectedEntity && selectedEntity.id === item.id}" (click)="selectItem(item)">
                 <td>
                   {{item.code}}
