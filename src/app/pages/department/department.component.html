@@ -16,7 +16,8 @@
               </button>
             </div>
             <div class="mr-1">
-              <button class="btn btn-danger" (click)="handleDeleteEDepartment(selectedEntity)">
+              <button class="btn btn-danger" (click)="handleDeleteEDepartment(selectedEntity)"
+                [disabled]="!selectedEntity">
                 <i class="fa fa-trash mr-1"></i>
                 Xóa
               </button>
