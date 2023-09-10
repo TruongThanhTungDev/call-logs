@@ -16,7 +16,9 @@ import { NgxSpinnerService } from "ngx-spinner";
 export class DepartmentComponent implements OnInit {
   REQUEST_URL = "/api/v1/department";
   deparmentName: "";
+ 
   selectedEntity: any;
+  listSelected: any[]=[];
   fields: any[] = [
     {
       label: "Mã phòng ban",
@@ -44,9 +46,15 @@ export class DepartmentComponent implements OnInit {
     },
   ];
   data= [];
+  params = {
+    page: 1,
+    itemsPerPage: 10,
+    name:"",
+    code:"",
+    status:"",
+  };
+  previousPage = 1;
   totalItems = 0;
-  page = 0;
-  itemsPerPage = 0;
   constructor(
     private dmService: DanhMucService,
     private notificationService: NotificationService,
@@ -59,23 +67,31 @@ export class DepartmentComponent implements OnInit {
   }
   public filterData() {
     const filter = [];
+    this.params.page=1;
     filter.push("id>0");
-    // if (this.deparmentName) {
-    //   filter.push(`name=="*${this.deparmentName}*"`);
-    // }
+    if (this.params.name) {
+      filter.push(`name=="*${this.params.name.trim()}*"`);
+    }
+    if (this.params.status) {
+      filter.push(`status==${this.params.status}`);
+    }
+    if (this.params.code) {
+      filter.push(`code=="*${this.params.code.trim()}*"`);
+    }
+    
     return filter.join(";");
   }
   loadData() {
     const payload = {
-      page: 0,
-      size: 1000,
+      page: this.params.page - 1,
+      size: this.params.itemsPerPage,
       filter: this.filterData(),
       sort: ["id", "asc"],
     };
     this.dmService.query(payload, this.REQUEST_URL).subscribe(
       (res: HttpResponse<any>) => {
-        if (res.body.CODE === 200) {
-          this.data = res.body.RESULT.content;
+        if (res.body.statusCode === 200) {
+          this.data = res.body.result.content;
         } else {
           this.notificationService.showError(res.body.MESSAGE, "Fail");
         }
@@ -85,17 +101,23 @@ export class DepartmentComponent implements OnInit {
         console.error();
       }
     );
-    console.log(this.data)
+
   }
-  loadPage(page: any) {}
+  loadPage(page: number): void {
+    if (page !== this.previousPage) {
+      this.previousPage = page;
+      this.loadData();
+    }
+  }
 
   editDepartment(department: any) {
+    this.selectedEntity=department;
     const modalRef = this.modalService.open(DepartmentPopup, {
       size: "lg",
       backdrop: "static",
       keyboard: false,
     });
-    modalRef.componentInstance.data = this.selectedEntity;
+    modalRef.componentInstance.data = department;
     modalRef.componentInstance.type = "edit";
     modalRef.componentInstance.title = "Xử lý thông tin phòng ban";
     modalRef.result.then(
@@ -128,10 +150,10 @@ export class DepartmentComponent implements OnInit {
         if (confirmed) {
           this.spinner.show();
           this.dmService
-            .delete(id, this.REQUEST_URL + OPERATIONS.DELETE)
+            .delete(id, this.REQUEST_URL)
             .subscribe(
               (res: HttpResponse<any>) => {
-                if (res.body.CODE === 200) {
+                if (res.body.statusCode === 200) {
                   this.spinner.hide();
                   this.notificationService.showSuccess(
                     "Xóa thành công",
@@ -157,13 +179,19 @@ export class DepartmentComponent implements OnInit {
   selectRow(item: any) {
     const index = this.data.findIndex((el: any) => el.id === item.id);
     if (index !== -1) {
-      this.data.splice(index, 1);
+      this.listSelected.splice(index, 1);
+      this.selectedEntity=item;
     } else {
-      this.data.push(item);
+      this.listSelected.push(item);
+      this.selectedEntity=null;
     }
   }
   reset() {
-    this.deparmentName = "";
+    this.selectedEntity="";
     this.loadData();
+  }
+
+  selectItem(deparment:any){
+    this.selectedEntity=deparment;
   }
 }
