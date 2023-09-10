@@ -42,6 +42,7 @@ export class DepartmentPopup implements OnInit {
       this.trangThai = this.data.status;
       this.ghiChu = this.data.note;
     }
+    console.log(this.data)
   }
 
   create() {    
@@ -84,7 +85,7 @@ export class DepartmentPopup implements OnInit {
         );
       }else {
       this.dmService
-        .putOption(entity, this.REQUEST_URL, "/update?id=" + entity.id)
+        .putOption(entity, this.REQUEST_URL, "?id=" + entity.id)
         .subscribe(
           (res: HttpResponse<any>) => {
             if (res.body.statusCode === 200) {
@@ -93,9 +94,11 @@ export class DepartmentPopup implements OnInit {
                 "Success"
               );
               this.accept();
+              
             } else {
               this.notification.showError("Cập nhật phòng ban thất bại", "Fail");
               this.dismiss();
+              
             }
           },
           () => {
