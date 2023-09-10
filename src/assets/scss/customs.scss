@@ -1002,3 +1002,11 @@ h4 {
     }
   }
 }
+@media only screen and (max-width: 694px) {
+  .ng-star-inserted {
+    >.md-drppicker {
+      min-width: 200px!important;
+      left: 25%!important;
+    }
+  }
+}
