@@ -40,6 +40,8 @@ import { TongKetDuLieuPopupComponent } from "./shared/popup/tong-ket-du-lieu/Ton
 import { TuDongGiaoViecComponent } from "./shared/popup/tu-dong-giao-viec/tu-dong-giao-viec.component";
 import { XuLyDuLieuPopupComponent } from "./shared/popup/xu-ly-du-lieu/XuLyDuLieuPopup.component";
 import { DepartmentPopup } from "./shared/popup/them-sua-xoa-department/them-sua-xoa-department.component";
+import { CheckInComponent } from "./shared/popup/checkin/checkin.component";
+import { CheckOutComponent } from "./shared/popup/checkout/checkout.component";
 
 @NgModule({
   declarations: [
@@ -54,6 +56,8 @@ import { DepartmentPopup } from "./shared/popup/them-sua-xoa-department/them-sua
     TuDongGiaoViecComponent,
     XuLyDuLieuPopupComponent,
     DepartmentPopup,
+    CheckInComponent,
+    CheckOutComponent,
   ],
   imports: [
     BrowserAnimationsModule,
