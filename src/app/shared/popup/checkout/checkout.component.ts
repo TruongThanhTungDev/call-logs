@@ -13,10 +13,10 @@ import { LocalStorageService } from "ngx-webstorage";
   styleUrls: ["./checkout.component.scss"],
 })
 export class CheckOutComponent implements OnInit {
-  checkOut = moment(new Date()).format("YYYYMMDDHHmmss");
+  checkOut = moment(new Date()).format("DD/MM/YYYY HH:mm:ss");
   local: LocalStorageService;
   data: any = {};
-  REQUEST_URL = "/api/v1/work/infoCheckout";
+  REQUEST_URL = "/api/v1/work";
   constructor(
     private activeModal: NgbActiveModal,
     private dmService: DanhMucService,
@@ -27,7 +27,7 @@ export class CheckOutComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getInfo();
+    // this.getInfo();
   }
 
   getInfo(): void {
@@ -55,51 +55,25 @@ export class CheckOutComponent implements OnInit {
           );
         }
       );
-    // this.dmService.postOption(null,this.REQUEST_URL, "?id=" + token.id).subscribe(
-    //   (res: HttpResponse<any>) => {
-    //     this.data = this.customDate(res.body.RESULT);
-    //   },
-    //   (error: any) => {
-    //     this.notificationService.showError('Đã có lỗi xảy ra',"Thông báo lỗi!");
-    //   }
-    // );
   }
   doCheckOut() {
-    let time = moment(new Date()).format("YYYYMMDDHHmmss");
-    let checkOutEntity = {
-      id: this.data.id,
-      timeOut: time,
-      totalOrder: this.data.totalOrder,
-      successOrder: this.data.successOrder,
-      processedOrder: this.data.processedOrder,
-      onlyOrder: this.data.onlyOrder,
-      processedOnlyOrder: this.data.processedOnlyOrder,
-    };
-
-    this.dmService
-      .postOption(checkOutEntity, "/api/v1/work/checkOut/", "")
-      .subscribe(
-        (res: HttpResponse<any>) => {
-          if (res.body.CODE === 200) {
-            this.notificationService.showSuccess(
-              "Check Out thành công",
-              "Thông báo!"
-            );
-            this.local.store("check_work_active", false);
-            this.local.store("shopcode", "");
-            this.activeCall();
-            this.activeModal.close(true);
-          } else {
-            this.notificationService.showError(
-              "Đã có lỗi xảy ra",
-              "Thông báo!"
-            );
-          }
-        },
-        () => {
-          console.error();
+    this.dmService.post(this.REQUEST_URL, "/checkout").subscribe(
+      (res: any) => {
+        if (res.statusCode === 200) {
+          this.notificationService.showSuccess(
+            "Check Out thành công",
+            "Thông báo!"
+          );
+          this.local.store("check_work_active", false);
+          this.activeModal.close(true);
+        } else {
+          this.notificationService.showError("Đã có lỗi xảy ra", "Thông báo!");
         }
-      );
+      },
+      () => {
+        console.error();
+      }
+    );
   }
 
   activeCall(): void {

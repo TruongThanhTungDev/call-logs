@@ -12,13 +12,6 @@
       <a class="click_show" (click)="sidebarToggle()">☰</a>
       <a class="navbar-brand" href="javascript:void(0)">{{getTitle()}}</a>
     </div>
-    <!-- <div class="col-6 col-sm-1">
-      <select [(ngModel)]="shopCode" class="form-control pl-3 " style="margin-top: 10px;height: 33px;
-        border-radius: 5px;
-        border: 1px solid #006eb9;">
-          <option *ngFor="let obj of shopList" [value]="obj.code">{{obj.code}}</option>
-        </select>
-    </div> -->
     <button class="navbar-toggler" type="button" (click)="collapse()" [attr.aria-expanded]="!isCollapsed"
       aria-controls="collapseExample">
       <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -27,20 +20,10 @@
     </button>
     <div class="collapse navbar-collapse justify-content-end navbar-container" id="collapseExample"
       [ngbCollapse]="isCollapsed">
-      <form>
-        <!-- <div class="input-group no-border">
-          <input type="text" value="" class="form-control" placeholder="Search...">
-          <div class="input-group-append">
-            <div class="input-group-text">
-              <i class="nc-icon nc-zoom-split"></i>z
-            </div>
-          </div>
-        </div> -->
-      </form>
-      <ng-toggle *ngIf="this.info.role==='user' && checkWorkActive" [value]="true" id="toggleActive"
+      <ng-toggle *ngIf="this.info.roleList[0]==='staff' && checkWorkActive" [value]="true" id="toggleActive"
         [color]="{ unchecked: '#939da2', checked: '#ef8157'}" [disabled]="disableToggle"
         (change)="onTriggerWorkActive()"></ng-toggle>
-      <ng-toggle *ngIf="this.info.role==='user' && !checkWorkActive" [value]="false" id="toggleActive"
+      <ng-toggle *ngIf="this.info.roleList[0]==='staff' && !checkWorkActive" [value]="false" id="toggleActive"
         [color]="{ unchecked: '#939da2', checked: '#ef8157'}" [disabled]="disableToggle"
         (change)="onTriggerWorkActive()"></ng-toggle>
       <ul class="navbar-nav ml-2">

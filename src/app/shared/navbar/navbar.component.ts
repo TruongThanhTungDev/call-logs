@@ -16,6 +16,8 @@ import { ConfirmationDialogService } from "app/layouts/confirm-dialog/confirm-di
 import { NgbModal, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
 import { NotificationService } from "app/notification.service";
 import { Store } from "@ngrx/store";
+import { CheckOutComponent } from "../popup/checkout/checkout.component";
+import { CheckInComponent } from "../popup/checkin/checkin.component";
 @Component({
   moduleId: module.id,
   selector: "navbar-cmp",
@@ -66,7 +68,7 @@ export class NavbarComponent implements OnInit {
     //   this.sidebarClose();
     // });
 
-    this.getAccountStatus();
+    // this.getAccountStatus();
     this.getTime();
   }
 
@@ -215,5 +217,39 @@ export class NavbarComponent implements OnInit {
         }
       })
       .catch(() => console.log("Đã có lỗi xảy ra"));
+  }
+  onTriggerWorkActive(): void {
+    this.checkWorkActive = !this.checkWorkActive;
+    if (this.checkWorkActive) {
+      this.modalRef = this.modalService.open(CheckInComponent, {
+        keyboard: true,
+        backdrop: "static",
+        size: "lg",
+      });
+      this.modalRef.result.then((res: any) => {
+        if (res) {
+          // this.getAccountStatus();
+          setTimeout(() => {}, 200);
+        } else {
+          this.checkWorkActive = !this.checkWorkActive;
+        }
+        window.location.reload();
+      });
+    } else {
+      this.modalRef = this.modalService.open(CheckOutComponent, {
+        keyboard: true,
+        backdrop: "static",
+        size: "lg",
+      });
+      this.modalRef.result.then((res: any) => {
+        if (res) {
+          // this.getAccountStatus();
+          setTimeout(() => {}, 200);
+        } else {
+          this.checkWorkActive = !this.checkWorkActive;
+        }
+        window.location.reload();
+      });
+    }
   }
 }
