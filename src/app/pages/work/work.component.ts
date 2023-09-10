@@ -30,6 +30,37 @@ export class WorkComponent implements OnInit, AfterViewInit {
     { id: 0, label: "Chờ xử lý" },
     { id: 1, label: "Đang xử lý" },
   ];
+  data: any[] = [];
+  fields: any[] = [
+    {
+      label: "Tài Khoản",
+      key: "username",
+    },
+    {
+      label: "Check in",
+      key: "checkin",
+    },
+    {
+      label: "Check out",
+      key: "checkout",
+    },
+    {
+      label: "Tổng đơn giao",
+      key: "totalOrder",
+    },
+    {
+      label: "Đơn Đã xử lý",
+      key: "processedOrder",
+    },
+    {
+      label: "Đơn hoàn thành",
+      key: "successOrder",
+    },
+  ];
+  totalItems = 0;
+  page = 1;
+  itemsPerPage = 0;
+
   plugins = new Plugin();
   dataAdapter: any;
   columns: any[] = [
@@ -207,11 +238,7 @@ export class WorkComponent implements OnInit, AfterViewInit {
       sort: ["id", "desc"],
       page: 0,
       size: 100000,
-      filter:     
-        "timeIn >=" +
-        startDate +
-        ";timeIn <=" +
-        endDate,
+      filter: "timeIn >=" + startDate + ";timeIn <=" + endDate,
     };
     this.dmService.query(params, this.REQUEST_URL).subscribe(
       (res: HttpResponse<any>) => {
@@ -329,4 +356,5 @@ export class WorkComponent implements OnInit, AfterViewInit {
     };
     this.checkLoadData();
   }
+  loadPage(page: any) {}
 }

@@ -105,9 +105,9 @@ export class SidebarComponent implements OnInit {
     this.store.subscribe((state) => {
       const loadingCompleted = state.common.isLoadCompleted;
       if (loadingCompleted) {
-        this.setMenu();
       }
     });
+    this.setMenu();
   }
 
   setMenu() {
