@@ -10,13 +10,13 @@
         <div class="row justify-content-between align-items-center">
           <div class="col-6 d-flex justify-content-start">
             <div class="mr-1">
-              <button class="btn btn-success">
+              <button class="btn btn-success" (click)="createDepartment()">
                 <i class="fa fa-plus mr-1"></i>
                 Thêm phòng ban
               </button>
             </div>
             <div class="mr-1">
-              <button class="btn btn-danger">
+              <button class="btn btn-danger" (click)="handleDeleteEDepartment(selectedEntity)">
                 <i class="fa fa-trash mr-1"></i>
                 Xóa
               </button>
@@ -37,10 +37,30 @@
                   {{ field.label }}
                 </th>
               </tr>
+              <tr class="table-search">
+                <th>
+                  <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Tìm kiếm">
+                </th>
+                <th>
+                  <input type="text" [(ngModel)]="deparmentName" autocomplete="off" class="form-control form-control-sm"
+                    placeholder="Tìm kiếm">
+                </th>
+                <th class="position-relative">
+                  <select class="form-control">
+                    <option value="">Tất cả</option>
+                    <option value="0">Không hoạt động</option>
+                    <option value="1">Hoạt động</option>
+                  </select>
+                </th>
+                <th>
+                  <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Tìm kiếm">
+                </th>
+              </tr>
             </thead>
             <tbody *ngIf="data.length">
-              <tr *ngFor="let item of data" [key]="item.id" [ngClass]="{'tr-selected': listSelected.includes(item.id)}"
-                (dblclick)="createAccount(itemSelected)" (click)="selectRow(item)">
+              <tr *ngFor="let item of data;index as i" [key]="item.id"
+                [ngClass]="{'tr-selected': listSelected.includes(item.id)}" (dblclick)="editDepartment(selectedEntity)"
+                (click)="selectRow(item)">
                 <td>
                   {{item.name}}
                 </td>

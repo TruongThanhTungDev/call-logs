@@ -9,6 +9,7 @@ import $ from "jquery";
 import { LocalStorageService } from "ngx-webstorage";
 import { OPERATIONS } from "../../app.constants";
 import { ActivatedRoute } from "@angular/router";
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: "account-cmp",
@@ -35,7 +36,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   FtDiaChi = "";
   FtPhanQuyen = "";
   FtGhiChu = "";
-  shopCode='';
+  shopCode = "";
 
   constructor(
     private dmService: DanhMucService,
@@ -43,7 +44,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
     private confirmDialogService: ConfirmationDialogService,
     private modalService: NgbModal,
     private localStorage: LocalStorageService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private spinner: NgxSpinnerService
   ) {
     this.info = this.localStorage.retrieve("authenticationtoken");
     this.route.queryParams.subscribe((params) => {
@@ -108,7 +110,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
       FtGhiChu,
       FtPhanQuyen,
       FtSdt,
-      shopCode
+      shopCode,
     } = this;
     comparesArray.push(`id>0`);
     if (FtHoTen) comparesArray.push(`fullName=="*${FtHoTen.trim()}*"`);
@@ -235,9 +237,9 @@ export class AccountComponent implements OnInit, AfterViewInit {
   }
   scriptPage(): void {
     $(window).resize(function (): void {
-      if($(window).height() > 800){
+      if ($(window).height() > 800) {
         $(".boxscroll").height($(window).height()! - 300);
-      }else{
+      } else {
         $(".boxscroll").height($(window).height()! - 200);
       }
     });
