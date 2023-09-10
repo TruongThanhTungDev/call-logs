@@ -43,7 +43,7 @@ export class DepartmentComponent implements OnInit {
       style: "width: 25%",
     },
   ];
-  data: any[] = [];
+  data= [];
   totalItems = 0;
   page = 0;
   itemsPerPage = 0;
@@ -57,17 +57,35 @@ export class DepartmentComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
   }
-
+  public filterData() {
+    const filter = [];
+    filter.push("id>0");
+    // if (this.deparmentName) {
+    //   filter.push(`name=="*${this.deparmentName}*"`);
+    // }
+    return filter.join(";");
+  }
   loadData() {
     const payload = {
-      search: this.deparmentName ? this.deparmentName : "",
+      page: 0,
+      size: 1000,
+      filter: this.filterData(),
+      sort: ["id", "asc"],
     };
-    this.dmService.getOption(payload, this.REQUEST_URL, "/search").subscribe(
+    this.dmService.query(payload, this.REQUEST_URL).subscribe(
       (res: HttpResponse<any>) => {
-        console.log("res :>> ", res);
+        if (res.body.CODE === 200) {
+          this.data = res.body.RESULT.content;
+        } else {
+          this.notificationService.showError(res.body.MESSAGE, "Fail");
+        }
       },
-      () => {}
+      () => {
+        this.notificationService.showError("Đã có lỗi xảy ra", "Fail");
+        console.error();
+      }
     );
+    console.log(this.data)
   }
   loadPage(page: any) {}
 
@@ -143,5 +161,9 @@ export class DepartmentComponent implements OnInit {
     } else {
       this.data.push(item);
     }
+  }
+  reset() {
+    this.deparmentName = "";
+    this.loadData();
   }
 }
