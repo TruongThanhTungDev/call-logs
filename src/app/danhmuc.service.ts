@@ -120,4 +120,12 @@ export class DanhMucService {
       observe: "response",
     });
   }
+  uploadFile(requestUrl: any, file: any): Observable<HttpResponse<any>> {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    return this.http.post<any>(this.resourceUrl + requestUrl, formData, {
+      observe: "response",
+    });
+  }
 }

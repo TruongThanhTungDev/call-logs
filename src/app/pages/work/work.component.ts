@@ -63,7 +63,7 @@ export class WorkComponent implements OnInit {
 
   plugins = new Plugin();
   dataAdapter: any;
-  
+
   // date
   dateRange: TimePeriod = {
     startDate: dayjs().startOf("month"),
@@ -120,9 +120,7 @@ export class WorkComponent implements OnInit {
     this.info = this.localStorage.retrieve("authenticationtoken");
   }
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 
   loadData() {
     var date = JSON.parse(JSON.stringify(this.dateRange));
@@ -134,21 +132,37 @@ export class WorkComponent implements OnInit {
       size: this.itemsPerPage,
       filter: "timeIn >=" + startDate + ";timeIn <=" + endDate,
     };
+    this.spinner.show();
     this.dmService.query(params, this.REQUEST_URL).subscribe(
-      (res:any) => {
-        if(res.body.statusCode === 200) {
-          this.data = res.body.result.content.map((item:any) => {
+      (res: any) => {
+        if (res.body.statusCode === 200) {
+          this.spinner.hide();
+          this.data = res.body.result.content.map((item: any) => {
             return {
               ...item,
-              timeIn:item.timeIn ? moment(item.timeIn, 'YYYYMMDDHHmms').format('HH:mm:ss DD/MM/YYYY') : '',
-              timeOut: item.timeOut ?moment(item.timeOut, 'YYYYMMDDHHmms').format('HH:mm:ss DD/MM/YYYY') : ''
-            }
+              timeIn: item.timeIn
+                ? moment(item.timeIn, "YYYYMMDDHHmms").format(
+                    "HH:mm:ss DD/MM/YYYY"
+                  )
+                : "",
+              timeOut: item.timeOut
+                ? moment(item.timeOut, "YYYYMMDDHHmms").format(
+                    "HH:mm:ss DD/MM/YYYY"
+                  )
+                : "",
+            };
           });
-          this.totalItems = res.body.result.totalElements
+          this.totalItems = res.body.result.totalElements;
+        } else {
+          this.spinner.hide();
+          this.notificationService.showError(
+            "Đã có lỗi xảy ra",
+            "Error message"
+          );
         }
-        console.log('res :>> ', res);
       },
       () => {
+        this.spinner.hide();
         this.notificationService.showError("Đã có lỗi xảy ra", "Error message");
         console.error();
       }
