@@ -7,20 +7,24 @@
           <div class="col-12">
             <h4 class="text-primary mt-0 bold">Danh sách tài khoản</h4>
           </div>
-          <div class="col-12">
-            <div class="dropdown mr-1" style="float: left;">
+          <div class="col-12 d-flex">
+            <div class=" dropdown mr-1" style="float: left;">
               <a class="dropdown-toggle btn btn-primary" type="button" id="tk-sub" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
+                aria-haspopup="true" aria-expanded="false" width=200px>
                 Phòng ban
               </a>
-              <ul class="dropdown-menu" aria-labelledby="tk-sub" [(ngModel)]="department">
-                <li *ngFor="let obj of listDepartment" [value]="obj.id" (click)="filterPhongBan(obj)" ><a class="dropdown-item">{{obj.code}} - {{obj.name}}</a></li>
+              <ul class="dropdown-menu" aria-labelledby="tk-sub">
+                <li *ngFor="let obj of listDepartment"  (click)="filterPhongBan(obj.id)" ><a class="dropdown-item">{{obj.code}} - {{obj.name}}</a></li>
               </ul>
             </div>
             <button type="" class="btn btn-success mr-1" (click)="createData()"><i class="fa fa-plus mr-1"></i> Thêm tài
               khoản</button>
-            <button type="" class="btn btn-danger mr-1" (click)="deleteData()" [disabled]="!selectedEntity"><i
+            <button type="" class="btn btn-danger mr-1" (click)="handleDeleteUser(selectedEntity.id)" [disabled]="!selectedEntity"><i
                 class="fa fa-trash mr-1"></i> Xoá</button>
+            <button type="button" (click)="reset()" class="btn btn-primary d-flex align-items-center">
+              <i class="fa fa-refresh mr-1"></i>
+              Làm mới
+            </button>
             <!-- <button type="" class="btn btn-primary" [routerLink]="['/utm-medium']">Cấu hình UTM</button> -->
             <!-- <div class="page-navigation d-flex justify-content-right">
               <nav aria-label="Page navigation">
@@ -38,7 +42,6 @@
             cellpadding="0" border="0">
             <thead>
               <tr>
-                <th style="width:70px" class="th-f text-center"><input type="checkbox" class="check-box" /></th>
                 <th>Tài khoản</th>
                 <th>Họ và tên</th>
                 <th>Email</th>
@@ -46,7 +49,7 @@
                 <th (click)="sortData('role')" class="th-fi">Phân quyền <i class="fa fa-sort"></i></th>
               </tr>
               <tr class="table-search">
-                <th class="text-center"></th>
+                
                 <th>
                   <input type="text" [(ngModel)]="params.userName" autocomplete="off" (keyup.enter)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
@@ -70,9 +73,8 @@
               </tr>
             </thead>
             <tbody>
-              <tr  *ngFor="let entity of listEntity, index as i" [class]="{'tr-selected': selectedEntity && selectedEntity.id === item.id}" 
-                (click)="onRowSelect(entity)" (dblclick)="onRowdblclick(entity)">
-                <td class="text-center"><input type="checkbox" class="check-box" /></td>
+              <tr  *ngFor="let entity of listEntity, index as i" [class]="{'tr-selected': selectedEntity && selectedEntity.id === entity.id}" 
+                (click)="onRowSelect(entity)" (dblclick)="updateData(entity)">
                 <td>{{entity.userName}}</td>
                 <td>{{entity.name}}</td>
                 <td>{{entity.email}}</td>

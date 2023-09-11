@@ -15,7 +15,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
   @Input() data?: any;
   @Input() id?: any;
   @Input() title?: any;
-
+  @Input() type?:any;
   @ViewChild("formLogin")
   formLogin!: NgForm;
   users: any;
@@ -50,11 +50,12 @@ export class ThemSuaXoaAccountComponent implements OnInit {
       this.email = this.data.email;
       this.sdt = this.data.phone;
       this.address = this.data.address;
-      this.role = this.data.role;
-      this.listSelect = this.data.department ? this.data.department.split(",") : [];
+      this.role = this.data.roleId;
+      // this.listSelect = this.data.department ? this.data.department.split(",") : [];
+      this.department=this.data.department.id;
+      console.log(this.data)
     }
   }
-
   loadData(): void {
     this.getDepartment();
   }
@@ -100,9 +101,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
   //     }
   //   );
   // }
-  changeDepartment(department){
-    console.log(this.department)
-  }
+  
   create() {
     if (this.validData()) {
       console.log(this.department)
@@ -150,6 +149,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
         }
       } else {
         entity.id = this.data.id;
+        console.log(entity);
         if ( entity.departmentId == "") {
           this.notification.showError(
             "Vui lòng lựa chọn department cho user!",
@@ -157,7 +157,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
           );
         } else {
           this.dmService
-            .putOption(entity, "/api/v1/user/update?id=" + entity.id, "")
+            .putOption(entity, "/api/v1/user?id=" + entity.id, "")
             .subscribe(
               (res: HttpResponse<any>) => {
                 if (res.body.statusCode === 200) {

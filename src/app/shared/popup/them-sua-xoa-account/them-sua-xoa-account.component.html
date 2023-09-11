@@ -34,14 +34,9 @@
     </div>
     <div class="col-6">
       <h4 class="bold text-primary">Thông tin người dùng</h4>
-      <div class="form-group form-outline mb-1">
-        <label class="text-primary"><i class="fa fa-phone"></i> Số điện thoại</label>
-        <input type="text" name="Số điện thoại" [(ngModel)]="sdt" placeholder=" Số điện thoại "
-          class="form-control form-control-lg" style="height:2.5rem ;">
-      </div>
-      <div class="form-group form-outline mb-1">
-        <label class="text-primary"><i class="fa fa-sitemap"></i> Phân quyền</label>
-        <select class="form-control" [(ngModel)]="role">
+      <div class="form-group form-outline mb-1" *ngIf="type==='add'">
+        <label class="text-primary" ><i class="fa fa-sitemap"></i> Phân quyền</label>
+        <select class="form-control" [(ngModel)]="role" >
           <option value="1">admin</option>
           <option value="2">staff</option>        
         </select>
@@ -54,9 +49,9 @@
     </div>
     <div class="form-group form-outline mb-1 col-6">
       <label class="text-primary"><i class="fa fa-ship"></i> Danh sách phòng ban</label>
-      <ng-select [(ngModel)]="department" name="department" [clearable]="true" (change)=changeDepartment($event)
+      <ng-select [(ngModel)]="department" name="department" [clearable]="true" 
         placeholder="Danh sách phòng ban">
-        <ng-option *ngFor="let obj of listDepartment" [value]="obj.id">{{obj.code}} - {{obj.name}}</ng-option>
+        <ng-option  *ngFor="let obj of listDepartment" [value]="obj.id">{{obj.code}} - {{obj.name}}</ng-option>
       </ng-select>
     </div>
   </div>

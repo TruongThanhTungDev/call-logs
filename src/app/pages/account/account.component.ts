@@ -59,7 +59,6 @@ export class AccountComponent implements OnInit, AfterViewInit {
     this.getDepartment();    
     this.loadData();
     this.scriptPage();
-    console.log(this.listEntity)
   }
   ngAfterViewInit(): void {}
   public loadData() {
@@ -73,9 +72,9 @@ export class AccountComponent implements OnInit, AfterViewInit {
       (res: HttpResponse<any>) => {
         if (res.body) {
           if (res.body.statusCode === 200) {
-            this.page = res.body ? res.body.RESULT.number + 1 : 1;
-            this.totalItems = res.body ? res.body.RESULT.totalElements : 0;
-            this.listEntity = res.body.RESULT.content;
+            this.page = res.body ? res.body.result.number + 1 : 1;
+            this.totalItems = res.body ? res.body.result.totalElements : 0;
+            this.listEntity = res.body.result.content;
             // load page
             if (this.listEntity.length === 0 && this.page > 1) {
               this.page = 1;
@@ -99,6 +98,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
         console.error();
       }
     );
+    this.department="";
   }
   getDepartment() {
     const payload = {
@@ -169,7 +169,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
       filter.push(`note=="*${this.params.note.trim()}*"`);
     }
     if (this.department) {
-      filter.push(`departmentId=="*${this.department.trim()}*"`);
+      filter.push(`department.id==${this.department}`);
     }
     return filter.join(";");
   }
@@ -217,27 +217,26 @@ export class AccountComponent implements OnInit, AfterViewInit {
   processFilter() {
     this.loadData();
   }
-  public updateData() {
-    if (!this.selectedEntity) {
-      this.notificationService.showWarning(
-        "Vui lòng chọn dữ liệu",
-        "Cảnh báo!"
-      );
-      return;
-    }
+  public updateData(user:any) {
     const modalRef = this.modalService.open(ThemSuaXoaAccountComponent, {
       size: "lg",
       backdrop: "static",
       keyboard: false,
     });
-    modalRef.componentInstance.data = this.selectedEntity;
+    modalRef.componentInstance.data = user;
     modalRef.componentInstance.title = "Xử lý thông tin tài khoản";
+    modalRef.componentInstance.type = "edit";
     modalRef.result.then(
       () => {
         this.loadData();
       },
       () => {}
     );
+  }
+  reset() {
+    this.selectedEntity = "";
+    this.department="";
+    this.loadData();
   }
   public createData() {
     const modalRef = this.modalService.open(ThemSuaXoaAccountComponent, {
@@ -247,6 +246,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
     });
     modalRef.componentInstance.data = null;
     modalRef.componentInstance.title = "Tạo tài khoản";
+    modalRef.componentInstance.type = "add";
+    
     modalRef.result.then(
       () => {
         this.loadData();
@@ -254,48 +255,40 @@ export class AccountComponent implements OnInit, AfterViewInit {
       () => {}
     );
   }
-  public deleteData() {
-    if (!this.selectedEntity) {
-      this.notificationService.showWarning(
-        "Vui lòng chọn dữ liệu",
-        "Cảnh báo!"
-      );
-      return;
-    }
+  filterPhongBan(department:any){
+   this.department=department
+   this.loadData();
+  }
+  handleDeleteUser(id: any) {
     this.confirmDialogService
       .confirm("Bạn có thật sự muốn xóa bản ghi này?", "Đồng ý", "Hủy")
       .then((confirmed: any) => {
         if (confirmed) {
-          this.dmService
-            .delete(
-              this.selectedEntity.id,
-              this.REQUEST_URL + OPERATIONS.DELETE
-            )
-            .subscribe(
-              (res: HttpResponse<any>) => {
-                if (res.body.statusCode === 200) {
-                  this.notificationService.showSuccess(
-                    "Xóa thành công",
-                    "Success"
-                  );
-                  setTimeout(() => {
-                    this.loadData();
-                  }, 100);
-                } else {
-                  this.notificationService.showError("Xóa thất bại", "Fail");
-                }
-              },
-              () => {
-                console.error();
+          this.spinner.show();
+          this.dmService.delete(id, this.REQUEST_URL).subscribe(
+            (res: HttpResponse<any>) => {
+              if (res.body.statusCode === 200) {
+                this.spinner.hide();
+                this.notificationService.showSuccess(
+                  "Xóa thành công",
+                  "Success"
+                );
+                setTimeout(() => {
+                  this.loadData();
+                }, 100);
+              } else {
+                this.spinner.hide();
+                this.notificationService.showError("Xóa thất bại", "Fail");
               }
-            );
+            },
+            () => {
+              this.spinner.hide();
+              console.error();
+            }
+          );
         }
       })
-      .catch(() =>
-        console.log(
-          "User dismissed the dialog (e.g., by using ESC, clicking the cross icon, or clicking outside the dialog)"
-        )
-      );
+      .catch(() => console.error());
   }
   public onRowSelect(event: any): void {
     this.selectedEntity = event;
@@ -303,7 +296,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   }
   public onRowdblclick(event: any): void {
     this.selectedEntity = event;
-    this.updateData();
+    this.updateData(event);
   }
   loadPage(page: number): void {
     if (page !== this.previousPage) {
