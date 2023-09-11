@@ -29,6 +29,7 @@ import { GiaoViecPopUpComponent } from "app/shared/popup/giao-viec-pop-up/giao-v
 import { NgxSpinnerService } from "ngx-spinner";
 import { ChuyenTrangThaiPopUpComponent } from "app/shared/popup/chuyen-trang-thai-pop-up/chuyen-trang-thai-pop-up.component";
 import { Plugin } from "app/shared/util/plugins";
+import { ImportDataPopup } from "app/shared/popup/import-data/import-data.component";
 
 @Component({
   selector: "data-cmp",
@@ -385,8 +386,8 @@ export class DataComponent implements OnInit, AfterViewInit {
               this.countList[Number(result[index].status)] = Number(
                 result[index].count
               );
-              if(Number(result[index].status) >= 10){
-                this.countGiaoHang+= Number(result[index].count);
+              if (Number(result[index].status) >= 10) {
+                this.countGiaoHang += Number(result[index].count);
               }
               this.tongDon += Number(result[index].count);
             }
@@ -446,8 +447,8 @@ export class DataComponent implements OnInit, AfterViewInit {
               this.countList[Number(result[index].status)] = Number(
                 result[index].count
               );
-              if(Number(result[index].status) >= 10){
-                this.countGiaoHang+= Number(result[index].count);
+              if (Number(result[index].status) >= 10) {
+                this.countGiaoHang += Number(result[index].count);
               }
               this.tongDoanhSo += Number(result[index].sum);
               this.tongDon += Number(result[index].count);
@@ -654,41 +655,12 @@ export class DataComponent implements OnInit, AfterViewInit {
     this.order = event;
 
     this.selectedEntity = event;
-    this.checkRowLength();
     if (this.selectedEntity == event) {
       this.countXuLy = 1;
     } else {
       this.selectedEntity = event;
       this.countXuLy = -1;
     }
-  }
-
-  // private checkOrderIsSuccess(order):void {
-  //     console.log(order.status);
-
-  //     if(order.status == 7) {
-  //         this.checkSuccessActive = !this.checkSuccessActive;
-  //     }else {
-  //         this.checkSuccessActive = !this.checkSuccessActive;
-  //     }
-  // }
-
-  public checkRowLength(): void {
-    // if(this.myGrid.getselectedrowindexes().length === 1) {
-    //     this.checkSingleSelected = true;
-    // }
-    // else {
-    //     this.checkSingleSelected = false;
-    // }
-    // if(this.myGrid.getselectedrowindexes().length > 0) {
-    //     this.checkMultiSelected = true;
-    // }
-    // else {
-    //     this.checkMultiSelected = false;
-    // }
-    // if(this.order.status == 7) {
-    //     this.checkSuccessActive = !this.checkSuccessActive;
-    // }
   }
 
   private convertToJson(stringValue: string) {
@@ -844,5 +816,17 @@ export class DataComponent implements OnInit, AfterViewInit {
       align
     );
     this.spinner.hide();
+  }
+  importData() {
+    const modalRef = this.modalService.open(ImportDataPopup, {
+      windowClass: "modal-view",
+      keyboard: true,
+    });
+    modalRef.result.then(
+      () => {
+        this.loadData();
+      },
+      () => {}
+    );
   }
 }

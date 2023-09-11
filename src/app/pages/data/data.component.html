@@ -4,11 +4,14 @@
       <div class="card-header">
         <div class="row">
           <div class="col-12 col-sm-8 btn-left-container">
-            <button *ngIf="!isShowButton" type="button" class="btn btn-primary mr-1" (click)="assignWork()"
+            <button type="" class="btn btn-success mr-1" (click)="importData()">
+              <i class="fa-solid fa-file-import mr-1"></i> Nhập dữ liệu
+            </button>
+            <button type="button" class="btn btn-primary mr-1" (click)="assignWork()"
               [hidden]="this.info.role === 'user'" [disabled]="listCheck.length === 0">
               Giao việc ({{plugins.formatNumber(listCheck.length)}})
             </button>
-            <button *ngIf="!isShowButton" type="" class="btn btn-orange mr-1" (click)="openAutoAssignWork()"
+            <button type="" class="btn btn-orange mr-1" (click)="openAutoAssignWork()"
               [hidden]="this.info.role === 'user'">
               Giao việc nhanh
             </button>
@@ -131,23 +134,14 @@
                 </th>
                 <th>Khách hàng</th>
                 <th>Số điện thoại</th>
-                <th (click)="sortData('product')">
-                  Sản phẩm <i class="fa fa-sort"></i>
-                </th>
                 <th (click)="sortData('account.fullName')">
-                  Nhân viên <i class="fa fa-sort"></i>
+                  Địa chỉ<i class="fa fa-sort"></i>
                 </th>
                 <th (click)="sortData('price')">
-                  Doanh số <i class="fa fa-sort"></i>
+                  Phòng ban<i class="fa fa-sort"></i>
                 </th>
                 <th>
-                  Mã vận chuyển
-                </th>
-                <th>
-                  Tài khoản vận chuyển
-                </th>
-                <th class="th-fi">
-                  Người lên đơn
+                  Nhân viên
                 </th>
               </tr>
               <tr class="table-search">
@@ -188,18 +182,6 @@
                 </th>
                 <th>
                   <input type="number" [(ngModel)]="ftDoanhSo" (keyup.enter)="processFilter()"
-                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
-                </th>
-                <th>
-                  <input type="text" [(ngModel)]="ftMaVanChuyen" (keyup.enter)="processFilter()"
-                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
-                </th>
-                <th>
-                  <input type="text" [(ngModel)]="ftTaiKhoanVC" (keyup.enter)="processFilter()"
-                    class="form-control form-control-sm" placeholder="Tìm kiếm" />
-                </th>
-                <th>
-                  <input type="text" [(ngModel)]="ftNguoiVC" (keyup.enter)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm" />
                 </th>
               </tr>

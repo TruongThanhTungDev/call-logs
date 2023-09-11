@@ -42,6 +42,7 @@ import { XuLyDuLieuPopupComponent } from "./shared/popup/xu-ly-du-lieu/XuLyDuLie
 import { DepartmentPopup } from "./shared/popup/them-sua-xoa-department/them-sua-xoa-department.component";
 import { CheckInComponent } from "./shared/popup/checkin/checkin.component";
 import { CheckOutComponent } from "./shared/popup/checkout/checkout.component";
+import { ImportDataPopup } from "./shared/popup/import-data/import-data.component";
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { CheckOutComponent } from "./shared/popup/checkout/checkout.component";
     DepartmentPopup,
     CheckInComponent,
     CheckOutComponent,
+    ImportDataPopup,
   ],
   imports: [
     BrowserAnimationsModule,
