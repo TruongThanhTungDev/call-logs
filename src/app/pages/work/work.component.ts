@@ -21,7 +21,7 @@ import { LocalStorageService } from "ngx-webstorage";
   selector: "work-cmp",
   templateUrl: "work.component.html",
 })
-export class WorkComponent implements OnInit, AfterViewInit {
+export class WorkComponent implements OnInit {
   @ViewChild("gridReference") myGrid: jqxGridComponent;
   source: any;
   info: any = null;
@@ -59,82 +59,11 @@ export class WorkComponent implements OnInit, AfterViewInit {
   ];
   totalItems = 0;
   page = 1;
-  itemsPerPage = 0;
+  itemsPerPage = 10;
 
   plugins = new Plugin();
   dataAdapter: any;
-  columns: any[] = [
-    {
-      text: "#",
-      sortable: false,
-      filterable: false,
-      editable: false,
-      groupable: false,
-      draggable: false,
-      resizable: false,
-      datafield: "",
-      columntype: "number",
-      width: 50,
-      cellsrenderer: (row: number, column: any, value: number): string => {
-        return (
-          '<div style="margin: 4px;margin-top: 14.5px;">' +
-          (value + 1) +
-          "</div>"
-        );
-      },
-    },
-    { text: "Tài Khoản", editable: false, datafield: "userName" },
-    { text: "Check in", editable: false, datafield: "ngayVao" },
-    { text: "Check out", editable: false, datafield: "ngayRa" },
-    {
-      text: "Tổng Đơn Giao",
-      editable: false,
-      datafield: "totalOrder",
-      cellsrenderer: (row: number, column: any, value: number): string => {
-        return (
-          "<div style='margin: 4px;margin-top: 14.5px;'>" +
-          this.plugins.formatNumber(value) +
-          "</div>"
-        );
-      },
-    },
-    {
-      text: "Đơn Đã Xử Lý",
-      editable: false,
-      datafield: "processedOrder",
-      cellsrenderer: (row: number, column: any, value: number): string => {
-        return (
-          "<div style='margin: 4px;margin-top: 14.5px;'>" +
-          this.plugins.formatNumber(value) +
-          "</div>"
-        );
-      },
-    },
-    {
-      text: "Đơn Hoàn Thành",
-      editable: false,
-      datafield: "successOrder",
-      cellsrenderer: (row: number, column: any, value: number): string => {
-        return (
-          "<div style='margin: 4px;margin-top: 14.5px;'>" +
-          this.plugins.formatNumber(value) +
-          "</div>"
-        );
-      },
-    },
-  ];
-  height: any = $(window).height()! - 240;
-  localization: any = {
-    pagergotopagestring: "Trang",
-    pagershowrowsstring: "Hiển thị",
-    pagerrangestring: " của ",
-    emptydatastring: "Không có dữ liệu hiển thị",
-    filterstring: "Nâng cao",
-    filterapplystring: "Áp dụng",
-    filtercancelstring: "Huỷ bỏ",
-  };
-  pageSizeOptions = ["50", "100", "200"];
-
+  
   // date
   dateRange: TimePeriod = {
     startDate: dayjs().startOf("month"),
@@ -189,75 +118,35 @@ export class WorkComponent implements OnInit, AfterViewInit {
       this.myGrid.render();
     });
     this.info = this.localStorage.retrieve("authenticationtoken");
-    this.shopCode = localStorage.retrieve("shop")
-      ? localStorage.retrieve("shop").code
-      : "";
   }
 
   ngOnInit() {
-    this.checkLoadData();
   }
 
-  checkLoadData() {
-    if (this.info.role === "admin") {
-      this.loadDataAdmin();
-    } else {
-      this.loadData();
-    }
-  }
 
-  ngAfterViewInit(): void {
-    this.myGrid.pagesizeoptions(this.pageSizeOptions);
-  }
-  public loadData() {
-    var date = JSON.parse(JSON.stringify(this.dateRange));
-    let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
-    let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
-    this.dmService
-      .getOption(
-        null,
-        this.REQUEST_URL,
-        "?startDate=" + startDate + "&endDate=" + endDate
-      )
-      .subscribe(
-        (res: HttpResponse<any>) => {
-          this.source.localdata = this.customDate(res.body.RESULT);
-          this.dataAdapter = new jqx.dataAdapter(this.source);
-        },
-        () => {
-          console.error();
-        }
-      );
-  }
-
-  loadDataAdmin() {
+  loadData() {
     var date = JSON.parse(JSON.stringify(this.dateRange));
     let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
     let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
     const params = {
       sort: ["id", "desc"],
-      page: 0,
-      size: 100000,
+      page: this.page - 1,
+      size: this.itemsPerPage,
       filter: "timeIn >=" + startDate + ";timeIn <=" + endDate,
     };
     this.dmService.query(params, this.REQUEST_URL).subscribe(
-      (res: HttpResponse<any>) => {
-        if (res.body) {
-          if (res.body.CODE === 200) {
-            this.source.localdata = this.customDate(res.body.RESULT.content);
-            this.dataAdapter = new jqx.dataAdapter(this.source);
-          } else {
-            this.notificationService.showError(
-              res.body.MESSAGE,
-              "Error message"
-            );
-          }
-        } else {
-          this.notificationService.showError(
-            "Đã có lỗi xảy ra",
-            "Error message"
-          );
+      (res:any) => {
+        if(res.body.statusCode === 200) {
+          this.data = res.body.result.content.map((item:any) => {
+            return {
+              ...item,
+              timeIn:item.timeIn ? moment(item.timeIn, 'YYYYMMDDHHmms').format('HH:mm:ss DD/MM/YYYY') : '',
+              timeOut: item.timeOut ?moment(item.timeOut, 'YYYYMMDDHHmms').format('HH:mm:ss DD/MM/YYYY') : ''
+            }
+          });
+          this.totalItems = res.body.result.totalElements
         }
+        console.log('res :>> ', res);
       },
       () => {
         this.notificationService.showError("Đã có lỗi xảy ra", "Error message");
@@ -354,7 +243,7 @@ export class WorkComponent implements OnInit, AfterViewInit {
       startDate: dayjs().startOf("month"),
       endDate: dayjs().endOf("month"),
     };
-    this.checkLoadData();
+    this.loadData();
   }
   loadPage(page: any) {}
 }
