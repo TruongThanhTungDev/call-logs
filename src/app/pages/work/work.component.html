@@ -23,14 +23,6 @@
         </div>
       </div>
       <div class="card-body pt-0 mt-3">
-        <!-- <jqxGrid #gridReference
-          [width]="'100%'" [source]="dataAdapter" [columns]="columns" [editable]="true"
-          [pageable]="true" [height]="height" [autorowheight]="true" [sortable]="true" 
-          [filterable]="true" [showfilterrow]="true" [rowsheight]="45" 
-          [altrows]="true"  [enabletooltips]="true"
-          (onRowselect)="onRowSelect($event)"
-          >
-          </jqxGrid> -->
         <div class="boxscroll grow">
           <table id="shop-table" class="table radius m-0 table-hover" style="min-width: 1200px; width: 100%;">
             <thead>
@@ -88,13 +80,13 @@
           </table>
         </div>
       </div>
-    </div>
-    <div class="card-footer d-flex justify-content-right" style="margin-top: auto;">
-      <nav aria-label="Page navigation">
-        <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="3"
-          [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)">
-        </ngb-pagination>
-      </nav>
+      <div class="card-footer d-flex justify-content-right" style="margin-top: auto;">
+        <nav aria-label="Page navigation">
+          <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="3"
+            [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)">
+          </ngb-pagination>
+        </nav>
+      </div>
     </div>
   </div>
 </div>

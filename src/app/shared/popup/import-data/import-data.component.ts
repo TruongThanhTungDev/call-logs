@@ -14,7 +14,9 @@ import { LocalStorageService } from "ngx-webstorage";
 export class ImportDataPopup implements OnInit {
   listDepartment: any[] = [];
   deparmentSelected: any;
+  selectedFile: any;
   DEPARTMENT_URL = "/api/v1/department";
+  UPLOAD_FILE_URL = "/api/v1/uploadFile/data";
   constructor(
     private activeModal: NgbActiveModal,
     private dmService: DanhMucService,
@@ -60,5 +62,31 @@ export class ImportDataPopup implements OnInit {
         console.error();
       }
     );
+  }
+  selectFile(event) {
+    this.selectedFile = event.target.files[0];
+  }
+  saveUploadFile() {
+    if (!this.selectedFile) {
+      this.notificationService.showWarning("Vui lòng chọn file!", "Cảnh báo");
+      return;
+    }
+    if (!this.deparmentSelected) {
+      this.notificationService.showWarning(
+        "Vui lòng chọn Phòng ban!",
+        "Cảnh báo"
+      );
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", this.selectedFile);
+    this.dmService
+      .uploadFile(
+        `${this.UPLOAD_FILE_URL}?departmentId=${this.deparmentSelected.id}`,
+        formData
+      )
+      .subscribe((res: any) => {
+        console.log("res :>> ", res);
+      });
   }
 }
