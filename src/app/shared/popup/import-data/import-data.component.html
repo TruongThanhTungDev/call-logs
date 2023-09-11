@@ -1,0 +1,52 @@
+<div class="modal-body">
+  <div class="text-center mb-3" style="font-size: 18px;">
+    <b class="title-popup">Nhập dữ liệu</b>
+    <button class="btn btn-link" style="position: absolute;right: 0px;top: -7px;" (click)="dismiss()"><i
+        class="fa fa-close"></i></button>
+  </div>
+  <div>
+    <div class="row">
+      <div class="col-5">
+        <h5 class="bold text-primary">Chọn Phòng ban</h5>
+        <div class="mb-3">
+          <ng-select [(ngModel)]="deparmentSelected" name="listSelect" [multiple]="false" [clearable]="true"
+            placeholder="Chọn Phòng ban *">
+            <ng-option *ngFor="let obj of listDepartment" [value]="obj">{{obj.name}}</ng-option>
+          </ng-select>
+        </div>
+        <div>
+          <label for="upload-file" class="w-100 cursor-pointer">
+            <div class="w-100 text-center border-primary" style="border: 2px dashed; padding: 32px;font-size: 20px;">
+              <i class="fa-solid fa-file-arrow-up text-primary"></i>
+              <div class="text-primary fw-bold">
+                Tải dữ liệu lên...
+              </div>
+            </div>
+          </label>
+          <input type="file" class="upload" id="upload-file" />
+        </div>
+      </div>
+      <div class="col-7">
+        <h5 class="bold text-primary">Xem trước</h5>
+        <div class="card">
+          <div class="boxscroll">
+            <table id="" class="table radius m-0 table-hover" style="min-width: 800px" width="100%" cellspacing="0"
+              cellpadding="0" border="0">
+              <thead>
+                <tr>
+                  <th class="th-f">STT</th>
+                  <th>Khách hàng</th>
+                  <th>Số điện thoại</th>
+                  <th>Địa chỉ</th>
+                </tr>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer mt-2 mb-2">
+  <button type="" class="title-popup"><i class="fa fa-save mr-1"></i> Lưu thông tin</button>
+</div>
