@@ -8,18 +8,19 @@
             <h4 class="text-primary mt-0 bold">Danh sách tài khoản</h4>
           </div>
           <div class="col-12">
+            <div class="dropdown mr-1" style="float: left;">
+              <a class="dropdown-toggle btn btn-primary" type="button" id="tk-sub" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                Phòng ban
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="tk-sub" [(ngModel)]="department">
+                <li *ngFor="let obj of listDepartment" [value]="obj.id" (click)="filterPhongBan(obj)" ><a class="dropdown-item">{{obj.code}} - {{obj.name}}</a></li>
+              </ul>
+            </div>
             <button type="" class="btn btn-success mr-1" (click)="createData()"><i class="fa fa-plus mr-1"></i> Thêm tài
               khoản</button>
             <button type="" class="btn btn-danger mr-1" (click)="deleteData()" [disabled]="!selectedEntity"><i
                 class="fa fa-trash mr-1"></i> Xoá</button>
-
-            <div class="form-group form-outline mb-1 col-6">
-              <label class="text-primary"><i class="fa fa-ship"></i> Danh sách phòng ban</label>
-              <ng-select [(ngModel)]="department" name="listSelect" [multiple]="true" [clearable]="true"
-                placeholder="Danh sách phòng ban" (change)="changeDepartment(department)">
-                <ng-option *ngFor="let obj of listDepartment" [value]="obj.code">{{obj.code}} - {{obj.name}}</ng-option>
-              </ng-select>
-            </div>
             <!-- <button type="" class="btn btn-primary" [routerLink]="['/utm-medium']">Cấu hình UTM</button> -->
             <!-- <div class="page-navigation d-flex justify-content-right">
               <nav aria-label="Page navigation">
@@ -41,47 +42,40 @@
                 <th>Tài khoản</th>
                 <th>Họ và tên</th>
                 <th>Email</th>
-                <th>Số điện thoại</th>
                 <th>Địa chỉ</th>
                 <th (click)="sortData('role')" class="th-fi">Phân quyền <i class="fa fa-sort"></i></th>
               </tr>
               <tr class="table-search">
                 <th class="text-center"></th>
                 <th>
-                  <input type="text" [(ngModel)]="FtTaiKhoan" autocomplete="off" (keyup.enter)="processFilter()"
+                  <input type="text" [(ngModel)]="params.userName" autocomplete="off" (keyup.enter)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
                 <th>
-                  <input type="text" [(ngModel)]="FtHoTen" (keyup.enter)="processFilter()"
+                  <input type="text" [(ngModel)]="params.name" (keyup.enter)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
                 <th>
-                  <input type="text" [(ngModel)]="FtEmail" (keyup.enter)="processFilter()"
+                  <input type="text" [(ngModel)]="params.email" (keyup.enter)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
                 <th>
-                  <input type="text" [(ngModel)]="FtSdt" (keyup.enter)="processFilter()"
+                  <input type="text" [(ngModel)]="params.address" (keyup.enter)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
                 <th>
-                  <input type="text" [(ngModel)]="FtDiaChi" (keyup.enter)="processFilter()"
+                  <input type="text" [(ngModel)]="params.role" (keyup.enter)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
-                <th>
-                  <input type="text" [(ngModel)]="FtPhanQuyen" (keyup.enter)="processFilter()"
-                    class="form-control form-control-sm" placeholder="Tìm kiếm">
-                </th>
-
               </tr>
             </thead>
             <tbody>
-              <tr [ngClass]="{'tr-selected': selectedId === entity.id}" *ngFor="let entity of listEntity, index as i"
+              <tr [class]="{'tr-selected': selectedEntity && selectedEntity.id === item.id}"  *ngFor="let entity of listEntity, index as i"
                 (click)="onRowSelect(entity)" (dblclick)="onRowdblclick(entity)">
                 <td class="text-center"><input type="checkbox" class="check-box" /></td>
                 <td>{{entity.userName}}</td>
-                <td>{{entity.fullName}}</td>
+                <td>{{entity.name}}</td>
                 <td>{{entity.email}}</td>
-                <td>{{entity.phone}}</td>
                 <td>{{entity.address}}</td>
                 <td>{{entity.role}}</td>
               </tr>

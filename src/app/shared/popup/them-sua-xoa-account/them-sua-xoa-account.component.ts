@@ -109,13 +109,16 @@ export class ThemSuaXoaAccountComponent implements OnInit {
       let entity = {
         id: "",
         userName: this.username,
-        passWord: this.password,
+        password: this.password,
         email: this.email,
         phone: this.sdt,
         address: this.address,
         name: this.name,
         roleId: this.role,
         departmentId: this.department,
+        isActive: 0,
+        code:null,
+
       };
       if (!this.data) {
         if ( entity.departmentId == "") {

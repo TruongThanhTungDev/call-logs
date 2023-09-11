@@ -29,19 +29,20 @@ export class AccountComponent implements OnInit, AfterViewInit {
   info: any;
   selectedEntity: any = null;
   selectedId = 0;
-
-  FtTaiKhoan = "";
-  FtHoTen = "";
-  FtEmail = "";
-  FtSdt = "";
-  FtDiaChi = "";
-  FtPhanQuyen = "";
-  FtGhiChu = "";
-  departmentCode = "";
   roleID="";
   department: any;
   listDepartment: any[] = [];
-
+  params = {
+  page: 1,
+  itemsPerPage: 10,
+  userName : "",
+  name : "",
+  email : "",
+  address : "",
+  role : "",
+  note : "",
+ 
+  };
   constructor(
     private dmService: DanhMucService,
     private notificationService: NotificationService,
@@ -55,11 +56,10 @@ export class AccountComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.getDepartment();
-    // if(this.shopCode){
+    this.getDepartment();    
     this.loadData();
-    // }
     this.scriptPage();
+    console.log(this.listEntity)
   }
   ngAfterViewInit(): void {}
   public loadData() {
@@ -68,12 +68,12 @@ export class AccountComponent implements OnInit, AfterViewInit {
       sort: [this.sort, this.sortType ? "desc" : "asc"],
       page: this.page - 1,
       size: this.itemsPerPage,
-      filter: this.filter(),
+      filter: this.filterData(),
     };
     this.dmService.query(params, this.REQUEST_URL).subscribe(
       (res: HttpResponse<any>) => {
         if (res.body) {
-          if (res.body.CODE === 200) {
+          if (res.body.statusCode === 200) {
             this.page = res.body ? res.body.RESULT.number + 1 : 1;
             this.totalItems = res.body ? res.body.RESULT.totalElements : 0;
             this.listEntity = res.body.RESULT.content;
@@ -144,37 +144,64 @@ export class AccountComponent implements OnInit, AfterViewInit {
     );
   }
   changeDepartment(department: any) {
-    this.departmentCode = department;
+    this.department = department;
     this.loadData();
   }
-  private filter(): string {
-    const comparesArray: string[] = [];
-    const {
-      FtTaiKhoan,
-      FtHoTen,
-      FtDiaChi,
-      FtEmail,
-      FtGhiChu,
-      FtPhanQuyen,
-      FtSdt,
-      departmentCode,
-    } = this;
-    this.getRole(FtPhanQuyen)
-    comparesArray.push(`id>0`);
-    if (FtHoTen) comparesArray.push(`fullName=="*${FtHoTen.trim()}*"`);
-    if (FtTaiKhoan) comparesArray.push(`userName=="*${FtTaiKhoan.trim()}*"`);
-    if (FtDiaChi) comparesArray.push(`address=="*${FtDiaChi.trim()}*"`);
-    if (FtEmail) comparesArray.push(`email=="*${FtEmail.trim()}*"`);
-    if (FtGhiChu) comparesArray.push(`note=="*${FtGhiChu.trim()}*"`);
-    if (FtPhanQuyen) comparesArray.push(`roleId=="*${this.roleID.trim()}*"`);
-    if (FtSdt) comparesArray.push(`phone=="*${FtSdt.trim()}*"`);
-    if (departmentCode)
-      comparesArray.push(`department=="*${departmentCode.trim()}*"`);
-    return comparesArray.join(";");
+  public filterData() {
+    const filter = [];
+    this.params.page = 1;
+    filter.push("id>0");
+    if (this.params.name) {
+      filter.push(`name=="*${this.params.name.trim()}*"`);
+    }
+    if (this.params.role) {
+      filter.push(`roleId==${this.params.role}`);
+    }
+    if (this.params.address) {
+      filter.push(`address=="*${this.params.address.trim()}*"`);
+    }
+    if (this.params.userName) {
+      filter.push(`userName=="*${this.params.userName.trim()}*"`);
+    }
+    if (this.params.email) {
+      filter.push(`email=="*${this.params.email.trim()}*"`);
+    }
+    if (this.params.note) {
+      filter.push(`note=="*${this.params.note.trim()}*"`);
+    }
+    if (this.department) {
+      filter.push(`departmentId=="*${this.department.trim()}*"`);
+    }
+    return filter.join(";");
   }
+  // private filter(): string {
+  //   const comparesArray: string[] = [];
+  //   const {
+  //     FtTaiKhoan,
+  //     FtHoTen,
+  //     FtDiaChi,
+  //     FtEmail,
+  //     FtGhiChu,
+  //     FtPhanQuyen,
+  //     FtSdt,
+  //     department,
+  //   } = this;
+  //   this.getRole(FtPhanQuyen)
+  //   comparesArray.push(`id>0`);
+  //   if (FtHoTen) comparesArray.push(`name=="*${FtHoTen.trim()}*"`);
+  //   if (FtTaiKhoan) comparesArray.push(`userName=="*${FtTaiKhoan.trim()}*"`);
+  //   if (FtDiaChi) comparesArray.push(`address=="*${FtDiaChi.trim()}*"`);
+  //   if (FtEmail) comparesArray.push(`email=="*${FtEmail.trim()}*"`);
+  //   if (FtGhiChu) comparesArray.push(`note=="*${FtGhiChu.trim()}*"`);
+  //   if (FtPhanQuyen) comparesArray.push(`roleId=="*${this.roleID.trim()}*"`);
+  //   if (FtSdt) comparesArray.push(`phone=="*${FtSdt.trim()}*"`);
+  //   if (this.department)
+  //     comparesArray.push(`department=="*${department.trim()}*"`);
+  //   return comparesArray.join(";");
+  // }
 
   filterPhanQuyen(e: any): void {
-    this.FtPhanQuyen = e;
+    this.params.role = e;
     this.loadData();
   }
 
