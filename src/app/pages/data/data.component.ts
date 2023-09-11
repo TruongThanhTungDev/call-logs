@@ -182,6 +182,7 @@ export class DataComponent implements OnInit, AfterViewInit {
       this.shopCode = params.shopCode;
       this.loadData();
     });
+    this.getData();
   }
 
   ngAfterViewInit(): void {}
@@ -194,6 +195,21 @@ export class DataComponent implements OnInit, AfterViewInit {
     this.checkBoxUtil = new CheckBoxUtil();
     this.checkAllValues = false;
     this.loadData();
+  }
+
+  getData() {
+    const params = {
+      sort: ["id", "asc"],
+      page: 0,
+      size: 999,
+      filter: "id>0",
+    };
+    this.dmService.query(params, this.REQUEST_URL).subscribe(
+      (res: any) => {
+        console.log("res :>> ", res);
+      },
+      () => {}
+    );
   }
 
   public loadData() {
