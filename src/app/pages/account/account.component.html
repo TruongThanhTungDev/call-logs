@@ -70,7 +70,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr [class]="{'tr-selected': selectedEntity && selectedEntity.id === item.id}"  *ngFor="let entity of listEntity, index as i"
+              <tr  *ngFor="let entity of listEntity, index as i" [class]="{'tr-selected': selectedEntity && selectedEntity.id === item.id}" 
                 (click)="onRowSelect(entity)" (dblclick)="onRowdblclick(entity)">
                 <td class="text-center"><input type="checkbox" class="check-box" /></td>
                 <td>{{entity.userName}}</td>

@@ -63,7 +63,6 @@ export class AccountComponent implements OnInit, AfterViewInit {
   }
   ngAfterViewInit(): void {}
   public loadData() {
-    if (this.info.role !== "admin") return;
     const params = {
       sort: [this.sort, this.sortType ? "desc" : "asc"],
       page: this.page - 1,
