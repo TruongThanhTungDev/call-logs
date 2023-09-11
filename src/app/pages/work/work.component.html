@@ -18,7 +18,7 @@
             height: 33px;
             border-radius: 5px;
             border: 1px solid #006eb9;" type="text" ngxDaterangepickerMd [(ngModel)]="dateRange" [ranges]="ranges"
-              [showCustomRangeLabel]="true" [alwaysShowCalendars]="true" (ngModelChange)="checkLoadData()" />
+              [showCustomRangeLabel]="true" [alwaysShowCalendars]="true" (ngModelChange)="loadData()" />
           </div>
         </div>
       </div>
@@ -61,21 +61,24 @@
               </tr>
             </thead>
             <tbody *ngIf="data.length">
-              <tr *ngFor="let item of data;index as i" [key]="item.id"
-                [ngClass]="{'tr-selected': listSelected.includes(item.id)}" (dblclick)="editDepartment(selectedEntity)"
-                (click)="selectRow(item)">
+              <tr *ngFor="let item of data;index as i" [key]="item.id">
                 <td>
-                  {{item.name}}
+                  {{item.staff.userName}}
                 </td>
                 <td>
-                  {{item.note}}
+                  {{item.timeIn}}
                 </td>
                 <td>
-                  {{item.isDefault ? 'Mặc định' : 'Không'}}
+                  {{item.timeOut}}
                 </td>
-                <td style="width:10%">
-                  <span *ngIf="item.status == 1" class="badge badge-success">Hoạt động</span>
-                  <span *ngIf="item.status == 0" class="badge badge-danger">Khóa</span>
+                <td>
+                  {{item.totalOrder}}
+                </td>
+                <td>
+                  {{item.processedOrder}}
+                </td>
+                <td>
+                  {{item.successOrder}}
                 </td>
               </tr>
             </tbody>
