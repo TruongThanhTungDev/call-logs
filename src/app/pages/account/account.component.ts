@@ -22,7 +22,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
   previousPage = 1;
   sort = "id";
   sortType = true;
-  REQUEST_URL = "/api/v1/account";
+  REQUEST_URL = "/api/v1/user";
+  REQUEST_URL_DEPARTMENT = "/api/v1/department";
 
   listEntity = [];
   info: any;
@@ -36,7 +37,9 @@ export class AccountComponent implements OnInit, AfterViewInit {
   FtDiaChi = "";
   FtPhanQuyen = "";
   FtGhiChu = "";
-  shopCode = "";
+  departmentCode = "";
+  department: any;
+  listDepartment: any[] = [];
 
   constructor(
     private dmService: DanhMucService,
@@ -48,12 +51,10 @@ export class AccountComponent implements OnInit, AfterViewInit {
     private spinner: NgxSpinnerService
   ) {
     this.info = this.localStorage.retrieve("authenticationtoken");
-    this.route.queryParams.subscribe((params) => {
-      this.shopCode = params.shopCode;
-    });
   }
 
   ngOnInit() {
+    this.getDepartment();
     // if(this.shopCode){
     this.loadData();
     // }
@@ -99,7 +100,31 @@ export class AccountComponent implements OnInit, AfterViewInit {
       }
     );
   }
-
+  getDepartment() {
+    const payload = {
+      page: 0,
+      size: 100,
+      filter: `id>0;status==1`,
+      sort: ["id", "asc"],
+    };
+    this.dmService.query(payload, this.REQUEST_URL_DEPARTMENT).subscribe(
+      (res: HttpResponse<any>) => {
+        if (res.body.statusCode === 200) {
+          this.listDepartment = res.body.result.content;
+        } else {
+          this.notificationService.showError(res.body.MESSAGE, "Fail");
+        }
+      },
+      () => {
+        this.notificationService.showError("Đã có lỗi xảy ra", "Fail");
+        console.error();
+      }
+    );
+  }
+  changeDepartment(department: any) {
+    this.departmentCode = department;
+    this.loadData();
+  }
   private filter(): string {
     const comparesArray: string[] = [];
     const {
@@ -110,7 +135,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
       FtGhiChu,
       FtPhanQuyen,
       FtSdt,
-      shopCode,
+      departmentCode,
     } = this;
     comparesArray.push(`id>0`);
     if (FtHoTen) comparesArray.push(`fullName=="*${FtHoTen.trim()}*"`);
@@ -120,6 +145,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
     if (FtGhiChu) comparesArray.push(`note=="*${FtGhiChu.trim()}*"`);
     if (FtPhanQuyen) comparesArray.push(`role=="*${FtPhanQuyen.trim()}*"`);
     if (FtSdt) comparesArray.push(`phone=="*${FtSdt.trim()}*"`);
+    if (departmentCode)
+      comparesArray.push(`department=="*${departmentCode.trim()}*"`);
     return comparesArray.join(";");
   }
 

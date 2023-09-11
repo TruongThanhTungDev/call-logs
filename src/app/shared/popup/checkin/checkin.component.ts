@@ -47,7 +47,6 @@ export class CheckInComponent implements OnInit {
           );
           this.local.store("check_work_active", true);
           this.local.store("call_info", res.result);
-          // this.getActiveCall();
           this.activeModal.close(true);
         } else {
           this.notificationService.showError(

@@ -12,6 +12,14 @@
               khoản</button>
             <button type="" class="btn btn-danger mr-1" (click)="deleteData()" [disabled]="!selectedEntity"><i
                 class="fa fa-trash mr-1"></i> Xoá</button>
+
+            <div class="form-group form-outline mb-1 col-6">
+              <label class="text-primary"><i class="fa fa-ship"></i> Danh sách phòng ban</label>
+              <ng-select [(ngModel)]="department" name="listSelect" [multiple]="true" [clearable]="true"
+                placeholder="Danh sách phòng ban" (change)="changeDepartment(department)">
+                <ng-option *ngFor="let obj of listDepartment" [value]="obj.code">{{obj.code}} - {{obj.name}}</ng-option>
+              </ng-select>
+            </div>
             <!-- <button type="" class="btn btn-primary" [routerLink]="['/utm-medium']">Cấu hình UTM</button> -->
             <!-- <div class="page-navigation d-flex justify-content-right">
               <nav aria-label="Page navigation">
@@ -77,7 +85,7 @@
                 <td>{{entity.address}}</td>
                 <td>{{entity.role}}</td>
               </tr>
-              <tr *ngIf="listEntity.length === 0" >
+              <tr *ngIf="listEntity.length === 0">
                 <td class="bg-gray" colspan="7">Không có dữ liệu!</td>
               </tr>
             </tbody>

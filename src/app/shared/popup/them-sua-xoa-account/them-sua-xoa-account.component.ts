@@ -25,13 +25,13 @@ export class ThemSuaXoaAccountComponent implements OnInit {
   retypePassword = "";
   sdt = "";
   address = "";
-  fullName = "";
+  name = "";
   role = "user";
-  listShop: any = [];
+  listDepartment: any = [];
   listSelect: any = [];
 
-  REQUEST_URL = "/api/v1/account";
-  REQUEST_URL_SHOP = "/api/v1/shop";
+  REQUEST_URL = "/api/v1/user";
+  REQUEST_URL_DEPARTMENT = "/api/v1/department";
   constructor(
     private activeModal: NgbActiveModal,
     private dmService: DanhMucService,
@@ -43,26 +43,38 @@ export class ThemSuaXoaAccountComponent implements OnInit {
     this.loadData();
     if (this.data) {
       this.username = this.data.userName;
-      this.fullName = this.data.fullName;
+      this.name = this.data.name;
       this.email = this.data.email;
       this.sdt = this.data.phone;
       this.address = this.data.address;
       this.role = this.data.role;
-      this.listSelect = this.data.shop ? this.data.shop.split(",") : [];
+      this.listSelect = this.data.department ? this.data.shop.split(",") : [];
     }
   }
 
   loadData(): void {
-    this.dmService
-      .getOption(null, this.REQUEST_URL_SHOP, "?status=1")
-      .subscribe(
-        (res: HttpResponse<any>) => {
-          this.listShop = res.body.RESULT;
-        },
-        () => {
-          console.error();
+    this.getDepartment();
+  }
+  getDepartment() {
+    const payload = {
+      page: 0,
+      size: 100,
+      filter: `id>0;status==1`,
+      sort: ["id", "asc"],
+    };
+    this.dmService.query(payload, this.REQUEST_URL_DEPARTMENT).subscribe(
+      (res: HttpResponse<any>) => {
+        if (res.body.statusCode === 200) {
+          this.listDepartment = res.body.result.content;
+        } else {
+          this.notification.showError(res.body.MESSAGE, "Fail");
         }
-      );
+      },
+      () => {
+        this.notification.showError("Đã có lỗi xảy ra", "Fail");
+        console.error();
+      }
+    );
   }
 
   create() {
@@ -74,51 +86,51 @@ export class ThemSuaXoaAccountComponent implements OnInit {
         email: this.email,
         phone: this.sdt,
         address: this.address,
-        fullName: this.fullName,
+        name: this.name,
         role: this.role,
-        shop: this.listSelect.toString(),
+        department: this.listSelect.toString(),
       };
       if (!this.data) {
-        if (entity.role == "user" && entity.shop == "") {
+        if (entity.role == "user" && entity.department == "") {
           this.notification.showError(
-            "Vui lòng lựa chọn shop cho user!",
+            "Vui lòng lựa chọn phòng ban cho user!",
             "Fail"
           );
         } else {
           this.dmService
-            .postOption(entity, "/api/v1/account/create", "")
+            .postOption(entity, "/api/v1/user/create", "")
             .subscribe(
               (res: HttpResponse<any>) => {
-                if (res.body.CODE === 200) {
+                if (res.body.statusCode === 200) {
                   this.notification.showSuccess(
-                    "Tạo account thành công",
+                    "Tạo user thành công",
                     "Success"
                   );
                   this.accept();
                 } else {
-                  this.notification.showError("Tạo account thất bại", "Fail");
+                  this.notification.showError("Tạo user thất bại", "Fail");
                   this.dismiss();
                 }
               },
               () => {
-                this.notification.showError("Tạo account thất bại", "Fail");
+                this.notification.showError("Tạo user thất bại", "Fail");
                 console.error();
               }
             );
         }
       } else {
         entity.id = this.data.id;
-        if (entity.role == "user" && entity.shop == "") {
+        if (entity.role == "user" && entity.department == "") {
           this.notification.showError(
-            "Vui lòng lựa chọn shop cho user!",
+            "Vui lòng lựa chọn department cho user!",
             "Fail"
           );
         } else {
           this.dmService
-            .putOption(entity, "/api/v1/account/update?id=" + entity.id, "")
+            .putOption(entity, "/api/v1/user/update?id=" + entity.id, "")
             .subscribe(
               (res: HttpResponse<any>) => {
-                if (res.body.CODE === 200) {
+                if (res.body.statusCode === 200) {
                   this.notification.showSuccess(
                     "Cập nhật tài khoản thành công",
                     "Success"
