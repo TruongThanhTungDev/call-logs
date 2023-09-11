@@ -26,12 +26,15 @@ export class ThemSuaXoaAccountComponent implements OnInit {
   sdt = "";
   address = "";
   name = "";
-  role = "user";
+  role = "";
+  roleID="";
   listDepartment: any = [];
   listSelect: any = [];
+  department:any;
 
   REQUEST_URL = "/api/v1/user";
   REQUEST_URL_DEPARTMENT = "/api/v1/department";
+  REQUEST_URL_ROLE="/api/v1/role";
   constructor(
     private activeModal: NgbActiveModal,
     private dmService: DanhMucService,
@@ -48,7 +51,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
       this.sdt = this.data.phone;
       this.address = this.data.address;
       this.role = this.data.role;
-      this.listSelect = this.data.department ? this.data.shop.split(",") : [];
+      this.listSelect = this.data.department ? this.data.department.split(",") : [];
     }
   }
 
@@ -76,9 +79,33 @@ export class ThemSuaXoaAccountComponent implements OnInit {
       }
     );
   }
-
+  // getRole(role:any){
+  //   const payload = {
+  //     page: 0,
+  //     size: 100,
+  //     filter: `id>0;name=="*${role.trim()}*"`,
+  //     sort: ["id", "asc"],
+  //   };
+  //   this.dmService.query(payload, this.REQUEST_URL_ROLE).subscribe(
+  //     (res: HttpResponse<any>) => {
+  //       if (res.body.statusCode === 200) {
+  //         this.roleID = res.body.result.content.id;
+  //       } else {
+  //         this.notification.showError(res.body.MESSAGE, "Fail");
+  //       }
+  //     },
+  //     () => {
+  //       this.notification.showError("Đã có lỗi xảy ra", "Fail");
+  //       console.error();
+  //     }
+  //   );
+  // }
+  changeDepartment(department){
+    console.log(this.department)
+  }
   create() {
     if (this.validData()) {
+      console.log(this.department)
       let entity = {
         id: "",
         userName: this.username,
@@ -87,11 +114,11 @@ export class ThemSuaXoaAccountComponent implements OnInit {
         phone: this.sdt,
         address: this.address,
         name: this.name,
-        role: this.role,
-        department: this.listSelect.toString(),
+        roleId: this.role,
+        departmentId: this.department,
       };
       if (!this.data) {
-        if (entity.role == "user" && entity.department == "") {
+        if ( entity.departmentId == "") {
           this.notification.showError(
             "Vui lòng lựa chọn phòng ban cho user!",
             "Fail"
@@ -120,7 +147,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
         }
       } else {
         entity.id = this.data.id;
-        if (entity.role == "user" && entity.department == "") {
+        if ( entity.departmentId == "") {
           this.notification.showError(
             "Vui lòng lựa chọn department cho user!",
             "Fail"

@@ -42,9 +42,8 @@
       <div class="form-group form-outline mb-1">
         <label class="text-primary"><i class="fa fa-sitemap"></i> Phân quyền</label>
         <select class="form-control" [(ngModel)]="role">
-          <option value="user">user</option>
-          <option value="marketing">marketing</option>
-          <option value="admin">admin</option>
+          <option value="1">admin</option>
+          <option value="2">staff</option>        
         </select>
       </div>
       <div class="form-group form-outline mb-1">
@@ -55,9 +54,9 @@
     </div>
     <div class="form-group form-outline mb-1 col-6">
       <label class="text-primary"><i class="fa fa-ship"></i> Danh sách phòng ban</label>
-      <ng-select [(ngModel)]="listSelect" name="listSelect" [multiple]="true" [clearable]="true"
+      <ng-select [(ngModel)]="department" name="department" [clearable]="true" (change)=changeDepartment($event)
         placeholder="Danh sách phòng ban">
-        <ng-option *ngFor="let obj of listDepartment" [value]="obj.code">{{obj.code}} - {{obj.name}}</ng-option>
+        <ng-option *ngFor="let obj of listDepartment" [value]="obj.id">{{obj.code}} - {{obj.name}}</ng-option>
       </ng-select>
     </div>
   </div>

@@ -24,7 +24,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   sortType = true;
   REQUEST_URL = "/api/v1/user";
   REQUEST_URL_DEPARTMENT = "/api/v1/department";
-
+  REQUEST_URL_ROLE="/api/v1/role"
   listEntity = [];
   info: any;
   selectedEntity: any = null;
@@ -38,6 +38,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   FtPhanQuyen = "";
   FtGhiChu = "";
   departmentCode = "";
+  roleID="";
   department: any;
   listDepartment: any[] = [];
 
@@ -121,6 +122,27 @@ export class AccountComponent implements OnInit, AfterViewInit {
       }
     );
   }
+  getRole(role:any){
+    const payload = {
+      page: 0,
+      size: 100,
+      filter: `id>0;name=="*${role.trim()}*"`,
+      sort: ["id", "asc"],
+    };
+    this.dmService.query(payload, this.REQUEST_URL_ROLE).subscribe(
+      (res: HttpResponse<any>) => {
+        if (res.body.statusCode === 200) {
+          this.roleID = res.body.result.content.id;
+        } else {
+          this.notificationService.showError(res.body.MESSAGE, "Fail");
+        }
+      },
+      () => {
+        this.notificationService.showError("Đã có lỗi xảy ra", "Fail");
+        console.error();
+      }
+    );
+  }
   changeDepartment(department: any) {
     this.departmentCode = department;
     this.loadData();
@@ -137,13 +159,14 @@ export class AccountComponent implements OnInit, AfterViewInit {
       FtSdt,
       departmentCode,
     } = this;
+    this.getRole(FtPhanQuyen)
     comparesArray.push(`id>0`);
     if (FtHoTen) comparesArray.push(`fullName=="*${FtHoTen.trim()}*"`);
     if (FtTaiKhoan) comparesArray.push(`userName=="*${FtTaiKhoan.trim()}*"`);
     if (FtDiaChi) comparesArray.push(`address=="*${FtDiaChi.trim()}*"`);
     if (FtEmail) comparesArray.push(`email=="*${FtEmail.trim()}*"`);
     if (FtGhiChu) comparesArray.push(`note=="*${FtGhiChu.trim()}*"`);
-    if (FtPhanQuyen) comparesArray.push(`role=="*${FtPhanQuyen.trim()}*"`);
+    if (FtPhanQuyen) comparesArray.push(`roleId=="*${this.roleID.trim()}*"`);
     if (FtSdt) comparesArray.push(`phone=="*${FtSdt.trim()}*"`);
     if (departmentCode)
       comparesArray.push(`department=="*${departmentCode.trim()}*"`);
@@ -224,7 +247,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
             )
             .subscribe(
               (res: HttpResponse<any>) => {
-                if (res.body.CODE === 200) {
+                if (res.body.statusCode === 200) {
                   this.notificationService.showSuccess(
                     "Xóa thành công",
                     "Success"
