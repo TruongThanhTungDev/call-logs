@@ -36,7 +36,7 @@ export class LogiinComponent implements OnInit {
     };
 
     this.dmService.postOption(entity, this.REQUEST_URL, "").subscribe(
-      (res: HttpResponse<any>) => {
+      (res: any) => {
         if (res.body.statusCode === 200) {
           this.localStorage.store("authenticationToken", res.body.result);
           this.localStorage.store("token", res.body.result.token);

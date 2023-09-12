@@ -80,13 +80,14 @@ export class ImportDataPopup implements OnInit {
     }
     const formData = new FormData();
     formData.append("file", this.selectedFile);
-    this.dmService
-      .uploadFile(
-        `${this.UPLOAD_FILE_URL}?departmentId=${this.deparmentSelected.id}`,
-        formData
-      )
-      .subscribe((res: any) => {
-        console.log("res :>> ", res);
-      });
+    console.log("this.selectedFile :>> ", this.selectedFile);
+    // this.dmService
+    //   .uploadFile(
+    //     `${this.UPLOAD_FILE_URL}?departmentId=${this.deparmentSelected.id}`,
+    //     formData
+    //   )
+    //   .subscribe((res: any) => {
+    //     console.log("res :>> ", res);
+    //   });
   }
 }

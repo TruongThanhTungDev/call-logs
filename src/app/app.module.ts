@@ -96,11 +96,6 @@ import { FormDataInterceptor } from "./formData.interceptor";
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: HeadersInterceptor, multi: true },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: FormDataInterceptor,
-      multi: true,
-    },
   ],
   bootstrap: [AppComponent],
 })
