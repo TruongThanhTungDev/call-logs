@@ -32,23 +32,29 @@
                 </th>
               </tr>
               <tr class="table-search">
-                <th>
-                  <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Tìm kiếm">
+                 <th>
+                  <input type="text" [(ngModel)]="params.username" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
-                <th>
-                  <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Tìm kiếm">
+                 <th>
+                  <input type="text" [(ngModel)]="params.timeIn" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
-                <th class="position-relative">
-                  <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Tìm kiếm">
+                 <th>
+                  <input type="text" [(ngModel)]="params.timeOut" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
-                <th>
-                  <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Tìm kiếm">
+                 <th>
+                  <input type="text" [(ngModel)]="params.totalOrder" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
-                <th>
-                  <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Tìm kiếm">
+                 <th>
+                  <input type="text" [(ngModel)]="params.processedOrder" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
-                <th>
-                  <input type="text" autocomplete="off" class="form-control form-control-sm" placeholder="Tìm kiếm">
+                 <th>
+                  <input type="text" [(ngModel)]="params.successOrder" (keyup.enter)="processFilter()"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
               </tr>
             </thead>

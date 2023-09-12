@@ -63,7 +63,16 @@ export class WorkComponent implements OnInit {
 
   plugins = new Plugin();
   dataAdapter: any;
-
+  params={
+  page: 1,
+  itemsPerPage: 10,
+  username:"",
+  timeIn:"",
+  timeOut:"",
+  totalOrder: 0,
+  processedOrder:0,
+  successOrder:0,
+  }
   // date
   dateRange: TimePeriod = {
     startDate: dayjs().startOf("month"),
@@ -123,14 +132,12 @@ export class WorkComponent implements OnInit {
   ngOnInit() {}
 
   loadData() {
-    var date = JSON.parse(JSON.stringify(this.dateRange));
-    let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
-    let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
+    
     const params = {
       sort: ["id", "desc"],
       page: this.page - 1,
       size: this.itemsPerPage,
-      filter: "timeIn >=" + startDate + ";timeIn <=" + endDate,
+      filter: this.filterData(),
     };
     this.spinner.show();
     this.dmService.query(params, this.REQUEST_URL).subscribe(
@@ -168,7 +175,37 @@ export class WorkComponent implements OnInit {
       }
     );
   }
-
+  public filterData() {
+    const filter = [];
+    var date = JSON.parse(JSON.stringify(this.dateRange));
+    let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
+    let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
+    this.params.page = 1;
+    filter.push("id>0");
+    filter.push("timeIn >=" + startDate + ";timeIn <=" + endDate);    
+    if (this.params.username) {
+      filter.push(`staff.name=="*${this.params.username.trim()}*"`);
+    }
+    if (this.params.timeIn) {
+      filter.push(`timeIn==${this.params.timeIn}`);
+    }
+    if (this.params.timeOut) {
+      filter.push(`timeOut==${this.params.timeOut}`);
+    }
+    if (this.params.totalOrder) {
+      filter.push(`totalOrder==${this.params.totalOrder}`);
+    }
+    if (this.params.processedOrder) {
+      filter.push(`processedOrder==${this.params.processedOrder}`);
+    }
+    if (this.params.successOrder) {
+      filter.push(`successOrder==${this.params.successOrder}`);
+    }
+    return filter.join(";");
+  }
+  processFilter() {
+    this.loadData();
+  }
   customDate(list: any[]): any[] {
     list.forEach((unitItem) => {
       unitItem.ngayVao = unitItem.timeIn
