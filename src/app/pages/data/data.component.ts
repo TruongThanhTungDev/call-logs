@@ -120,20 +120,9 @@ export class DataComponent implements OnInit, AfterViewInit {
     collectCost: "",
   };
 
-  deliveries = [
-    { type: 1, name: "Cho xem hàng nhưng không cho thử hàng" },
-    { type: 2, name: "Cho thử hàng" },
-    { type: 3, name: "Không cho xem hàng" },
-  ];
-
   provinces: any[];
   districts: any[];
   wards: any[];
-  sources = ["TPOS", "TRUSTSALES", "HARAVAN", "PANCAKE"];
-  collects = [
-    { type: 0, name: "Thu hộ = Tiền hàng + phí giao" },
-    { type: 1, name: "Thu hộ = Tiền hàng" },
-  ];
 
   constructor(
     private dmService: DanhMucService,
@@ -205,6 +194,7 @@ export class DataComponent implements OnInit, AfterViewInit {
     this.dmService.query(params, this.REQUEST_URL).subscribe(
       (res: any) => {
         if (res.body.statusCode === 200) {
+          this.spinner.hide();
           this.listEntity = res.body.result.content.map((item: any) => {
             return {
               ...item,
@@ -214,6 +204,11 @@ export class DataComponent implements OnInit, AfterViewInit {
             };
           });
           this.totalItems = res.body.result.totalElements;
+        } else {
+          this.notificationService.showError(
+            "Đã có lỗi xảy ra",
+            "Error message"
+          );
         }
       },
       () => {

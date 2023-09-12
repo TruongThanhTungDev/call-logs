@@ -62,7 +62,7 @@ export class GiaoViecPopUpComponent implements OnInit {
 
   private filter(): string {
     const comparesArray: string[] = [];
-    comparesArray.push(`isActive==-1`);
+    comparesArray.push(`isActive==1`);
     return comparesArray.join(";");
   }
   customDate(list: any[]): any[] {

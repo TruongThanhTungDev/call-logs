@@ -110,7 +110,7 @@ export class TuDongGiaoViecComponent
   private filter(): string {
     const comparesArray: string[] = [];
     const { ftHoTen, ftTenDangNhap, shopCode } = this;
-    comparesArray.push(`isActive==-1`);
+    comparesArray.push(`isActive==1`);
     if (ftHoTen) comparesArray.push(`account.fullName == "*${ftHoTen}*" `);
     if (ftTenDangNhap)
       comparesArray.push(`account.userName == "*${ftTenDangNhap}*" `);
@@ -281,7 +281,6 @@ export class TuDongGiaoViecComponent
     let countCV = phanNguyen;
 
     if (phanNguyen === 0) {
-      console.log("listWorkAssign :>> ", listWorkAssign);
       listWorkAssign.forEach((unitItem) => {
         unitItem.userId = listCheck[listCheck.length - 1].account.id;
         unitItem.dataId = unitItem.id;
