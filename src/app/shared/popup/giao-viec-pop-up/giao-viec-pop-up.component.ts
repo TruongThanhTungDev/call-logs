@@ -19,9 +19,7 @@ import moment from "moment";
   templateUrl: "./giao-viec-pop-up.component.html",
   styleUrls: ["./giao-viec-pop-up.component.scss"],
 })
-export class GiaoViecPopUpComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class GiaoViecPopUpComponent implements OnInit {
   REQUEST_WORK_URL = "/api/v1/work";
   @Input() data: any;
   @Input() shopCode: any;
@@ -40,32 +38,33 @@ export class GiaoViecPopUpComponent
   ngOnInit(): void {
     this.getUserActive();
   }
-
-  ngAfterViewInit(): void {}
-
-  ngOnDestroy(): void {}
-
-  public getUserActive() {
-    if (!this.shopCode) return;
-    this.service
-      .getOption(
-        null,
-        this.REQUEST_WORK_URL,
-        "/getAllActive?shopCode=" + this.shopCode
-      )
-      .subscribe(
-        (res: HttpResponse<any>) => {
-          this.listUser = res.body.RESULT;
-        },
-        (error: any) => {
-          this.notificationService.showError(
-            `${error.body.RESULT.message}`,
-            "Thông báo lỗi!"
-          );
+  getUserActive() {
+    const params = {
+      sort: ["id", "asc"],
+      page: 0,
+      size: 9999,
+      filter: this.filter(),
+    };
+    this.service.query(params, this.REQUEST_WORK_URL).subscribe(
+      (res: HttpResponse<any>) => {
+        if (res.body.statusCode === 200) {
+          this.listUser = res.body.result.content;
+        } else {
+          this.notificationService.showError(res.body.MESSAGE, "Error message");
         }
-      );
+      },
+      () => {
+        this.notificationService.showError("Đã có lỗi xảy ra", "Error message");
+        console.error();
+      }
+    );
   }
 
+  private filter(): string {
+    const comparesArray: string[] = [];
+    comparesArray.push(`isActive==-1`);
+    return comparesArray.join(";");
+  }
   customDate(list: any[]): any[] {
     list.forEach((unitItem) => {
       unitItem.ngay = unitItem.date ? DateUtil.formatDate(unitItem.date) : null;
@@ -86,29 +85,26 @@ export class GiaoViecPopUpComponent
       return;
     }
     const entity = {
-      dataList: this.data.map((item) => {
+      item: this.data.map((item) => {
         return {
-          ...item,
-          nhanVienId: this.selectedStaff,
-          dateChanged: moment(new Date()).format("YYYYMMDDHHmmss"),
-          dateChangedOnly: moment(new Date()).format("YYYYMMDD"),
-          status: item.status === 0 ? 1 : item.status,
+          userId: this.selectedStaff,
+          dataId: item.id,
         };
       }),
     };
     this.service
-      .postOption(entity, this.REQUEST_DATA_URL, "/assignWork")
+      .postOption(entity, this.REQUEST_DATA_URL, "/assignData")
       .subscribe(
         (res: HttpResponse<any>) => {
           this.activeModal.close();
           this.notificationService.showSuccess(
-            `${res.body.MESSAGE}`,
+            `Giao việc thành công`,
             "Thông báo!"
           );
         },
         (error: any) => {
           this.notificationService.showError(
-            `${error.body.MESSAGE}`,
+            `Giao việc thất bại`,
             "Thông báo lỗi!"
           );
         }

@@ -3,13 +3,14 @@ import { Injectable } from "@angular/core";
 import { OPERATIONS } from "app/app.constants";
 import { createRequestOption } from "app/shared/util/request-util";
 import { Observable, Subject } from "rxjs";
+import { env } from "./environment";
 
 @Injectable({ providedIn: "root" })
 export class DanhMucService {
   public resourceAddress = "https://api.mysupership.vn/v1/partner/areas";
   public resourceGHSV = "https://api.ghsv.vn/v1";
 
-  public resourceUrl = "http://103.75.184.157:8080";
+  public resourceUrl = env.BASE_URL;
   // public resourceUrl = "http://localhost:8080";
   private subject = new Subject<any>();
   constructor(protected http: HttpClient) {}
@@ -121,10 +122,7 @@ export class DanhMucService {
     });
   }
   uploadFile(requestUrl: any, file: any): Observable<HttpResponse<any>> {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    return this.http.post<any>(this.resourceUrl + requestUrl, formData, {
+    return this.http.post<any>(this.resourceUrl + requestUrl, file, {
       observe: "response",
     });
   }

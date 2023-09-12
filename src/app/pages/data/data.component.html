@@ -256,22 +256,13 @@
                   <input class="check-box" type="checkbox" [id]="'check' + i" (change)="checkOnIndex(i)"
                     [(ngModel)]="checkBoxValues[i]" />
                 </td>
-                <td>{{ entity.ngay }}</td>
+                <td>{{ entity.date }}</td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.phone }}</td>
-                <td>{{ entity.product }}</td>
-                <td>{{ entity.nhanvien }}</td>
+                <td>{{ entity.address }}</td>
+                <td>{{ entity.department.name }}</td>
                 <td>
-                  {{ entity ? plugins.formatNumber(entity.price) : "" }}{{ entity.price ? "đ" : "" }}
-                </td>
-                <td>
-                  {{ entity.shippingCode}}
-                </td>
-                <td>
-                  {{ entity.shippingAccount?entity.shippingAccount.name:''}}
-                </td>
-                <td>
-                  {{ entity.shippingCreator?entity.shippingCreator.userName:''}}
+                  {{entity.staff ? entity.staff.name : ''}}
                 </td>
               </tr>
               <tr *ngIf="listEntity.length === 0">

@@ -8,7 +8,8 @@
       <h4 class="bold text-primary mt-1">
         Số lượng công việc cần xử lý:
         <input type="number" min="0" max="{{listWork.length}}" step="1"
-          style="border-radius: 8px; border:1px solid #006EB9" [(ngModel)]="numOfWork" (change)="onChangeNumOfWork()" /> /
+          style="border-radius: 8px; border:1px solid #006EB9" [(ngModel)]="numOfWork" (change)="onChangeNumOfWork()" />
+        /
         {{listWork.length}}
       </h4>
     </div>
@@ -17,17 +18,10 @@
           class="fa fa-refresh"></i></button>
     </div>
     <div class="col-12">
-      <!-- <jqxGrid #gridNhanVien
-            [width]="'100%'" [source]="dataAdapter" [columns]="columns" [editable]="true" [height]="height"
-            [pageable]="true" [sortable]="true" 
-            [filterable]="true" [showfilterrow]="true" [rowsheight]="45" 
-            [altrows]="true"  [enabletooltips]="true"  [selectionmode]="'checkbox'"
-            (onRowselect)="onRowSelect($event)" [localization]="localization" (onRowunselect)="onRowunselect($event)"
-            >
-          </jqxGrid> -->
       <div class="mt-2">
         <div class="table-popup" style="height:480px">
-          <table id="" class="table radius m-0 table-hover" width="100%" cellspacing="0" cellpadding="0" border="0" style="min-width: 1100px">
+          <table id="" class="table radius m-0 table-hover" width="100%" cellspacing="0" cellpadding="0" border="0"
+            style="min-width: 1100px">
             <thead>
               <tr>
                 <th style="width: 50px;" class="th-f text-center">
@@ -45,10 +39,8 @@
                     class="form-control form-control-sm" placeholder="Tìm kiếm"></th>
                 <th> <input type="text" [(ngModel)]="ftHoTen" (keyup.enter)="getUserActive('')"
                     class="form-control form-control-sm" placeholder="Tìm kiếm"></th>
-                <th> <input type="text" 
-                    class="form-control form-control-sm" placeholder="Tìm kiếm"></th>
-                <th> <input type="text"
-                    class="form-control form-control-sm" placeholder="Tìm kiếm"></th>
+                <th> <input type="text" class="form-control form-control-sm" placeholder="Tìm kiếm"></th>
+                <th> <input type="text" class="form-control form-control-sm" placeholder="Tìm kiếm"></th>
               </tr>
             </thead>
             <tbody>
@@ -58,10 +50,10 @@
                     [(ngModel)]="checkBoxValues[i]">
                 </td>
                 <td>
-                  {{entity.account?entity.account.userName:''}}
+                  {{entity.staff?entity.staff.userName:''}}
                 </td>
                 <td>
-                  {{entity.account?entity.account.fullName:''}}
+                  {{entity.staff?entity.staff.fullName:''}}
                 </td>
                 <td>
                   {{entity.thoiGianVao}}
@@ -77,10 +69,10 @@
           </table>
         </div>
       </div>
-  
+
     </div>
   </div>
   <div class="modal-footer mt-2 mb-2">
     <button type="" class="title-popup" (click)="assignWork()"><i class="fa fa-save mr-1"></i> Lưu thông tin</button>
   </div>
-  </div>
+</div>

@@ -19,7 +19,7 @@
             <div class="w-100 text-center border-primary" style="border: 2px dashed; padding: 32px;font-size: 20px;">
               <i class="fa-solid fa-file-arrow-up text-primary"></i>
               <div class="text-primary fw-bold">
-                Tải dữ liệu lên...
+                {{selectedFile ? selectedFile.name : 'Tải dữ liệu lên...'}}
               </div>
             </div>
           </label>
@@ -40,6 +40,14 @@
                   <th>Địa chỉ</th>
                 </tr>
               </thead>
+              <tbody>
+                <tr *ngFor="let item of listData">
+                  <td>{{item.id}}</td>
+                  <td>{{item.name}}</td>
+                  <td>{{item.phone}}</td>
+                  <td>{{item.address}}</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>

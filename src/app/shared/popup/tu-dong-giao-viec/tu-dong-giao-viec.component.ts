@@ -56,19 +56,6 @@ export class TuDongGiaoViecComponent
   ngAfterViewInit(): void {}
 
   getUserActive(e: any) {
-    // this.service.getOption(null, this.REQUEST_WORK_URL, "/getAllActive?shopCode=" + this.shopCode).subscribe(
-    //   (res: HttpResponse<any>) => {
-    //     this.listUser = res.body.RESULT;
-    //     this.source.localdata = this.listUser;
-    //     this.dataAdapter = new jqx.dataAdapter(this.source);
-    //     setTimeout(() => {
-    //       this.myGrid.selectallrows();
-    //     }, 200);
-    //   },
-    //   (error: any) => {
-    //     this.notificationService.showError(`${error.body.RESULT.message}`, "Thông báo lỗi!");
-    //   }
-    // );
     const params = {
       sort: ["id", "asc"],
       page: 0,
@@ -78,8 +65,8 @@ export class TuDongGiaoViecComponent
     this.service.query(params, this.REQUEST_WORK_URL).subscribe(
       (res: HttpResponse<any>) => {
         if (res.body) {
-          if (res.body.CODE === 200) {
-            this.listUser = res.body.RESULT.content;
+          if (res.body.statusCode === 200) {
+            this.listUser = res.body.result.content;
             if (e) {
               this.checkAllValues = true;
               this.checkAll();
@@ -123,8 +110,7 @@ export class TuDongGiaoViecComponent
   private filter(): string {
     const comparesArray: string[] = [];
     const { ftHoTen, ftTenDangNhap, shopCode } = this;
-    comparesArray.push(`isActive==0`);
-    if (shopCode) comparesArray.push(`shopCode=="${shopCode}"`);
+    comparesArray.push(`isActive==-1`);
     if (ftHoTen) comparesArray.push(`account.fullName == "*${ftHoTen}*" `);
     if (ftTenDangNhap)
       comparesArray.push(`account.userName == "*${ftTenDangNhap}*" `);
@@ -233,56 +219,37 @@ export class TuDongGiaoViecComponent
   }
 
   getWorks(): void {
+    const params = {
+      sort: ["id", "desc"],
+      page: 0,
+      size: 9999,
+      filter: "id>0",
+    };
     this.spinner.show();
-    this.service
-      .getOption(
-        null,
-        this.REQUEST_DATA_URL,
-        `/getAllDataAccountNull?status=0,1,2,3,4,5&shopCode=` + this.shopCode
-      )
-      .subscribe(
-        (res: HttpResponse<any>) => {
-          this.listWork = res.body.RESULT;
-          this.listWork = this.listWork.sort((a, b) => 0.5 - Math.random());
-          this.numOfWork = this.listWork.length;
-          if (this.listWork.length === 0) {
-            this.notificationService.showWarning(
-              "Danh sách công việc trống",
-              "Cảnh báo!"
-            );
-          } else {
-            this.getUserActive("all");
-          }
-          this.spinner.hide();
-        },
-        (error: HttpResponse<any>) => {
-          this.notificationService.showError(
-            `${error.body.RESULT.message}`,
-            "Thông báo lỗi!"
+    this.service.query(params, this.REQUEST_DATA_URL).subscribe(
+      (res: HttpResponse<any>) => {
+        this.listWork = res.body.result.content;
+        this.listWork = this.listWork.sort((a, b) => 0.5 - Math.random());
+        this.numOfWork = this.listWork.length;
+        if (this.listWork.length === 0) {
+          this.notificationService.showWarning(
+            "Danh sách công việc trống",
+            "Cảnh báo!"
           );
-          this.spinner.hide();
+        } else {
+          this.getUserActive("all");
         }
-      );
+        this.spinner.hide();
+      },
+      (error: HttpResponse<any>) => {
+        this.notificationService.showError(
+          `${error.body.RESULT.message}`,
+          "Thông báo lỗi!"
+        );
+        this.spinner.hide();
+      }
+    );
   }
-
-  // onRowSelect(e: any): void {
-  //   this.customDataSelect(this.listUser);
-  //   this.source.localdata = this.listUser;
-  //   this.dataAdapter = new jqx.dataAdapter(this.source);
-  //   setTimeout(() => {
-  //     this.myGrid.refreshdata();
-  //   }, 200);
-  // }
-
-  // onRowunselect(e: any): void {
-  //   this.customDataSelect(this.listUser);
-  //   this.source.localdata = this.listUser;
-  //   this.dataAdapter = new jqx.dataAdapter(this.source);
-  //   setTimeout(() => {
-  //     this.myGrid.refreshdata();
-  //   }, 200);
-  // }
-
   onChangeNumOfWork(): void {
     if (this.numOfWork > this.listWork.length || this.numOfWork <= 0) {
       this.notificationService.showError("Số lượng không hợp lý!", "Cảnh báo");
@@ -314,18 +281,15 @@ export class TuDongGiaoViecComponent
     let countCV = phanNguyen;
 
     if (phanNguyen === 0) {
+      console.log("listWorkAssign :>> ", listWorkAssign);
       listWorkAssign.forEach((unitItem) => {
-        unitItem.nhanVienId = listCheck[listCheck.length - 1].account.id;
-        unitItem.dateChanged = moment(new Date()).format("YYYYMMDDHHmmss");
-        unitItem.dateChangedOnly = moment(new Date()).format("YYYYMMDD");
-        unitItem.status = unitItem.status === 0 ? 1 : unitItem.status;
+        unitItem.userId = listCheck[listCheck.length - 1].account.id;
+        unitItem.dataId = unitItem.id;
       });
     } else {
       listWorkAssign.forEach((unitItem, index) => {
-        unitItem.nhanVienId = listCheck[countTK].account.id;
-        unitItem.dateChanged = moment(new Date()).format("YYYYMMDDHHmmss");
-        unitItem.dateChangedOnly = moment(new Date()).format("YYYYMMDD");
-        unitItem.status = unitItem.status === 0 ? 1 : unitItem.status;
+        unitItem.userId = listCheck[listCheck.length - 1].account.id;
+        unitItem.dataId = unitItem.id;
         if (index === countCV - 1) {
           countCV = countCV + phanNguyen;
           if (countTK !== length - 1) {
@@ -338,10 +302,10 @@ export class TuDongGiaoViecComponent
   }
   save(list: any): void {
     const entity = {
-      dataList: list,
+      item: list,
     };
     this.service
-      .postOption(entity, this.REQUEST_DATA_URL, "/assignWork")
+      .postOption(entity, this.REQUEST_DATA_URL, "/assignData")
       .subscribe(
         (res: HttpResponse<any>) => {
           this.spinnerService.hide();

@@ -1,11 +1,11 @@
-import { HttpResponse } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpResponse } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
 import { DanhMucService } from "app/danhmuc.service";
 import { NotificationService } from "app/notification.service";
 import { NgxSpinnerService } from "ngx-spinner";
 import { LocalStorageService } from "ngx-webstorage";
-
+import readXlsxFile from "read-excel-file";
 @Component({
   selector: "import-data",
   templateUrl: "./import-data.component.html",
@@ -13,6 +13,7 @@ import { LocalStorageService } from "ngx-webstorage";
 })
 export class ImportDataPopup implements OnInit {
   listDepartment: any[] = [];
+  listData: any[] = [];
   deparmentSelected: any;
   selectedFile: any;
   DEPARTMENT_URL = "/api/v1/department";
@@ -22,13 +23,21 @@ export class ImportDataPopup implements OnInit {
     private dmService: DanhMucService,
     private localStorage: LocalStorageService,
     private notificationService: NotificationService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private http: HttpClient
   ) {}
   ngOnInit(): void {
     this.loadData();
   }
   public dismiss(): void {
     this.activeModal.close(false);
+  }
+  public decline(): void {
+    this.activeModal.close(false);
+  }
+
+  public accept(): void {
+    this.activeModal.close(true);
   }
   public filterData() {
     const filter = [];
@@ -65,6 +74,14 @@ export class ImportDataPopup implements OnInit {
   }
   selectFile(event) {
     this.selectedFile = event.target.files[0];
+    readXlsxFile(this.selectedFile).then((result: any) => {
+      this.listData = result.slice(1).map((item: any) => ({
+        id: item[0],
+        name: item[1],
+        phone: item[2],
+        address: item[3],
+      }));
+    });
   }
   saveUploadFile() {
     if (!this.selectedFile) {
@@ -80,14 +97,36 @@ export class ImportDataPopup implements OnInit {
     }
     const formData = new FormData();
     formData.append("file", this.selectedFile);
-    console.log("this.selectedFile :>> ", this.selectedFile);
-    // this.dmService
-    //   .uploadFile(
-    //     `${this.UPLOAD_FILE_URL}?departmentId=${this.deparmentSelected.id}`,
-    //     formData
-    //   )
-    //   .subscribe((res: any) => {
-    //     console.log("res :>> ", res);
-    //   });
+    this.spinner.show();
+    this.dmService
+      .uploadFile(
+        this.UPLOAD_FILE_URL + `?departmentId=${this.deparmentSelected.id}`,
+        formData
+      )
+      .subscribe(
+        (res: any) => {
+          if (res.status === 200) {
+            this.spinner.hide();
+            this.notificationService.showSuccess(
+              "Nhập dữ liệu thành công",
+              "Thông báo"
+            );
+            this.accept();
+          } else {
+            this.spinner.hide();
+            this.notificationService.showError(
+              "Nhập dữ liệu thất bại",
+              "Thông báo"
+            );
+          }
+        },
+        () => {
+          this.spinner.hide();
+          this.notificationService.showError(
+            "Có lỗi xảy ra, vui lòng thử lại",
+            "Thông báo"
+          );
+        }
+      );
   }
 }

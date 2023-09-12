@@ -12,8 +12,8 @@
       <div class="row form-group form-outline">
         <div class="col-11">
           <ng-select [(ngModel)]="selectedStaff" name="selectedStaff">
-            <ng-option *ngFor="let obj of listUser" [value]="obj.account.id">{{obj.account.fullName}}
-              ({{obj.account.userName}})</ng-option>
+            <ng-option *ngFor="let obj of listUser" [value]="obj.staff.id">{{obj.staff.name}}
+              ({{obj.staff.userName}})</ng-option>
           </ng-select>
         </div>
         <div class="col-1">
@@ -37,7 +37,7 @@
                 <th style="width: 150px;">Thời gian</th>
                 <th style="width: 200px;">Khách hàng</th>
                 <th style="width: 120px;">Số điện thoại</th>
-                <th>Sản phẩm</th>
+                <th>Phòng ban</th>
                 <th class="th-fi" style="width: 300px;">Địa chỉ</th>
               </tr>
             </thead>
@@ -83,7 +83,7 @@
                   </div>
                 </td>
                 <td>
-                  {{entity.ngay}}
+                  {{entity.date}}
                 </td>
                 <td>
                   {{entity.name}}
@@ -92,10 +92,10 @@
                   {{entity.phone}}
                 </td>
                 <td>
-                  {{entity.product}}
+                  {{entity.department.name}}
                 </td>
                 <td>
-                  {{entity.street}}
+                  {{entity.address}}
                 </td>
 
               </tr>

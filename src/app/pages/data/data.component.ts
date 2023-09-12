@@ -57,10 +57,6 @@ export class DataComponent implements OnInit, AfterViewInit {
   ftNhanVien = "";
   ftDoanhSo = "";
   ftChiPhi = "";
-  ftNoteShipping = "";
-  ftMaVanChuyen = "";
-  ftNguoiVC = "";
-  ftTaiKhoanVC = "";
   plugins = new Plugin();
   listEntity = [];
   selectedEntity: any;
@@ -180,15 +176,12 @@ export class DataComponent implements OnInit, AfterViewInit {
     this.scriptPage();
     this.route.queryParams.subscribe((params) => {
       this.shopCode = params.shopCode;
-      this.loadData();
     });
-    this.getData();
   }
 
   ngAfterViewInit(): void {}
 
   getByStatus(e): void {
-    console.log("e :>> ", e);
     this.ftTrangThai = e;
     this.listCheck = [];
     this.checkBoxValues = Array(this.itemsPerPage).fill(false);
@@ -197,95 +190,39 @@ export class DataComponent implements OnInit, AfterViewInit {
     this.loadData();
   }
 
-  getData() {
-    const params = {
-      sort: ["id", "asc"],
-      page: 0,
-      size: 999,
-      filter: "id>0",
-    };
-    this.dmService.query(params, this.REQUEST_URL).subscribe(
-      (res: any) => {
-        console.log("res :>> ", res);
-      },
-      () => {}
-    );
-  }
-
   public loadData() {
-    if (this.info.role == "admin") {
-      this.checkStatusActive = false;
-    } else {
-      if (
-        this.localStorage.retrieve("check_work_active") &&
-        this.info.role == "user"
-      ) {
-        this.checkStatusActive = false;
-      } else {
-        this.checkStatusActive = true;
-        return;
-      }
-    }
-    if (!this.shopCode) return;
     var date = JSON.parse(JSON.stringify(this.dateRange));
     date.endDate = date.endDate.replace("23:59:59", "00:00:00");
     let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
     let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
+    this.spinner.show();
     const params = {
       sort: [this.sort, this.sortType ? "desc" : "asc"],
       page: this.page - 1,
       size: this.itemsPerPage,
-      filter: this.filter(startDate, endDate),
+      filter: "id>0",
     };
-    this.spinner.show();
     this.dmService.query(params, this.REQUEST_URL).subscribe(
-      (res: HttpResponse<any>) => {
-        if (res.body) {
-          if (res.body.CODE === 200) {
-            this.page = res.body ? res.body.RESULT.number + 1 : 1;
-            this.totalItems = res.body ? res.body.RESULT.totalElements : 0;
-            this.listEntity = res.body.RESULT.content;
-            this.customDate(this.listEntity);
-            // checkbox
-            // checkbox
-            this.checkBoxValues = this.checkBoxUtil.getPageCheckArray(
-              this.listEntity
-            );
-            if (
-              this.listEntity.length ===
-                this.checkBoxValues.filter((k) => k === true).length &&
-              this.listEntity.length !== 0
-            ) {
-              this.checkAllValues = true;
-            } else {
-              this.checkAllValues = false;
-            }
-            // load page
-            if (this.listEntity.length === 0 && this.page > 1) {
-              this.page = 1;
-              this.loadData();
-            }
-          } else {
-            this.notificationService.showError(
-              res.body.MESSAGE,
-              "Error message"
-            );
-          }
-        } else {
-          this.notificationService.showError(
-            "Đã có lỗi xảy ra",
-            "Error message"
-          );
+      (res: any) => {
+        if (res.body.statusCode === 200) {
+          this.listEntity = res.body.result.content.map((item: any) => {
+            return {
+              ...item,
+              date: moment(item.date, "YYYYMMDDHHmmss").format(
+                "HH:mm:ss DD/MM/YYYY"
+              ),
+            };
+          });
+          this.totalItems = res.body.result.totalElements;
         }
+      },
+      () => {
         this.spinner.hide();
       },
       () => {
-        this.notificationService.showError("Đã có lỗi xảy ra", "Error message");
         this.spinner.hide();
-        console.error();
       }
     );
-    this.loadDataCount();
   }
 
   public loadDataExcel() {
@@ -326,30 +263,19 @@ export class DataComponent implements OnInit, AfterViewInit {
       ftThoiGian,
       ftTrangThai,
       shopCode,
-      ftNoteShipping,
-      ftMaVanChuyen,
-      ftNguoiVC,
-      ftTaiKhoanVC,
     } = this;
     comparesArray.push(`id>0`);
     if (shopCode) comparesArray.push(`shopCode=="${shopCode}"`);
     if (startDate) comparesArray.push(`date >= ${startDate} `);
     if (endDate) comparesArray.push(`date <= ${endDate} `);
-    if (ftTrangThai || ftTrangThai >= 0)
-      comparesArray.push(`status=in=(${ftTrangThai})`);
+    // if (ftTrangThai || ftTrangThai >= 0)
+    //   comparesArray.push(`status=in=(${ftTrangThai})`);
     if (ftKhachHang) comparesArray.push(`name=="*${ftKhachHang.trim()}*"`);
     if (ftSdt) comparesArray.push(`phone=="*${ftSdt.trim()}*"`);
     if (ftSanPham) comparesArray.push(`product=="*${ftSanPham.trim()}*"`);
     if (ftNhanVien)
       comparesArray.push(`account.userName=="*${ftNhanVien.trim()}*"`);
     if (ftDoanhSo) comparesArray.push(`price==${ftDoanhSo}`);
-    if (ftChiPhi) comparesArray.push(`cost==${ftChiPhi}`);
-    if (ftNoteShipping) comparesArray.push(`noteShipping==${ftNoteShipping}`);
-    if (ftMaVanChuyen) comparesArray.push(`shippingCode=="*${ftMaVanChuyen}*"`);
-    if (ftNguoiVC)
-      comparesArray.push(`shippingCreator.userName=="*${ftNguoiVC}*"`);
-    if (ftTaiKhoanVC)
-      comparesArray.push(`shippingAccount.name=="*${ftTaiKhoanVC}*"`);
     return comparesArray.join(";");
   }
 
@@ -712,9 +638,6 @@ export class DataComponent implements OnInit, AfterViewInit {
     this.ftTrangThai = "0,1,2,3,4,5,6,9";
     this.ftThoiGian = "";
     this.ftKhachHang = "";
-    this.ftNguoiVC = "";
-    this.ftMaVanChuyen = "";
-    this.ftTaiKhoanVC = "";
     this.ftSdt = "";
     this.ftSanPham = "";
     this.ftNhanVien = "";

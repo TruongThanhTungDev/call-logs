@@ -43,7 +43,6 @@ import { DepartmentPopup } from "./shared/popup/them-sua-xoa-department/them-sua
 import { CheckInComponent } from "./shared/popup/checkin/checkin.component";
 import { CheckOutComponent } from "./shared/popup/checkout/checkout.component";
 import { ImportDataPopup } from "./shared/popup/import-data/import-data.component";
-import { FormDataInterceptor } from "./formData.interceptor";
 
 @NgModule({
   declarations: [
