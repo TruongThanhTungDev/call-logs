@@ -24,24 +24,23 @@ export class AccountComponent implements OnInit, AfterViewInit {
   sortType = true;
   REQUEST_URL = "/api/v1/user";
   REQUEST_URL_DEPARTMENT = "/api/v1/department";
-  REQUEST_URL_ROLE="/api/v1/role"
+  REQUEST_URL_ROLE = "/api/v1/role";
   listEntity = [];
   info: any;
   selectedEntity: any = null;
   selectedId = 0;
-  roleID="";
+  roleID = "";
   department: any;
   listDepartment: any[] = [];
   params = {
-  page: 1,
-  itemsPerPage: 10,
-  userName : "",
-  name : "",
-  email : "",
-  address : "",
-  role : "",
-  note : "",
- 
+    page: 1,
+    itemsPerPage: 10,
+    userName: "",
+    name: "",
+    email: "",
+    address: "",
+    role: "",
+    note: "",
   };
   constructor(
     private dmService: DanhMucService,
@@ -56,7 +55,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.getDepartment();    
+    this.getDepartment();
     this.loadData();
     this.scriptPage();
   }
@@ -68,10 +67,12 @@ export class AccountComponent implements OnInit, AfterViewInit {
       size: this.itemsPerPage,
       filter: this.filterData(),
     };
+    this.spinner.show();
     this.dmService.query(params, this.REQUEST_URL).subscribe(
       (res: HttpResponse<any>) => {
         if (res.body) {
           if (res.body.statusCode === 200) {
+            this.spinner.hide();
             this.page = res.body ? res.body.result.number + 1 : 1;
             this.totalItems = res.body ? res.body.result.totalElements : 0;
             this.listEntity = res.body.result.content;
@@ -81,12 +82,14 @@ export class AccountComponent implements OnInit, AfterViewInit {
               this.loadData();
             }
           } else {
+            this.spinner.hide();
             this.notificationService.showError(
               res.body.MESSAGE,
               "Error message"
             );
           }
         } else {
+          this.spinner.hide();
           this.notificationService.showError(
             "Đã có lỗi xảy ra",
             "Error message"
@@ -94,11 +97,12 @@ export class AccountComponent implements OnInit, AfterViewInit {
         }
       },
       () => {
+        this.spinner.hide();
         this.notificationService.showError("Đã có lỗi xảy ra", "Error message");
         console.error();
       }
     );
-    this.department="";
+    this.department = "";
   }
   getDepartment() {
     const payload = {
@@ -121,7 +125,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
       }
     );
   }
-  getRole(role:any){
+  getRole(role: any) {
     const payload = {
       page: 0,
       size: 100,
@@ -217,7 +221,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   processFilter() {
     this.loadData();
   }
-  public updateData(user:any) {
+  public updateData(user: any) {
     const modalRef = this.modalService.open(ThemSuaXoaAccountComponent, {
       size: "lg",
       backdrop: "static",
@@ -235,7 +239,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   }
   reset() {
     this.selectedEntity = "";
-    this.department="";
+    this.department = "";
     this.loadData();
   }
   public createData() {
@@ -247,7 +251,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
     modalRef.componentInstance.data = null;
     modalRef.componentInstance.title = "Tạo tài khoản";
     modalRef.componentInstance.type = "add";
-    
+
     modalRef.result.then(
       () => {
         this.loadData();
@@ -255,9 +259,9 @@ export class AccountComponent implements OnInit, AfterViewInit {
       () => {}
     );
   }
-  filterPhongBan(department:any){
-   this.department=department
-   this.loadData();
+  filterPhongBan(department: any) {
+    this.department = department;
+    this.loadData();
   }
   handleDeleteUser(id: any) {
     this.confirmDialogService

@@ -8,14 +8,14 @@
               <i class="fa-solid fa-file-import mr-1"></i> Nhập dữ liệu
             </button>
             <button type="button" class="btn btn-primary mr-1" (click)="assignWork()"
-              [hidden]="this.info.role === 'user'" [disabled]="listCheck.length === 0">
+              *ngIf="this.info.roleList.includes('leader')" [disabled]="listCheck.length === 0">
               Giao việc ({{plugins.formatNumber(listCheck.length)}})
             </button>
             <button type="" class="btn btn-orange mr-1" (click)="openAutoAssignWork()"
-              [hidden]="this.info.role === 'user'">
+              *ngIf="this.info.roleList.includes('leader')">
               Giao việc nhanh
             </button>
-            <button type="" class="btn btn-success mr-1" (click)="loadDataExcel()" [hidden]="this.info.role === 'user'">
+            <button type="" class=" btn btn-success mr-1" (click)="loadDataExcel()" *ngIf="this.info.role === 'user'">
               <i class="fa fa-file-excel-o mr-1"></i> Xuất Excel
             </button>
             <button type="" class="btn btn-primary mr-1" (click)="openChangeStatus()"

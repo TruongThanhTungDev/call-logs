@@ -189,7 +189,7 @@ export class DataComponent implements OnInit, AfterViewInit {
       sort: [this.sort, this.sortType ? "desc" : "asc"],
       page: this.page - 1,
       size: this.itemsPerPage,
-      filter: "id>0",
+      filter: this.filter(startDate, endDate),
     };
     this.dmService.query(params, this.REQUEST_URL).subscribe(
       (res: any) => {
@@ -260,17 +260,16 @@ export class DataComponent implements OnInit, AfterViewInit {
       shopCode,
     } = this;
     comparesArray.push(`id>0`);
-    if (shopCode) comparesArray.push(`shopCode=="${shopCode}"`);
     if (startDate) comparesArray.push(`date >= ${startDate} `);
     if (endDate) comparesArray.push(`date <= ${endDate} `);
     // if (ftTrangThai || ftTrangThai >= 0)
     //   comparesArray.push(`status=in=(${ftTrangThai})`);
-    if (ftKhachHang) comparesArray.push(`name=="*${ftKhachHang.trim()}*"`);
-    if (ftSdt) comparesArray.push(`phone=="*${ftSdt.trim()}*"`);
-    if (ftSanPham) comparesArray.push(`product=="*${ftSanPham.trim()}*"`);
-    if (ftNhanVien)
-      comparesArray.push(`account.userName=="*${ftNhanVien.trim()}*"`);
-    if (ftDoanhSo) comparesArray.push(`price==${ftDoanhSo}`);
+    // if (ftKhachHang) comparesArray.push(`name=="*${ftKhachHang.trim()}*"`);
+    // if (ftSdt) comparesArray.push(`phone=="*${ftSdt.trim()}*"`);
+    // if (ftSanPham) comparesArray.push(`product=="*${ftSanPham.trim()}*"`);
+    // if (ftNhanVien)
+    //   comparesArray.push(`account.userName=="*${ftNhanVien.trim()}*"`);
+    // if (ftDoanhSo) comparesArray.push(`price==${ftDoanhSo}`);
     return comparesArray.join(";");
   }
 

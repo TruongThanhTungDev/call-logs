@@ -30,7 +30,10 @@ export class TuDongGiaoViecComponent
   listWork = [];
   selectId = null;
   REQUEST_DATA_URL = "/api/v1/data";
+  REQUEST_USER = "/api/v1/user";
   numOfWork = 0;
+  infoUser: any;
+  departmentInfo: any;
   // chung
   ftTenDangNhap = "";
   ftHoTen = "";
@@ -45,16 +48,37 @@ export class TuDongGiaoViecComponent
     private notificationService: NotificationService,
     private spinnerService: NgxSpinnerService,
     private spinner: NgxSpinnerService
-  ) {}
+  ) {
+    this.infoUser = JSON.parse(localStorage.getItem("authenticationtoken"));
+  }
 
   ngOnInit(): void {
-    this.getWorks();
+    this.getInfoDepartment();
   }
 
   ngOnDestroy(): void {}
 
   ngAfterViewInit(): void {}
 
+  getInfoDepartment() {
+    const params = {
+      sort: ["id", "asc"],
+      page: 0,
+      size: 10,
+      filter: this.filterUser(),
+    };
+    this.service.query(params, this.REQUEST_USER).subscribe((res: any) => {
+      if (res.body.statusCode === 200) {
+        this.departmentInfo = res.body.result.content[0];
+        this.getWorks();
+      }
+    });
+  }
+  filterUser() {
+    const filter = [];
+    filter.push(`id>0;id==${this.infoUser.staffId}`);
+    return filter.join(";");
+  }
   getUserActive(e: any) {
     const params = {
       sort: ["id", "asc"],
@@ -109,8 +133,10 @@ export class TuDongGiaoViecComponent
 
   private filter(): string {
     const comparesArray: string[] = [];
-    const { ftHoTen, ftTenDangNhap, shopCode } = this;
-    comparesArray.push(`isActive==1`);
+    const { ftHoTen, ftTenDangNhap } = this;
+    comparesArray.push(
+      `isActive==1;staff.department.id==${this.departmentInfo.department.id}`
+    );
     if (ftHoTen) comparesArray.push(`account.fullName == "*${ftHoTen}*" `);
     if (ftTenDangNhap)
       comparesArray.push(`account.userName == "*${ftTenDangNhap}*" `);
@@ -217,13 +243,17 @@ export class TuDongGiaoViecComponent
       return list;
     }
   }
-
+  filterWork() {
+    const filter = [];
+    filter.push(`id>0;staff==#NULL#`);
+    return filter.join(";");
+  }
   getWorks(): void {
     const params = {
       sort: ["id", "desc"],
       page: 0,
       size: 9999,
-      filter: "id>0",
+      filter: this.filterWork(),
     };
     this.spinner.show();
     this.service.query(params, this.REQUEST_DATA_URL).subscribe(
@@ -273,7 +303,7 @@ export class TuDongGiaoViecComponent
         "Cảnh báo!"
       );
     }
-    const listWorkAssign = this.listWork.slice(0, this.numOfWork);
+    let listWorkAssign = this.listWork.slice(0, this.numOfWork);
 
     const phanNguyen = Math.floor(listWorkAssign.length / listCheck.length);
     const length = listCheck.length;
@@ -282,12 +312,12 @@ export class TuDongGiaoViecComponent
 
     if (phanNguyen === 0) {
       listWorkAssign.forEach((unitItem) => {
-        unitItem.userId = listCheck[listCheck.length - 1].account.id;
+        unitItem.userId = listCheck[listCheck.length - 1].staff.id;
         unitItem.dataId = unitItem.id;
       });
     } else {
       listWorkAssign.forEach((unitItem, index) => {
-        unitItem.userId = listCheck[listCheck.length - 1].account.id;
+        unitItem.userId = listCheck[listCheck.length - 1].staff.id;
         unitItem.dataId = unitItem.id;
         if (index === countCV - 1) {
           countCV = countCV + phanNguyen;
@@ -297,6 +327,10 @@ export class TuDongGiaoViecComponent
         }
       });
     }
+    listWorkAssign = listWorkAssign.map((item: any) => ({
+      userId: listCheck[listCheck.length - 1].staff.id,
+      dataId: item.id,
+    }));
     this.save(listWorkAssign);
   }
   save(list: any): void {
