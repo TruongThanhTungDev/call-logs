@@ -110,7 +110,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   ];
   dataAdapter: any;
 
-  REQUEST_URL = "/api/v1/call-logs";
+  REQUEST_URL = "/api/v1/callLogs";
 
   selectedEntity: any;
   height: any = $(window).height()! - 270;
@@ -192,11 +192,11 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     };
     this.dmService.query(payload, `${this.REQUEST_URL}`).subscribe(
       (res: HttpResponse<any>) => {
-        if (res.body.CODE === 200) {
-          this.data = res.body.RESULT.content;
-          this.totalItems = res.body.RESULT.totalElements;
-          this.params.page = res.body ? res.body.RESULT.number + 1 : 1;
-          this.getThongKe();
+        if (res.body.statusCode === 200) {
+          this.data = res.body.result.content;
+          this.totalItems = res.body.result.totalElements;
+          this.params.page = res.body ? res.body.result.number + 1 : 1;
+          // this.getThongKe();
           if (this.data.length === 0 && this.params.page > 1) {
             this.params.page = 1;
             this.loadData();
@@ -211,42 +211,42 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     );
   }
 
-  getThongKe() {
-    var date = JSON.parse(JSON.stringify(this.dateRange));
-    date.endDate = date.endDate.replace("23:59:59", "00:00:00");
-    let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
-    let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
-    this.dmService
-      .get(
-        this.REQUEST_URL +
-          "/statisticCallLogs?fromCallDate=" +
-          startDate +
-          "&toCallDate=" +
-          endDate
-      )
-      .subscribe(
-        (res: HttpResponse<any>) => {
-          if (res.body.CODE === 200) {
-            const data = res.body.RESULT;
-            if (data.length > 0) {
-              this.thongKe = data[0];
-            } else {
-              this.thongKe = null;
-            }
-          } else {
-            this.notificationService.showError(
-              res.body.MESSAGE,
-              "Error message"
-            );
-            this.thongKe = null;
-          }
-        },
-        () => {
-          this.thongKe = null;
-          console.error();
-        }
-      );
-  }
+  // getThongKe() {
+  //   var date = JSON.parse(JSON.stringify(this.dateRange));
+  //   date.endDate = date.endDate.replace("23:59:59", "00:00:00");
+  //   let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
+  //   let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
+  //   this.dmService
+  //     .get(
+  //       this.REQUEST_URL +
+  //         "/statisticCallLogs?fromCallDate=" +
+  //         startDate +
+  //         "&toCallDate=" +
+  //         endDate
+  //     )
+  //     .subscribe(
+  //       (res: HttpResponse<any>) => {
+  //         if (res.body.CODE === 200) {
+  //           const data = res.body.result;
+  //           if (data.length > 0) {
+  //             this.thongKe = data[0];
+  //           } else {
+  //             this.thongKe = null;
+  //           }
+  //         } else {
+  //           this.notificationService.showError(
+  //             res.body.MESSAGE,
+  //             "Error message"
+  //           );
+  //           this.thongKe = null;
+  //         }
+  //       },
+  //       () => {
+  //         this.thongKe = null;
+  //         console.error();
+  //       }
+  //     );
+  // }
 
   loadPage(page: number): void {
     if (page !== this.previousPage) {
@@ -294,7 +294,6 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     if (this.params.recording) {
       filter.push(`recording=="${this.params.recording}"`);
     }
-    filter.push(`status=="ANSWERED";extension>2010`)
     return filter.join(";");
   }
   public checkAll() {

@@ -63,16 +63,16 @@ export class WorkComponent implements OnInit {
 
   plugins = new Plugin();
   dataAdapter: any;
-  params={
-  page: 1,
-  itemsPerPage: 10,
-  username:"",
-  timeIn:"",
-  timeOut:"",
-  totalOrder: 0,
-  processedOrder:0,
-  successOrder:0,
-  }
+  params = {
+    page: 1,
+    itemsPerPage: 10,
+    username: "",
+    timeIn: "",
+    timeOut: "",
+    totalOrder: 0,
+    processedOrder: 0,
+    successOrder: 0,
+  };
   // date
   dateRange: TimePeriod = {
     startDate: dayjs().startOf("month"),
@@ -132,7 +132,6 @@ export class WorkComponent implements OnInit {
   ngOnInit() {}
 
   loadData() {
-    
     const params = {
       sort: ["id", "desc"],
       page: this.page - 1,
@@ -182,15 +181,15 @@ export class WorkComponent implements OnInit {
     let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
     this.params.page = 1;
     filter.push("id>0");
-    filter.push("timeIn >=" + startDate + ";timeIn <=" + endDate);    
+    filter.push("timeIn >=" + startDate + ";timeIn <=" + endDate);
     if (this.params.username) {
       filter.push(`staff.name=="*${this.params.username.trim()}*"`);
     }
     if (this.params.timeIn) {
-      filter.push(`timeIn==${this.params.timeIn}`);
+      filter.push(`timeIn==*${this.params.timeIn}*`);
     }
     if (this.params.timeOut) {
-      filter.push(`timeOut==${this.params.timeOut}`);
+      filter.push(`timeOut==*${this.params.timeOut}*`);
     }
     if (this.params.totalOrder) {
       filter.push(`totalOrder==${this.params.totalOrder}`);
