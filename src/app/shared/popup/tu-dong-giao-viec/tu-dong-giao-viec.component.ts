@@ -116,7 +116,7 @@ export class TuDongGiaoViecComponent
     const comparesArray: string[] = [];
     const { ftHoTen, ftTenDangNhap } = this;
     comparesArray.push(
-      `isActive==1;staff.department.id==${this.departmentInfo.department.id}`
+      `isActive==1;staff.department.id==${this.infoUser.departmentId}`
     );
     if (ftHoTen) comparesArray.push(`account.fullName == "*${ftHoTen}*" `);
     if (ftTenDangNhap)
@@ -255,6 +255,7 @@ export class TuDongGiaoViecComponent
             "Danh sách công việc trống",
             "Cảnh báo!"
           );
+          this.spinner.hide();
         } else {
           this.getUserActive("all");
         }
@@ -265,6 +266,9 @@ export class TuDongGiaoViecComponent
           `${error.body.RESULT.message}`,
           "Thông báo lỗi!"
         );
+        this.spinner.hide();
+      },
+      () => {
         this.spinner.hide();
       }
     );
