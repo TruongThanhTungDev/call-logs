@@ -27,13 +27,15 @@ export class GiaoViecPopUpComponent implements OnInit {
   listUser = [];
   selectedStaff: any;
   REQUEST_DATA_URL = "/api/v1/data";
-
+  infoUser: any;
   constructor(
     private activeModal: NgbActiveModal,
     private service: DanhMucService,
     private notificationService: NotificationService,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.infoUser = JSON.parse(localStorage.getItem("authenticationtoken"));
+  }
 
   ngOnInit(): void {
     this.getUserActive();
@@ -62,7 +64,9 @@ export class GiaoViecPopUpComponent implements OnInit {
 
   private filter(): string {
     const comparesArray: string[] = [];
-    comparesArray.push(`isActive==1`);
+    comparesArray.push(
+      `isActive==1;staff.department.id==${this.infoUser.departmentId}`
+    );
     return comparesArray.join(";");
   }
   customDate(list: any[]): any[] {
