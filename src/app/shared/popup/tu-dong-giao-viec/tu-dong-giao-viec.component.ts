@@ -53,32 +53,13 @@ export class TuDongGiaoViecComponent
   }
 
   ngOnInit(): void {
-    this.getInfoDepartment();
+    this.getWorks();
   }
 
   ngOnDestroy(): void {}
 
   ngAfterViewInit(): void {}
 
-  getInfoDepartment() {
-    const params = {
-      sort: ["id", "asc"],
-      page: 0,
-      size: 10,
-      filter: this.filterUser(),
-    };
-    this.service.query(params, this.REQUEST_USER).subscribe((res: any) => {
-      if (res.body.statusCode === 200) {
-        this.departmentInfo = res.body.result.content[0];
-        this.getWorks();
-      }
-    });
-  }
-  filterUser() {
-    const filter = [];
-    filter.push(`id>0;id==${this.infoUser.staffId}`);
-    return filter.join(";");
-  }
   getUserActive(e: any) {
     const params = {
       sort: ["id", "asc"],
@@ -246,6 +227,14 @@ export class TuDongGiaoViecComponent
   filterWork() {
     const filter = [];
     filter.push(`id>0;staff==#NULL#`);
+    if (this.infoUser.roleList.includes("leader")) {
+      filter.push(`department.id==${this.infoUser.departmentId}`);
+    }
+    if (this.infoUser.roleList.includes("staff")) {
+      filter.push(
+        `department.id==${this.infoUser.departmentId};staff.id==${this.infoUser.staffId}`
+      );
+    }
     return filter.join(";");
   }
   getWorks(): void {

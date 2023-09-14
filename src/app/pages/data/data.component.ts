@@ -103,6 +103,8 @@ export class DataComponent implements OnInit, AfterViewInit {
   checkBoxUtil = new CheckBoxUtil();
   checkAllValues = false;
   REQUEST_CREATE_ORDER_URL = "/api/v1/order-shipping";
+  REQUEST_USER = "/api/v1/user";
+  departmentInfo: any;
   province: any;
   district: any;
   ward: any;
@@ -167,7 +169,11 @@ export class DataComponent implements OnInit, AfterViewInit {
       this.shopCode = params.shopCode;
     });
   }
-
+  filterUser() {
+    const filter = [];
+    filter.push(`id>0;id==${this.info.staffId}`);
+    return filter.join(";");
+  }
   ngAfterViewInit(): void {}
 
   getByStatus(e): void {
@@ -260,6 +266,14 @@ export class DataComponent implements OnInit, AfterViewInit {
       shopCode,
     } = this;
     comparesArray.push(`id>0`);
+    if (this.info.roleList.includes("leader")) {
+      comparesArray.push(`department.id==${this.info.departmentId}`);
+    }
+    if (this.info.roleList.includes("staff")) {
+      comparesArray.push(
+        `department.id==${this.info.departmentId};staff.id==${this.info.staffId}`
+      );
+    }
     if (startDate) comparesArray.push(`date >= ${startDate} `);
     if (endDate) comparesArray.push(`date <= ${endDate} `);
     // if (ftTrangThai || ftTrangThai >= 0)

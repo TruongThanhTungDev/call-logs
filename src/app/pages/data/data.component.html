@@ -43,8 +43,8 @@
               (ngModelChange)="loadData()" />
           </div>
           <div class="col-12 text-center btn-status-data">
-            <button *ngIf="!isUser" type="" class="btn btn-info btn-sm mr-1"
-              [ngClass]="{ 'btn-selected': ftTrangThai === 0 }" (click)="getByStatus(0)" [disabled]="checkStatusActive">
+            <button type="" class="btn btn-info btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 0 }"
+              (click)="getByStatus(0)" [disabled]="checkStatusActive">
               Mới ({{ countList[0] }})
             </button>
             <button type="" class="btn btn-primary btn-sm mr-1" [ngClass]="{ 'btn-selected': ftTrangThai === 1 }"
@@ -148,8 +148,8 @@
                 <th>#</th>
                 <th class="text-center">
                   <select class="form-control" [(ngModel)]="ftTrangThai" (change)="loadData()">
-                    <option *ngIf="!isUser" value="0,1,2,3,4,5,6,9">Tất cả</option>
-                    <option *ngIf="!isUser" value="0">Mới</option>
+                    <option value="0,1,2,3,4,5,6,9">Tất cả</option>
+                    <option value="0">Mới</option>
                     <option value="1">Đã tiếp nhận</option>
                     <option value="2">Đang xử lý</option>
                     <option value="3">KNM L1</option>
