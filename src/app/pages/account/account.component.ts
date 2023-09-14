@@ -146,10 +146,6 @@ export class AccountComponent implements OnInit, AfterViewInit {
       }
     );
   }
-  changeDepartment(department: any) {
-    this.department = department;
-    this.loadData();
-  }
   public filterData() {
     const filter = [];
     this.params.page = 1;

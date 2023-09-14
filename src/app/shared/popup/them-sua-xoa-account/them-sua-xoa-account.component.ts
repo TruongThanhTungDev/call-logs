@@ -19,15 +19,15 @@ export class ThemSuaXoaAccountComponent implements OnInit {
   @ViewChild("formLogin")
   formLogin!: NgForm;
   users: any;
-  username = "";
-  password = "";
-  email = "";
-  retypePassword = "";
-  sdt = "";
-  address = "";
-  name = "";
-  role = "";
-  roleID = "";
+  username: any;
+  password: any;
+  email: any;
+  retypePassword: any;
+  sdt: any;
+  address: any;
+  name: any;
+  role: any;
+  roleID: any;
   listDepartment: any = [];
   listSelect: any = [];
   department: any;
