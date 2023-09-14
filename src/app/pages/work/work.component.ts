@@ -182,6 +182,14 @@ export class WorkComponent implements OnInit {
     this.params.page = 1;
     filter.push("id>0");
     filter.push("timeIn >=" + startDate + ";timeIn <=" + endDate);
+    if (this.info.roleList.includes("leader")) {
+      filter.push(`department.id==${this.info.departmentId}`);
+    }
+    if (this.info.roleList.includes("staff")) {
+      filter.push(
+        `department.id==${this.info.departmentId};staff.id==${this.info.staffId}`
+      );
+    }
     if (this.params.username) {
       filter.push(`staff.name=="*${this.params.username.trim()}*"`);
     }
