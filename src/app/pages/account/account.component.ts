@@ -25,6 +25,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   REQUEST_URL = "/api/v1/user";
   REQUEST_URL_DEPARTMENT = "/api/v1/department";
   REQUEST_URL_ROLE = "/api/v1/role";
+  REQUEST_URL_ROLE_USER = "/api/v1/role_user";
   listEntity = [];
   info: any;
   selectedEntity: any = null;
@@ -75,7 +76,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
             this.spinner.hide();
             this.page = res.body ? res.body.result.number + 1 : 1;
             this.totalItems = res.body ? res.body.result.totalElements : 0;
-            this.listEntity = res.body.result.content;
+            this.checkRoleUser(res.body.result.content)
             // load page
             if (this.listEntity.length === 0 && this.page > 1) {
               this.page = 1;
@@ -104,6 +105,40 @@ export class AccountComponent implements OnInit, AfterViewInit {
     );
     this.department = "";
   }
+  checkRoleUser(data) {
+    const payload = {
+      page: this.page - 1,
+      size: this.itemsPerPage,
+      sort: [this.sort, this.sortType ? "desc" : "asc"],
+      filter: this.filterRole(),
+    }
+    this.dmService.getOption(payload, this.REQUEST_URL_ROLE_USER, '/search')
+    .subscribe(
+      (res: HttpResponse<any>) => {
+        if(res.body.statusCode === 200) {
+          this.spinner.hide()
+         this.listEntity = data.map(item => ({
+          ...item,
+          roleId: this.findRole(item.id, res.body.result.content)
+         }))
+        } else {
+          this.spinner.hide()
+        }
+      },
+      () => {
+        this.spinner.hide()
+      }
+    )
+  }
+  findRole(userId, list) {
+    const result = list.find(item => item.userId == userId)
+    return result ? result.userId : ''
+  }
+  filterRole() {
+    const filter = []
+    filter.push("id>0")
+    return filter.join(";")
+  }
   getDepartment() {
     const payload = {
       page: 0,
@@ -123,7 +158,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
         this.notificationService.showError("Đã có lỗi xảy ra", "Fail");
         console.error();
       }
-    );
+    ); 
   }
   getRole(role: any) {
     const payload = {

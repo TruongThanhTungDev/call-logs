@@ -42,6 +42,11 @@
           <option [value]="4">Leader</option>
         </select>
       </div>
+      <div *ngIf="role == 2" class="form-group form-outline mb-1">
+        <label class="text-primary"><i class="fa fa-phone"></i> Call Code</label>
+        <input type="text" [(ngModel)]="callCode" placeholder=" Call Code" class="form-control form-control-lg"
+          style="height:2.5rem ;">
+      </div>
       <div class="form-group form-outline mb-1">
         <label class="text-primary"><i class="fa fa-envelope"></i> Email</label>
         <input type="text" name="Email" [(ngModel)]="email" placeholder=" email" class="form-control form-control-lg"

@@ -89,6 +89,12 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       },
     },
     {
+      key: "name",
+      name: "Nhân viên",
+      class: "",
+      style: "",
+    },
+    {
       key: "recording",
       name: "Ghi âm",
       class: "",
@@ -111,7 +117,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   dataAdapter: any;
 
   REQUEST_URL = "/api/v1/callLogs";
-
+  REQUEST_USER = "/api/v1/user"
   selectedEntity: any;
   height: any = $(window).height()! - 270;
   shopcode = "";
@@ -171,8 +177,8 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     };
   }
 
-  ngOnInit() {}
-  ngAfterViewInit(): void {}
+  ngOnInit() { }
+  ngAfterViewInit(): void { }
   ngDoCheck() {
     if (
       this.listSelected.length &&
@@ -193,10 +199,10 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     this.dmService.query(payload, `${this.REQUEST_URL}`).subscribe(
       (res: HttpResponse<any>) => {
         if (res.body.statusCode === 200) {
-          this.data = res.body.result.content;
           this.totalItems = res.body.result.totalElements;
           this.params.page = res.body ? res.body.result.number + 1 : 1;
           // this.getThongKe();
+          this.getAllUser(res.body.result.content)
           if (this.data.length === 0 && this.params.page > 1) {
             this.params.page = 1;
             this.loadData();
@@ -210,7 +216,29 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       }
     );
   }
-
+  getAllUser(data) {
+    const payload = {
+      filter: 'id>0',
+      page: 0,
+      size: 99999,
+      sort: ['id', 'asc']
+    }
+    this.dmService.getOption(payload, this.REQUEST_USER, '/search').subscribe(
+      (
+        res: HttpResponse<any>) => {
+        if (res.body.statusCode === 200) {
+          this.data = data.map(item => ({
+            ...item,
+            fullName: this.checkingCallCode(item.extension, res.body.result.content)
+          }))
+        }
+      }
+    )
+  }
+  checkingCallCode(code,list) {
+    const result = list.find(item => item.callCode == code)
+    return result ? result.name : ''
+  }
   // getThongKe() {
   //   var date = JSON.parse(JSON.stringify(this.dateRange));
   //   date.endDate = date.endDate.replace("23:59:59", "00:00:00");

@@ -41,6 +41,7 @@
                 <th>Thời gian</th>
                 <th (click)="sortData('duration')">Thời lượng <i class="fa fa-sort"></i></th>
                 <th style="width:160px">Trạng thái</th>
+                <th style="width:220px">Nhân viên</th>
                 <th>Ghi âm</th>
                 <th>Danh sách đen</th>
               </tr>
@@ -70,6 +71,7 @@
                     <option value="CONGESTION">Ngoài vùng phủ sóng</option>
                   </select>
                 </th>
+                <th></th>
                 <th>
                   <input type="text" autocomplete="off" [(ngModel)]="params.recording"
                     class="form-control form-control-sm" placeholder="Tìm kiếm" (keyup.enter)="loadData()">
@@ -100,6 +102,9 @@
                 </td>
                 <td class="text-center">
                   {{item.status}}
+                </td>
+                <td>
+                  {{item.fullName}}
                 </td>
                 <td>
                   <a [href]="item.recording">{{item.recording}}</a>

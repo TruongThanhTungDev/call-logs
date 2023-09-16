@@ -28,6 +28,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
   name: any;
   role: any;
   roleID: any;
+  callCode: any
   listDepartment: any = [];
   listSelect: any = [];
   department: any;
@@ -51,6 +52,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
       this.sdt = this.data.phone;
       this.address = this.data.address;
       this.role = this.data.roleId;
+      this.callCode = this.data.callCode
       // this.listSelect = this.data.department ? this.data.department.split(",") : [];
       this.department = this.data.department.id;
       console.log(this.data);
@@ -94,6 +96,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
         departmentId: this.department,
         isActive: 0,
         code: null,
+        callCode: this.callCode.toUpperCase(),
       };
       if (!this.data) {
         if (entity.departmentId == "") {
@@ -135,7 +138,6 @@ export class ThemSuaXoaAccountComponent implements OnInit {
             .postOption(entity, "/api/v1/user/update", "")
             .subscribe(
               (res: HttpResponse<any>) => {
-                console.log("res :>> ", res);
                 if (res.body.statusCode === 200) {
                   this.notification.showSuccess(
                     "Cập nhật tài khoản thành công",
