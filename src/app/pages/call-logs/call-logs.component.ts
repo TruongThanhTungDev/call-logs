@@ -43,6 +43,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     status: "",
     recording: "",
     blacklist: "",
+    staffName:"",
   };
   previousPage = 1;
   totalItems = 0;

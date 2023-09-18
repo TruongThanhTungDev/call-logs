@@ -37,11 +37,11 @@
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
                  <th>
-                  <input type="text" [(ngModel)]="params.timeIn" (keyup.enter)="processFilter()"
+                  <input type="date" [(ngModel)]="params.timeIn" (change)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
                  <th>
-                  <input type="text" [(ngModel)]="params.timeOut" (keyup.enter)="processFilter()"
+                  <input type="date" [(ngModel)]="params.timeOut" (change)="processFilter()"
                     class="form-control form-control-sm" placeholder="Tìm kiếm">
                 </th>
                  <th>

@@ -71,7 +71,10 @@
                     <option value="CONGESTION">Ngoài vùng phủ sóng</option>
                   </select>
                 </th>
-                <th></th>
+                <th>
+                <input type="text" autocomplete="off" [(ngModel)]="params.staffName"
+                    class="form-control form-control-sm" placeholder="Tìm kiếm" (keyup.enter)="loadData()">
+                </th>
                 <th>
                   <input type="text" autocomplete="off" [(ngModel)]="params.recording"
                     class="form-control form-control-sm" placeholder="Tìm kiếm" (keyup.enter)="loadData()">

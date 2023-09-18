@@ -194,10 +194,15 @@ export class WorkComponent implements OnInit {
       filter.push(`staff.name=="*${this.params.username.trim()}*"`);
     }
     if (this.params.timeIn) {
-      filter.push(`timeIn==*${this.params.timeIn}*`);
+      let startFilterDate = moment(this.params.timeIn).format("YYYYMMDD") + "000000";
+      let endFilterDate = moment(this.params.timeIn).format("YYYYMMDD") + "235959";
+      filter.push("timeIn >=" + startFilterDate + ";timeIn <=" + endFilterDate);
     }
     if (this.params.timeOut) {
-      filter.push(`timeOut==*${this.params.timeOut}*`);
+      let startFilterDate = moment(this.params.timeOut).format("YYYYMMDD") + "000000";
+      let endFilterDate = moment(this.params.timeOut).format("YYYYMMDD") + "235959";
+      filter.push("timeOut >=" + startFilterDate + ";timeOut <=" + endFilterDate);
+      
     }
     if (this.params.totalOrder) {
       filter.push(`totalOrder==${this.params.totalOrder}`);

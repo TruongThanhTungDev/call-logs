@@ -55,8 +55,8 @@ export class DataComponent implements OnInit, AfterViewInit {
   ftSdt = "";
   ftSanPham = "";
   ftNhanVien = "";
-  ftDoanhSo = "";
-  ftChiPhi = "";
+  ftAddress = "";
+  ftDepartment:any;
   plugins = new Plugin();
   listEntity = [];
   selectedEntity: any;
@@ -254,13 +254,14 @@ export class DataComponent implements OnInit, AfterViewInit {
 
   private filter(startDate: any, endDate: any): string {
     const comparesArray: string[] = [];
+    
     const {
-      ftChiPhi,
-      ftDoanhSo,
+      ftAddress,
       ftKhachHang,
       ftNhanVien,
       ftSanPham,
       ftSdt,
+      ftDepartment,
       ftThoiGian,
       ftTrangThai,
       shopCode,
@@ -278,12 +279,17 @@ export class DataComponent implements OnInit, AfterViewInit {
     if (endDate) comparesArray.push(`date <= ${endDate} `);
     // if (ftTrangThai || ftTrangThai >= 0)
     //   comparesArray.push(`status=in=(${ftTrangThai})`);
-    // if (ftKhachHang) comparesArray.push(`name=="*${ftKhachHang.trim()}*"`);
-    // if (ftSdt) comparesArray.push(`phone=="*${ftSdt.trim()}*"`);
-    // if (ftSanPham) comparesArray.push(`product=="*${ftSanPham.trim()}*"`);
-    // if (ftNhanVien)
-    //   comparesArray.push(`account.userName=="*${ftNhanVien.trim()}*"`);
-    // if (ftDoanhSo) comparesArray.push(`price==${ftDoanhSo}`);
+    if(ftThoiGian){
+      let startFilterDate = moment(this.ftThoiGian).format("YYYYMMDD") + "000000";
+      let endFilterDate = moment(this.ftThoiGian).format("YYYYMMDD") + "235959";
+      comparesArray.push("date >=" + startFilterDate + ";date <=" + endFilterDate);
+    } 
+    if (ftKhachHang) comparesArray.push(`name=="*${ftKhachHang.trim()}*"`);
+    if (ftSdt) comparesArray.push(`phone=="*${ftSdt.trim()}*"`);
+    if (ftDepartment) comparesArray.push(`department.name=="*${ftDepartment.trim()}*"`);
+    if (ftNhanVien)
+      comparesArray.push(`staff.name=="*${ftNhanVien.trim()}*"`);
+    if (ftAddress) comparesArray.push(`address=="*${ftAddress.trim()}*"`);
     return comparesArray.join(";");
   }
 
@@ -649,8 +655,7 @@ export class DataComponent implements OnInit, AfterViewInit {
     this.ftSdt = "";
     this.ftSanPham = "";
     this.ftNhanVien = "";
-    this.ftDoanhSo = "";
-    this.ftChiPhi = "";
+    this.ftDepartment = "";
     this.itemsPerPage = 10;
     this.page = 1;
     this.totalItems = 0;
