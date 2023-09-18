@@ -43,7 +43,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     status: "",
     recording: "",
     blacklist: "",
-    staffName:"",
+    staffName: "",
   };
   previousPage = 1;
   totalItems = 0;
@@ -111,6 +111,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   data = [];
   listSelected = [];
   itemSelected = null;
+  listUser: any[] = [];
   listStatus = [
     { id: 0, label: "Chờ xử lý" },
     { id: 1, label: "Đang xử lý" },
@@ -118,7 +119,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   dataAdapter: any;
 
   REQUEST_URL = "/api/v1/callLogs";
-  REQUEST_USER = "/api/v1/user"
+  REQUEST_USER = "/api/v1/user";
   selectedEntity: any;
   height: any = $(window).height()! - 270;
   shopcode = "";
@@ -178,8 +179,8 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     };
   }
 
-  ngOnInit() { }
-  ngAfterViewInit(): void { }
+  ngOnInit() {}
+  ngAfterViewInit(): void {}
   ngDoCheck() {
     if (
       this.listSelected.length &&
@@ -203,7 +204,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
           this.totalItems = res.body.result.totalElements;
           this.params.page = res.body ? res.body.result.number + 1 : 1;
           // this.getThongKe();
-          this.getAllUser(res.body.result.content)
+          this.getAllUser(res.body.result.content);
           if (this.data.length === 0 && this.params.page > 1) {
             this.params.page = 1;
             this.loadData();
@@ -219,64 +220,30 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   }
   getAllUser(data) {
     const payload = {
-      filter: 'id>0',
+      filter: "id>0",
       page: 0,
       size: 99999,
-      sort: ['id', 'asc']
-    }
-    this.dmService.getOption(payload, this.REQUEST_USER, '/search').subscribe(
-      (
-        res: HttpResponse<any>) => {
+      sort: ["id", "asc"],
+    };
+    this.dmService
+      .getOption(payload, this.REQUEST_USER, "/search")
+      .subscribe((res: HttpResponse<any>) => {
         if (res.body.statusCode === 200) {
-          this.data = data.map(item => ({
+          this.listUser = res.body.result.content;
+          this.data = data.map((item) => ({
             ...item,
-            fullName: this.checkingCallCode(item.extension, res.body.result.content)
-          }))
+            fullName: this.checkingCallCode(
+              item.extension,
+              res.body.result.content
+            ),
+          }));
         }
-      }
-    )
+      });
   }
-  checkingCallCode(code,list) {
-    const result = list.find(item => item.callCode == code)
-    return result ? result.name : ''
+  checkingCallCode(code, list) {
+    const result = list.find((item) => item.callCode == code);
+    return result ? `${result.name} (${result.userName})` : "";
   }
-  // getThongKe() {
-  //   var date = JSON.parse(JSON.stringify(this.dateRange));
-  //   date.endDate = date.endDate.replace("23:59:59", "00:00:00");
-  //   let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
-  //   let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
-  //   this.dmService
-  //     .get(
-  //       this.REQUEST_URL +
-  //         "/statisticCallLogs?fromCallDate=" +
-  //         startDate +
-  //         "&toCallDate=" +
-  //         endDate
-  //     )
-  //     .subscribe(
-  //       (res: HttpResponse<any>) => {
-  //         if (res.body.CODE === 200) {
-  //           const data = res.body.result;
-  //           if (data.length > 0) {
-  //             this.thongKe = data[0];
-  //           } else {
-  //             this.thongKe = null;
-  //           }
-  //         } else {
-  //           this.notificationService.showError(
-  //             res.body.MESSAGE,
-  //             "Error message"
-  //           );
-  //           this.thongKe = null;
-  //         }
-  //       },
-  //       () => {
-  //         this.thongKe = null;
-  //         console.error();
-  //       }
-  //     );
-  // }
-
   loadPage(page: number): void {
     if (page !== this.previousPage) {
       this.previousPage = page;
@@ -308,9 +275,15 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     if (this.params.phone) {
       filter.push(`phone=="*${this.params.phone.trim()}*"`);
     }
-    // if (this.params.calldate) {
-    //   filter.push(`calldate==${calldate}`);
-    // }
+    if (this.params.calldate) {
+      let startFilterDate =
+        moment(this.params.calldate).format("YYYYMMDD") + "000000";
+      let endFilterDate =
+        moment(this.params.calldate).format("YYYYMMDD") + "235959";
+      filter.push(
+        "calldate >=" + startFilterDate + ";calldate <=" + endFilterDate
+      );
+    }
     if (this.params.duration) {
       filter.push(`duration=="*${this.params.duration.trim()}*"`);
     }

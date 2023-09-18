@@ -76,7 +76,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
             this.spinner.hide();
             this.page = res.body ? res.body.result.number + 1 : 1;
             this.totalItems = res.body ? res.body.result.totalElements : 0;
-            this.checkRoleUser(res.body.result.content)
+            this.checkRoleUser(res.body.result.content);
             // load page
             if (this.listEntity.length === 0 && this.page > 1) {
               this.page = 1;
@@ -111,33 +111,48 @@ export class AccountComponent implements OnInit, AfterViewInit {
       size: this.itemsPerPage,
       sort: [this.sort, this.sortType ? "desc" : "asc"],
       filter: this.filterRole(),
-    }
-    this.dmService.getOption(payload, this.REQUEST_URL_ROLE_USER, '/search')
-    .subscribe(
-      (res: HttpResponse<any>) => {
-        if(res.body.statusCode === 200) {
-          this.spinner.hide()
-         this.listEntity = data.map(item => ({
-          ...item,
-          roleId: this.findRole(item.id, res.body.result.content)
-         }))
-        } else {
-          this.spinner.hide()
+    };
+    this.dmService
+      .getOption(payload, this.REQUEST_URL_ROLE_USER, "/search")
+      .subscribe(
+        (res: HttpResponse<any>) => {
+          if (res.body.statusCode === 200) {
+            this.spinner.hide();
+            this.listEntity = data.map((item) => ({
+              ...item,
+              roleId: this.findRole(item.id, res.body.result.content),
+            }));
+            this.listEntity = this.listEntity.map((item) => ({
+              ...item,
+              roleName: this.getRoleName(item.roleId),
+            }));
+          } else {
+            this.spinner.hide();
+          }
+        },
+        () => {
+          this.spinner.hide();
         }
-      },
-      () => {
-        this.spinner.hide()
-      }
-    )
+      );
+  }
+  getRoleName(value) {
+    switch (value) {
+      case 2:
+        return "Staff";
+      case 3:
+        return "Manager";
+      default:
+        return "Leader";
+    }
   }
   findRole(userId, list) {
-    const result = list.find(item => item.userId == userId)
-    return result ? result.userId : ''
+    const result = list.find((item) => item.userId == userId);
+    return result ? result.userId : "";
   }
   filterRole() {
-    const filter = []
-    filter.push("id>0")
-    return filter.join(";")
+    const filter = [];
+    filter.push("id>0");
+    return filter.join(";");
   }
   getDepartment() {
     const payload = {
@@ -158,7 +173,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
         this.notificationService.showError("Đã có lỗi xảy ra", "Fail");
         console.error();
       }
-    ); 
+    );
   }
   getRole(role: any) {
     const payload = {
@@ -208,31 +223,6 @@ export class AccountComponent implements OnInit, AfterViewInit {
     }
     return filter.join(";");
   }
-  // private filter(): string {
-  //   const comparesArray: string[] = [];
-  //   const {
-  //     FtTaiKhoan,
-  //     FtHoTen,
-  //     FtDiaChi,
-  //     FtEmail,
-  //     FtGhiChu,
-  //     FtPhanQuyen,
-  //     FtSdt,
-  //     department,
-  //   } = this;
-  //   this.getRole(FtPhanQuyen)
-  //   comparesArray.push(`id>0`);
-  //   if (FtHoTen) comparesArray.push(`name=="*${FtHoTen.trim()}*"`);
-  //   if (FtTaiKhoan) comparesArray.push(`userName=="*${FtTaiKhoan.trim()}*"`);
-  //   if (FtDiaChi) comparesArray.push(`address=="*${FtDiaChi.trim()}*"`);
-  //   if (FtEmail) comparesArray.push(`email=="*${FtEmail.trim()}*"`);
-  //   if (FtGhiChu) comparesArray.push(`note=="*${FtGhiChu.trim()}*"`);
-  //   if (FtPhanQuyen) comparesArray.push(`roleId=="*${this.roleID.trim()}*"`);
-  //   if (FtSdt) comparesArray.push(`phone=="*${FtSdt.trim()}*"`);
-  //   if (this.department)
-  //     comparesArray.push(`department=="*${department.trim()}*"`);
-  //   return comparesArray.join(";");
-  // }
 
   filterPhanQuyen(e: any): void {
     this.params.role = e;
