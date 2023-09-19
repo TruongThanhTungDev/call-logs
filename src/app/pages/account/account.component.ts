@@ -141,8 +141,10 @@ export class AccountComponent implements OnInit, AfterViewInit {
         return "Staff";
       case 3:
         return "Manager";
-      default:
+      case 4:
         return "Leader";
+      default:
+        return "";
     }
   }
   findRole(userId, list) {
