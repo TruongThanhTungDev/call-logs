@@ -96,7 +96,7 @@ export class ThemSuaXoaAccountComponent implements OnInit {
         departmentId: this.department,
         isActive: 0,
         code: null,
-        callCode: this.callCode.toUpperCase(),
+        callCode: this.callCode ? this.callCode.toUpperCase() : '',
       };
       if (!this.data) {
         if (entity.departmentId == "") {
