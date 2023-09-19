@@ -137,6 +137,8 @@ export class AccountComponent implements OnInit, AfterViewInit {
   }
   getRoleName(value) {
     switch (value) {
+      case 1:
+        return "Admin";
       case 2:
         return "Staff";
       case 3:
@@ -149,7 +151,7 @@ export class AccountComponent implements OnInit, AfterViewInit {
   }
   findRole(userId, list) {
     const result = list.find((item) => item.userId == userId);
-    return result ? result.userId : "";
+    return result ? result.roleId : "";
   }
   filterRole() {
     const filter = [];
