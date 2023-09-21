@@ -256,11 +256,11 @@
                   <input class="check-box" type="checkbox" [id]="'check' + i" (change)="checkOnIndex(i)"
                     [(ngModel)]="checkBoxValues[i]" />
                 </td>
-                <td>{{ entity.date }}</td>
-                <td>{{ entity.name }}</td>
-                <td>{{ entity.phone }}</td>
-                <td>{{ entity.address }}</td>
-                <td>{{ entity.department.name }}</td>
+                <td>{{ entity.date ? entity.date : '' }}</td>
+                <td>{{ entity ? entity.name : '' }}</td>
+                <td>{{ entity.phone ? entity.phone : '' }}</td>
+                <td>{{ entity.address ? entity.address : '' }}</td>
+                <td>{{ entity.department ? entity.department.name : '' }}</td>
                 <td>
                   {{entity.staff ? entity.staff.name : ''}}
                 </td>
