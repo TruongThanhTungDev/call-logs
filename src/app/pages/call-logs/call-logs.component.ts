@@ -287,9 +287,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     if (this.params.duration) {
       filter.push(`duration=="*${this.params.duration.trim()}*"`);
     }
-    if (this.params.status) {
-      filter.push(`status=="${this.params.status}"`);
-    }
+    filter.push(`status=="ANSWERED"`);
     if (this.params.blacklist) {
       filter.push(`blacklist==${this.params.blacklist}`);
     }

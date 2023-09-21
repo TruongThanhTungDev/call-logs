@@ -67,13 +67,6 @@
                     class="form-control form-control-sm" placeholder="Tìm kiếm" (keyup.enter)="loadData()">
                 </th>
                 <th class="position-relative">
-                  <select class="form-control" [(ngModel)]="params.status" name="trangThai" (change)="loadData()">
-                    <option value="">Tất cả</option>
-                    <option value="ANSWERED">Trả lời</option>
-                    <option value="NO ANSWER">Không trả lời</option>
-                    <option value="BUSY">Bận</option>
-                    <option value="CONGESTION">Ngoài vùng phủ sóng</option>
-                  </select>
                 </th>
                 <th>
                   <input type="text" autocomplete="off" [(ngModel)]="params.recording"
