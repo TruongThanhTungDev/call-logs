@@ -61,7 +61,7 @@
             <tbody *ngIf="data.length">
               <tr *ngFor="let item of data;index as i" [key]="item.id">
                 <td>
-                  {{item.staff.userName}}
+                  {{item.staff.userName}} ({{item.staff.name}})
                 </td>
                 <td>
                   {{item.timeIn}}
