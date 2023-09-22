@@ -8,7 +8,7 @@
             <h4 class="text-primary mt-0 bold">Danh sách tài khoản</h4>
           </div>
           <div class="col-12 d-flex">
-            <div class=" dropdown mr-1" style="float: left;">
+            <div *ngIf="!info.roleList.includes('leader')" class=" dropdown mr-1" style="float: left;">
               <a class="dropdown-toggle btn btn-primary" type="button" id="tk-sub" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false" width=200px>
                 {{department ? department.name : 'Phòng ban'}}

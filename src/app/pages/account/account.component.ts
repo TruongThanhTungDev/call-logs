@@ -59,6 +59,10 @@ export class AccountComponent implements OnInit, AfterViewInit {
     this.getDepartment();
     this.loadData();
     this.scriptPage();
+    console.log(
+      "object :>> ",
+      !this.info.roleList.includes("leader")
+    );
   }
   ngAfterViewInit(): void {}
   public loadData() {
@@ -204,6 +208,9 @@ export class AccountComponent implements OnInit, AfterViewInit {
     const filter = [];
     this.params.page = 1;
     filter.push("id>0");
+    if (this.info.roleList.includes('leader')) {
+      filter.push(`department.id==${this.info.departmentId}`);
+    }
     if (this.params.name) {
       filter.push(`name=="*${this.params.name.trim()}*"`);
     }
