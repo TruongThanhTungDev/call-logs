@@ -23,6 +23,7 @@ import {
   TimePeriod,
 } from "ngx-daterangepicker-material/daterangepicker.component";
 import { Plugin } from "app/shared/util/plugins";
+import { LocalStorageService } from "ngx-webstorage";
 @Component({
   selector: "call-logs-cmp",
   templateUrl: "call-logs.component.html",
@@ -146,14 +147,16 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       dayjs().subtract(1, "month").endOf("month"),
     ],
   };
-
+  info: any
+  callCode: any
   constructor(
     private dmService: DanhMucService,
     private notificationService: NotificationService,
     private confirmDialogService: ConfirmationDialogService,
     private modalService: NgbModal,
     private excelService: ExcelService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private localStorage: LocalStorageService,
   ) {
     this.source = {
       localdata: [],
@@ -177,9 +180,11 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       startDate: dayjs().subtract(6, "days"),
       endDate: dayjs().add(1, "days"),
     };
+    this.info = this.localStorage.retrieve('authenticationtoken')
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
   ngAfterViewInit(): void {}
   ngDoCheck() {
     if (
@@ -189,6 +194,13 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       this.isCheckAll = true;
     } else {
       this.isCheckAll = false;
+    }
+  }
+  getDataCallLog() {
+    if(this.info.roleList.includes('leader') || (this.info.roleList.includes('staff'))) {
+      this.getCallLineByDepartment()
+    } else {
+      this.loadData()
     }
   }
   public loadData() {
@@ -207,7 +219,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
           this.getAllUser(res.body.result.content);
           if (this.data.length === 0 && this.params.page > 1) {
             this.params.page = 1;
-            this.loadData();
+            this.getCallLineByDepartment();
           }
         } else {
           this.notificationService.showError(res.body.MESSAGE, "Error message");
@@ -217,6 +229,23 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
         console.error();
       }
     );
+  }
+  getCallLineByDepartment() {
+    const payload = {
+      page: 0,
+      size: 9999,
+      deptId: this.info.departmentId,
+      sort: ['id','sort']
+    }
+    this.dmService.getOption(payload,this.REQUEST_USER,'/getLineByDept')
+    .subscribe(
+      (res: HttpResponse<any>) => {
+        if(res.body.statusCode === 200) {
+          this.callCode = res.body.result.content[0]
+          this.loadData()
+        }
+      }
+    )
   }
   getAllUser(data) {
     const payload = {
@@ -247,17 +276,17 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   loadPage(page: number): void {
     if (page !== this.previousPage) {
       this.previousPage = page;
-      this.loadData();
+      this.getCallLineByDepartment();
     }
   }
 
   sortData(e: any) {
     if (e !== this.sort) {
       this.sort = e;
-      this.loadData();
+      this.getCallLineByDepartment();
     } else {
       this.sortType = !this.sortType;
-      this.loadData();
+      this.getCallLineByDepartment();
     }
   }
 
@@ -269,6 +298,9 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
     let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
     filter.push(`calldate >= ${startDate};calldate <= ${endDate}`);
+    if (this.info.roleList.includes('leader')) {
+      filter.push(`extension=="*${this.callCode}*"`);
+    }
     if (this.params.extension) {
       filter.push(`extension=="*${this.params.extension.trim()}*"`);
     }
