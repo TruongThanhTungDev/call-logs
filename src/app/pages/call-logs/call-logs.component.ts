@@ -210,6 +210,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       filter: this.filterData(),
       sort: [this.sort, this.sortType ? "desc" : "asc"],
     };
+    this.spinner.show()
     this.dmService.query(payload, `${this.REQUEST_URL}`).subscribe(
       (res: HttpResponse<any>) => {
         if (res.body.statusCode === 200) {
@@ -221,11 +222,14 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
             this.params.page = 1;
             this.getCallLineByDepartment();
           }
+           this.spinner.hide();
         } else {
+           this.spinner.hide();
           this.notificationService.showError(res.body.MESSAGE, "Error message");
         }
       },
       () => {
+         this.spinner.hide();
         console.error();
       }
     );
@@ -271,7 +275,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   }
   checkingCallCode(code, list) {
     const result = list.find((item) => item.callCode == code);
-    return result ? `${result.name} (${result.userName})` : "";
+    return result ? `${result.name} (${result.userName})` : code;
   }
   loadPage(page: number): void {
     if (page !== this.previousPage) {

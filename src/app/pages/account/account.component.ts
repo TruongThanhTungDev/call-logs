@@ -59,10 +59,6 @@ export class AccountComponent implements OnInit, AfterViewInit {
     this.getDepartment();
     this.loadData();
     this.scriptPage();
-    console.log(
-      "object :>> ",
-      !this.info.roleList.includes("leader")
-    );
   }
   ngAfterViewInit(): void {}
   public loadData() {
