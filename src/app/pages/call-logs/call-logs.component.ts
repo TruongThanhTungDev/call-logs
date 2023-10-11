@@ -37,15 +37,15 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   params = {
     page: 1,
     itemsPerPage: 10,
-    extension: "",
-    phone: "",
-    calldate: "",
-    duration: "",
-    status: "",
-    recording: "",
-    blacklist: "",
-    staffName: "",
+    phone: "" as any,
+    calldate: "" as any,
+    duration: "" as any,
+    status: "" as any,
+    recording: "" as any,
+    blacklist: "" as any,
+    staffName: "" as any,
   };
+  extension: any;
   previousPage = 1;
   totalItems = 0;
   sort = "calldate";
@@ -147,8 +147,8 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       dayjs().subtract(1, "month").endOf("month"),
     ],
   };
-  info: any
-  callCode: any
+  info: any;
+  callCode: any;
   constructor(
     private dmService: DanhMucService,
     private notificationService: NotificationService,
@@ -156,7 +156,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     private modalService: NgbModal,
     private excelService: ExcelService,
     private spinner: NgxSpinnerService,
-    private localStorage: LocalStorageService,
+    private localStorage: LocalStorageService
   ) {
     this.source = {
       localdata: [],
@@ -180,11 +180,10 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       startDate: dayjs().subtract(6, "days"),
       endDate: dayjs().add(1, "days"),
     };
-    this.info = this.localStorage.retrieve('authenticationtoken')
+    this.info = this.localStorage.retrieve("authenticationtoken");
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
   ngAfterViewInit(): void {}
   ngDoCheck() {
     if (
@@ -197,10 +196,13 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     }
   }
   getDataCallLog() {
-    if(this.info.roleList.includes('leader') || (this.info.roleList.includes('staff'))) {
-      this.getCallLineByDepartment()
+    if (
+      this.info.roleList.includes("leader") ||
+      this.info.roleList.includes("staff")
+    ) {
+      this.getCallLineByDepartment();
     } else {
-      this.loadData()
+      this.loadData();
     }
   }
   public loadData() {
@@ -210,7 +212,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       filter: this.filterData(),
       sort: [this.sort, this.sortType ? "desc" : "asc"],
     };
-    this.spinner.show()
+    this.spinner.show();
     this.dmService.query(payload, `${this.REQUEST_URL}`).subscribe(
       (res: HttpResponse<any>) => {
         if (res.body.statusCode === 200) {
@@ -222,14 +224,14 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
             this.params.page = 1;
             this.getCallLineByDepartment();
           }
-           this.spinner.hide();
+          this.spinner.hide();
         } else {
-           this.spinner.hide();
+          this.spinner.hide();
           this.notificationService.showError(res.body.MESSAGE, "Error message");
         }
       },
       () => {
-         this.spinner.hide();
+        this.spinner.hide();
         console.error();
       }
     );
@@ -239,17 +241,16 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       page: 0,
       size: 9999,
       deptId: this.info.departmentId,
-      sort: ['id','sort']
-    }
-    this.dmService.getOption(payload,this.REQUEST_USER,'/getLineByDept')
-    .subscribe(
-      (res: HttpResponse<any>) => {
-        if(res.body.statusCode === 200) {
-          this.callCode = res.body.result.content[0]
-          this.loadData()
+      sort: ["id", "sort"],
+    };
+    this.dmService
+      .getOption(payload, this.REQUEST_USER, "/getLineByDept")
+      .subscribe((res: HttpResponse<any>) => {
+        if (res.body.statusCode === 200) {
+          this.callCode = res.body.result.content[0];
+          this.loadData();
         }
-      }
-    )
+      });
   }
   getAllUser(data) {
     const payload = {
@@ -270,6 +271,7 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
               res.body.result.content
             ),
           }));
+          console.log('this.listUser :>> ', this.listUser);
         }
       });
   }
@@ -293,7 +295,9 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
       this.getCallLineByDepartment();
     }
   }
-
+  filterWithUser(event: any) {
+    console.log('event :>> ', event);
+  }
   public filterData() {
     const filter = [];
     this.params.page = 1;
@@ -302,11 +306,12 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
     let startDate = moment(date.startDate).format("YYYYMMDD") + "000000";
     let endDate = moment(date.endDate).format("YYYYMMDD") + "235959";
     filter.push(`calldate >= ${startDate};calldate <= ${endDate}`);
-    if (this.info.roleList.includes('leader')) {
-      filter.push(`extension=="*${this.callCode}*"`);
-    }
-    if (this.params.extension) {
-      filter.push(`extension=="*${this.params.extension.trim()}*"`);
+    // if (this.info.roleList.includes('leader')) {
+    //   filter.push(`extension=="*${this.callCode}*"`);
+    // }
+    if (this.extension) {
+      console.log("this.extension :>> ", this.extension);
+      filter.push(`extension=="*${this.extension}*"`);
     }
     if (this.params.phone) {
       filter.push(`phone=="*${this.params.phone.trim()}*"`);
