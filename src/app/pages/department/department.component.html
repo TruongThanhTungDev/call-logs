@@ -83,10 +83,10 @@
           </table>
         </div>
       </div>
-      <div class="card-footer d-flex justify-content-right" style="margin-top: auto;">
+      <div class="card-footer d-flex justify-content-right">
         <nav aria-label="Page navigation">
-          <ngb-pagination [collectionSize]="totalItems" [(page)]="params.page" [pageSize]="params.itemsPerPage"
-            [maxSize]="3" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(params.page)">
+          <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="3"
+            [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)">
           </ngb-pagination>
         </nav>
       </div>

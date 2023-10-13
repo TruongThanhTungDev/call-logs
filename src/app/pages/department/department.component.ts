@@ -16,7 +16,13 @@ import { NgxSpinnerService } from "ngx-spinner";
 export class DepartmentComponent implements OnInit {
   REQUEST_URL = "/api/v1/department";
   deparmentName: "";
-
+  itemsPerPage = 10;
+  page = 1;
+  sort = "id";
+  totalItems = 0;
+  previousPage = 1;
+  listEntity = [];
+  sortType = true;
   selectedEntity: any;
   listSelected: any[] = [];
   fields: any[] = [
@@ -53,8 +59,6 @@ export class DepartmentComponent implements OnInit {
     code: "",
     status: "",
   };
-  previousPage = 1;
-  totalItems = 0;
   constructor(
     private dmService: DanhMucService,
     private notificationService: NotificationService,
@@ -83,16 +87,25 @@ export class DepartmentComponent implements OnInit {
   }
   loadData() {
     const payload = {
-      page: this.params.page - 1,
-      size: this.params.itemsPerPage,
+      sort: [this.sort, this.sortType ? "desc" : "asc"],
+      page: this.page - 1,
+      size: this.itemsPerPage,
       filter: this.filterData(),
-      sort: ["id", "asc"],
     };
+     this.spinner.show();
     this.dmService.query(payload, this.REQUEST_URL).subscribe(
       (res: HttpResponse<any>) => {
         if (res.body.statusCode === 200) {
+          this.spinner.hide();
+          this.page = res.body ? res.body.result.number + 1 : 1;
+          this.totalItems = res.body ? res.body.result.totalElements : 0;
           this.data = res.body.result.content;
+          if (this.data.length === 0 && this.page > 1) {
+            this.page = 1;
+            this.loadData();
+          }
         } else {
+          this.spinner.hide();
           this.notificationService.showError(res.body.MESSAGE, "Fail");
         }
       },
