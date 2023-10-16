@@ -220,10 +220,6 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
           this.params.page = res.body ? res.body.result.number + 1 : 1;
           // this.getThongKe();
           this.getAllUser(res.body.result.content);
-          if (this.data.length === 0 && this.params.page > 1) {
-            this.params.page = 1;
-            this.getCallLineByDepartment();
-          }
           this.spinner.hide();
         } else {
           this.spinner.hide();
@@ -271,7 +267,6 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
               res.body.result.content
             ),
           }));
-          console.log('this.listUser :>> ', this.listUser);
         }
       });
   }
@@ -282,21 +277,18 @@ export class CallLogsComponent implements OnInit, AfterViewInit, DoCheck {
   loadPage(page: number): void {
     if (page !== this.previousPage) {
       this.previousPage = page;
-      this.getCallLineByDepartment();
+      this.loadData();
     }
   }
 
   sortData(e: any) {
     if (e !== this.sort) {
       this.sort = e;
-      this.getCallLineByDepartment();
+      this.loadData();
     } else {
       this.sortType = !this.sortType;
-      this.getCallLineByDepartment();
+      this.loadData();
     }
-  }
-  filterWithUser(event: any) {
-    console.log('event :>> ', event);
   }
   public filterData() {
     const filter = [];
